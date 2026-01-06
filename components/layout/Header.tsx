@@ -100,6 +100,16 @@ export default function Header() {
                                 <div className="font-semibold text-gray-800">{user?.name}</div>
                                 <div className="text-xs text-gray-500">{user?.position}</div>
                             </div>
+                            <Link
+                                href="/profile"
+                                className="px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center space-x-1"
+                                title="내 정보"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span>내 정보</span>
+                            </Link>
                             <button
                                 onClick={handleLogout}
                                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors flex items-center space-x-1"
@@ -151,6 +161,17 @@ export default function Header() {
                                     {item.label}
                                 </Link>
                             ))}
+                            {/* 내 정보 버튼 (모바일) */}
+                            <Link
+                                href="/profile"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="w-full text-left py-3 px-4 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors flex items-center space-x-2 font-medium"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span>내 정보</span>
+                            </Link>
                             {/* 로그아웃 버튼 (모바일) */}
                             <button
                                 onClick={handleLogout}
