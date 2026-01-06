@@ -1,8 +1,27 @@
+import { useState, useEffect } from 'react';
 import { tracksData } from '../data/organization';
+import { Task } from '../interfaces/Organization';
 import { useDeviceMode } from '../contexts/DeviceModeContext';
 
 export default function OrganizationChart() {
     const { isMobileMode } = useDeviceMode();
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    // Load tasks from localStorage
+    useEffect(() => {
+        const savedTasks = localStorage.getItem('tf_tasks');
+        if (savedTasks) {
+            setTasks(JSON.parse(savedTasks));
+        }
+    }, []);
+
+    // Get active tasks for a specific member
+    const getMemberTasks = (memberId: string) => {
+        return tasks.filter(task =>
+            task.assignedTo === memberId &&
+            task.status !== 'completed'
+        );
+    };
     return (
         <div className="card-glass p-8">
             <h3 className="text-2xl font-bold text-white mb-6 text-center">미래전략TF 원팀 맵</h3>
@@ -49,23 +68,53 @@ export default function OrganizationChart() {
                             {/* Members */}
                             <div className="bg-white/5 rounded-b-xl p-4 border-x border-b border-white/10">
                                 <div className="space-y-3">
-                                    {track.members.map((member) => (
-                                        <div
-                                            key={member.id}
-                                            className="bg-slate-800/50 p-3 rounded-lg hover:bg-slate-700/50 transition-all duration-300 border border-white/5"
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <div className="text-white font-semibold">{member.name}</div>
-                                                    <div className="text-gray-400 text-sm">{member.position}</div>
+                                    {track.members.map((member) => {
+                                        const memberTasks = getMemberTasks(member.id);
+                                        return (
+                                            <div
+                                                key={member.id}
+                                                className="bg-slate-800/50 p-3 rounded-lg hover:bg-slate-700/50 transition-all duration-300 border border-white/5"
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <div>
+                                                        <div className="text-white font-semibold">{member.name}</div>
+                                                        <div className="text-gray-400 text-sm">{member.position}</div>
+                                                    </div>
+                                                    <div className="flex items-center space-x-2">
+                                                        {/* Task count badge */}
+                                                        {memberTasks.length > 0 && (
+                                                            <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                                                                {memberTasks.length}
+                                                            </div>
+                                                        )}
+                                                        <div
+                                                            className="w-3 h-3 rounded-full"
+                                                            style={{ backgroundColor: track.color }}
+                                                        ></div>
+                                                    </div>
                                                 </div>
-                                                <div
-                                                    className="w-3 h-3 rounded-full"
-                                                    style={{ backgroundColor: track.color }}
-                                                ></div>
+
+                                                {/* Task list */}
+                                                {memberTasks.length > 0 && (
+                                                    <div className="mt-2 pt-2 border-t border-white/10 space-y-1">
+                                                        {memberTasks.map((task) => (
+                                                            <div key={task.id} className="text-xs">
+                                                                <div className="flex items-center space-x-2">
+                                                                    <span className={`
+                                                                        inline-block w-2 h-2 rounded-full
+                                                                        ${task.priority === 'high' ? 'bg-red-400' :
+                                                                            task.priority === 'medium' ? 'bg-yellow-400' :
+                                                                                'bg-green-400'}
+                                                                    `}></span>
+                                                                    <span className="text-gray-300 truncate">{task.title}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
