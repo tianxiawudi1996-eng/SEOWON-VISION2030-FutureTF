@@ -10,21 +10,16 @@ export default function AdminPanel() {
     const [users, setUsers] = useState<User[]>([]);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newPassword, setNewPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
     const [passwordChanges, setPasswordChanges] = useState<Record<string, any>>({});
 
     // 데이터 로드 함수
-    const loadPasswordChanges = () => {
+    const loadData = () => {
         if (typeof window !== 'undefined') {
             const changes = JSON.parse(localStorage.getItem('password_changes') || '{}');
             setPasswordChanges(changes);
-            setUsers([...authorizedUsers]); // 최신 상태로 강제 갱신
+            setUsers([...authorizedUsers]);
         }
-    };
-
-    // 실제 비밀번호 가져오기 (변경된 것 포함)
-    const getActualPassword = (userId: string, defaultPassword: string) => {
-        return passwordChanges[userId]?.newPassword || defaultPassword;
     };
 
     useEffect(() => {
@@ -34,19 +29,31 @@ export default function AdminPanel() {
             return;
         }
 
-        // 초기 데이터 로드
-        loadPasswordChanges();
+        loadData();
 
-        // 다른 탭에서 변경 시 실시간 반영
+        // 저장소 변경 감지
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'password_changes') {
-                loadPasswordChanges();
+                loadData();
             }
         };
-
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [user, router]);
+
+    // 실제 표시할 비밀번호 계산
+    const getDisplayPassword = (u: User) => {
+        const changed = passwordChanges[u.id]?.newPassword;
+        return changed || u.password;
+    };
+
+    // 개별 비밀번호 토글
+    const toggleVisibility = (userId: string) => {
+        setVisiblePasswords(prev => ({
+            ...prev,
+            [userId]: !prev[userId]
+        }));
+    };
 
     const handleResetPassword = (targetUser: User) => {
         setSelectedUser(targetUser);
@@ -59,7 +66,6 @@ export default function AdminPanel() {
             return;
         }
 
-        // 최신 데이터 다시 읽기 (덮어쓰기 방지)
         const currentChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
         const updatedChanges = { ...currentChanges };
 
@@ -70,165 +76,113 @@ export default function AdminPanel() {
         };
 
         localStorage.setItem('password_changes', JSON.stringify(updatedChanges));
-
-        // 상태 업데이트
         setPasswordChanges(updatedChanges);
 
-        alert(`${selectedUser.name}님의 비밀번호가 재설정되었습니다.\n새 비밀번호: ${newPassword}`);
+        alert(`${selectedUser.name}님의 비밀번호가 [${newPassword}](으)로 재설정되었습니다.`);
         setSelectedUser(null);
         setNewPassword('');
     };
 
-    if (!user || user.id !== 'kim-mu-bin') {
-        return null;
-    }
+    if (!user || user.id !== 'kim-mu-bin') return null;
 
     return (
-        <>
+        <div className="min-h-screen bg-slate-900 text-slate-100 py-12">
             <Head>
-                <title>관리자 패널 | 서원토건 미래전략TF</title>
-                <meta name="description" content="사용자 관리 및 비밀번호 재설정" />
+                <title>관리자 패널 | 서원토건</title>
             </Head>
 
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-12">
-                <div className="container mx-auto px-4 max-w-6xl">
-                    {/* 헤더 */}
-                    <div className="mb-8">
-                        <h1 className="text-4xl font-bold text-white mb-2">관리자 패널</h1>
-                        <p className="text-gray-400">사용자 계정 관리 및 비밀번호 재설정</p>
+            <div className="container mx-auto px-4 max-w-6xl">
+                <div className="flex justify-between items-end mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold mb-2">관리 시스템</h1>
+                        <p className="text-slate-400">인가 사용자 13명 계정 관리</p>
                     </div>
+                    <button
+                        onClick={loadData}
+                        className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm transition-colors border border-slate-700 flex items-center gap-2"
+                    >
+                        🔄 데이터 새로고침
+                    </button>
+                </div>
 
-                    {/* 경고 메시지 */}
-                    <div className="bg-yellow-500/20 border border-yellow-500 text-yellow-200 px-6 py-4 rounded-lg mb-8">
-                        <div className="flex items-center space-x-2">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                            <span className="font-semibold">마스터 권한</span>
-                        </div>
-                        <p className="text-sm mt-2">
-                            이 페이지는 팀장(김무빈)만 접근 가능합니다. 모든 사용자의 계정 정보를 확인하고 비밀번호를 재설정할 수 있습니다.
-                        </p>
-                    </div>
+                <div className="bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden backdrop-blur-sm">
+                    <table className="w-full text-left">
+                        <thead>
+                            <tr className="bg-slate-800 border-b border-slate-700">
+                                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">이름</th>
+                                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">아이디</th>
+                                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">비밀번호</th>
+                                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400">역할</th>
+                                <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-right">관리</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-700/50">
+                            {users.map((u) => (
+                                <tr key={u.id} className="hover:bg-slate-700/30 transition-colors">
+                                    <td className="px-6 py-4">
+                                        <div className="font-medium">{u.name}</div>
+                                        <div className="text-xs text-slate-500">{u.position}</div>
+                                    </td>
+                                    <td className="px-6 py-4 font-mono text-blue-400">{u.username}</td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <span className="font-mono text-slate-300 min-w-[120px]">
+                                                {visiblePasswords[u.id] ? getDisplayPassword(u) : '••••••••'}
+                                            </span>
+                                            <button
+                                                onClick={() => toggleVisibility(u.id)}
+                                                className="text-slate-500 hover:text-white transition-colors"
+                                            >
+                                                {visiblePasswords[u.id] ? (
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268-2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                                                ) : (
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-400' :
+                                                u.role === 'leader' ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-500/20 text-slate-400'
+                                            }`}>
+                                            {u.role}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <button
+                                            onClick={() => handleResetPassword(u)}
+                                            className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border border-red-500/20"
+                                        >
+                                            비밀번호 재설정
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-                    {/* 사용자 목록 */}
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 overflow-hidden">
-                        <div className="bg-white/5 px-6 py-4 border-b border-white/10 flex justify-between items-center">
-                            <h2 className="text-xl font-bold text-white">전체 사용자 ({users.length}명)</h2>
-                            <button
-                                onClick={loadPasswordChanges}
-                                className="flex items-center space-x-2 text-sm bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-3 py-1.5 rounded-lg transition-colors border border-blue-500/30"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                                </svg>
-                                <span>데이터 동기화</span>
-                            </button>
-                        </div>
-
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-white/5">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">이름</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">직책</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">아이디</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">현재 비밀번호</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">역할</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">작업</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-white/5">
-                                    {users.map((u) => (
-                                        <tr key={u.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-medium text-white">{u.name}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-300">{u.position}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm font-mono text-blue-400">{u.username}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center space-x-2">
-                                                    <span className="text-sm font-mono text-gray-300">
-                                                        {showPassword ? getActualPassword(u.id, u.password) : '••••••••'}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => setShowPassword(!showPassword)}
-                                                        className="text-gray-400 hover:text-white"
-                                                    >
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            {showPassword ? (
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                                                            ) : (
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                                            )}
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                                    u.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
-                                                        u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                                            'bg-gray-500/20 text-gray-300'
-                                                    }`}>
-                                                    {u.role === 'ceo' ? 'CEO' :
-                                                        u.role === 'executive' ? '책임임원' :
-                                                            u.role === 'leader' ? '리더' : '멤버'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <button
-                                                    onClick={() => handleResetPassword(u)}
-                                                    className="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded transition-colors"
-                                                >
-                                                    비밀번호 재설정
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    {/* 비밀번호 재설정 모달 */}
-                    {selectedUser && (
-                        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                            <div className="bg-slate-800 rounded-xl p-6 max-w-md w-full border border-white/20">
-                                <h3 className="text-xl font-bold text-white mb-4">비밀번호 재설정</h3>
-                                <p className="text-gray-300 mb-4">
-                                    <span className="font-semibold">{selectedUser.name}</span>님의 새 비밀번호를 입력하세요
-                                </p>
-                                <input
-                                    type="text"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="새 비밀번호"
-                                    className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white mb-4"
-                                />
-                                <div className="flex space-x-3">
-                                    <button
-                                        onClick={confirmPasswordReset}
-                                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-                                    >
-                                        확인
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedUser(null)}
-                                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
-                                    >
-                                        취소
-                                    </button>
-                                </div>
+                {/* 재설정 모달 */}
+                {selectedUser && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
+                        <div className="bg-slate-800 p-8 rounded-3xl border border-slate-700 max-w-sm w-full shadow-2xl animate-scale-in">
+                            <h3 className="text-xl font-bold mb-2">{selectedUser.name} - 비밀번호 변경</h3>
+                            <p className="text-slate-400 text-sm mb-6">새로운 비밀번호를 입력해 주세요.</p>
+                            <input
+                                type="text"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 mb-6 focus:ring-2 focus:ring-blue-500 outline-none"
+                                placeholder="새 비밀번호"
+                            />
+                            <div className="flex gap-3">
+                                <button onClick={confirmPasswordReset} className="flex-1 bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition-colors">변경 적용</button>
+                                <button onClick={() => setSelectedUser(null)} className="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-xl font-bold transition-colors">취소</button>
                             </div>
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
-        </>
+        </div>
     );
 }
