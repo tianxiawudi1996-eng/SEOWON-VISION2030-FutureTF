@@ -17,7 +17,7 @@ export default function Login() {
         setLoading(true);
 
         // 로그인 시도
-        const success = login(username, password);
+        const success = await login(username, password);
 
         if (success) {
             // 로그인 성공

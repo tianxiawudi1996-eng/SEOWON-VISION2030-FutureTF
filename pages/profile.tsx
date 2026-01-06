@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { authorizedUsers } from '../data/users';
+import { syncPassword } from '../lib/supabase';
 
 export default function Profile() {
     const router = useRouter();
@@ -18,7 +19,7 @@ export default function Profile() {
         return null;
     }
 
-    const handlePasswordChange = (e: React.FormEvent) => {
+    const handlePasswordChange = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage('');
         setError('');
@@ -60,7 +61,7 @@ export default function Profile() {
                 return;
             }
 
-            // 비밀번호 변경 저장
+            // 비밀번호 변경 저장 (Local)
             passwordChanges[userData.id] = {
                 newPassword: newPassword,
                 changedBy: user.name,
@@ -69,7 +70,10 @@ export default function Profile() {
             };
             localStorage.setItem('password_changes', JSON.stringify(passwordChanges));
 
-            setMessage('비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.');
+            // 비밀번호 변경 저장 (Remote DB 동기화)
+            await syncPassword(userData.id, newPassword);
+
+            setMessage('비밀번호가 성공적으로 변경되었습니다. 모든 기기에 적용됩니다. 다시 로그인해주세요.');
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');

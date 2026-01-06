@@ -1,9 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, validateUser } from '../data/users';
+import { User, authorizedUsers } from '../data/users';
+import { getRemotePassword } from '../lib/supabase';
 
 interface AuthContextType {
     user: User | null;
-    login: (username: string, password: string) => boolean;
+    login: (username: string, password: string) => Promise<boolean>;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -25,15 +26,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
-    const login = (username: string, password: string): boolean => {
-        const validatedUser = validateUser(username, password);
-        if (validatedUser) {
-            setUser(validatedUser);
-            // 비밀번호는 저장하지 않음
-            const { password: _, ...userWithoutPassword } = validatedUser;
+    const login = async (username: string, password: string): Promise<boolean> => {
+        // 1. 사용자 찾기
+        const foundUser = authorizedUsers.find(u => u.username === username);
+        if (!foundUser) return false;
+
+        // 2. 비밀번호 결정 로직 (DB -> LocalStorage -> Default)
+        let actualPassword = foundUser.password;
+
+        // DB에서 최신 바뀐 비밀번호 가져오기 시도
+        const remotePassword = await getRemotePassword(foundUser.id);
+        if (remotePassword) {
+            actualPassword = remotePassword;
+        } else {
+            // DB에 없으면 로컬 기록 확인 (기존 방식 유지)
+            const localChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+            if (localChanges[foundUser.id]?.newPassword) {
+                actualPassword = localChanges[foundUser.id].newPassword;
+            }
+        }
+
+        // 3. 검증
+        if (password === actualPassword) {
+            setUser(foundUser);
+            const { password: _, ...userWithoutPassword } = foundUser;
             localStorage.setItem('seowon_tf_user', JSON.stringify(userWithoutPassword));
             return true;
         }
+
         return false;
     };
 

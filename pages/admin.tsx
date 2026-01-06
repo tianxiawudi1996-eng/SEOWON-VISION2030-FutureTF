@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { authorizedUsers, User } from '../data/users';
+import { syncPassword } from '../lib/supabase';
 
 export default function AdminPanel() {
     const router = useRouter();
@@ -60,7 +61,7 @@ export default function AdminPanel() {
         setNewPassword('');
     };
 
-    const confirmPasswordReset = () => {
+    const confirmPasswordReset = async () => {
         if (!selectedUser || !newPassword) {
             alert('새 비밀번호를 입력하세요.');
             return;
@@ -76,6 +77,10 @@ export default function AdminPanel() {
         };
 
         localStorage.setItem('password_changes', JSON.stringify(updatedChanges));
+
+        // 원격 DB 동기화
+        await syncPassword(selectedUser.id, newPassword);
+
         setPasswordChanges(updatedChanges);
 
         alert(`${selectedUser.name}님의 비밀번호가 [${newPassword}](으)로 재설정되었습니다.`);
@@ -143,7 +148,7 @@ export default function AdminPanel() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-400' :
-                                                u.role === 'leader' ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-500/20 text-slate-400'
+                                            u.role === 'leader' ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-500/20 text-slate-400'
                                             }`}>
                                             {u.role}
                                         </span>
