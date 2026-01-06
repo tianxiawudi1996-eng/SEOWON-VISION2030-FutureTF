@@ -6,7 +6,7 @@ export interface User {
     name: string;
     position: string;
     track?: string;
-    role: 'ceo' | 'leader' | 'member';
+    role: 'ceo' | 'executive' | 'leader' | 'member';
 }
 
 export const authorizedUsers: User[] = [
@@ -26,7 +26,7 @@ export const authorizedUsers: User[] = [
         password: 'seowon2030',
         name: '이강범',
         position: '전무 (총괄 책임임원)',
-        role: 'ceo'
+        role: 'executive'
     },
     // 기획/총괄
     {

@@ -107,17 +107,19 @@ export default function Profile() {
                             </div>
                             {user.track && (
                                 <div className="flex justify-between items-center py-3 border-b border-white/10">
-                                    <span className="text-gray-400">트랙</span>
                                     <span className="text-white font-semibold">{user.track}</span>
                                 </div>
                             )}
                             <div className="flex justify-between items-center py-3">
                                 <span className="text-gray-400">역할</span>
                                 <span className={`px-3 py-1 text-sm font-semibold rounded-full ${user.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                        user.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                            'bg-gray-500/20 text-gray-300'
+                                        user.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
+                                            user.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
+                                                'bg-gray-500/20 text-gray-300'
                                     }`}>
-                                    {user.role === 'ceo' ? 'CEO' : user.role === 'leader' ? '리더' : '멤버'}
+                                    {user.role === 'ceo' ? 'CEO' :
+                                        user.role === 'executive' ? '책임임원' :
+                                            user.role === 'leader' ? '리더' : '멤버'}
                                 </span>
                             </div>
                         </div>

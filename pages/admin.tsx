@@ -132,10 +132,13 @@ export default function AdminPanel() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                                    u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                                        'bg-gray-500/20 text-gray-300'
+                                                        u.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
+                                                            u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
+                                                                'bg-gray-500/20 text-gray-300'
                                                     }`}>
-                                                    {u.role === 'ceo' ? 'CEO' : u.role === 'leader' ? '리더' : '멤버'}
+                                                    {u.role === 'ceo' ? 'CEO' :
+                                                        u.role === 'executive' ? '책임임원' :
+                                                            u.role === 'leader' ? '리더' : '멤버'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
