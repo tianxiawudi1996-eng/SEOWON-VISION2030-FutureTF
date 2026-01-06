@@ -11,6 +11,12 @@ export default function AdminPanel() {
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newPassword, setNewPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [passwordChanges, setPasswordChanges] = useState<Record<string, any>>({});
+
+    // 실제 비밀번호 가져오기 (변경된 것 포함)
+    const getActualPassword = (userId: string, defaultPassword: string) => {
+        return passwordChanges[userId]?.newPassword || defaultPassword;
+    };
 
     useEffect(() => {
         // 김무빈 팀장만 접근 가능
@@ -21,6 +27,10 @@ export default function AdminPanel() {
 
         // 사용자 목록 로드
         setUsers(authorizedUsers);
+
+        // 비밀번호 변경 기록 로드
+        const changes = JSON.parse(localStorage.getItem('password_changes') || '{}');
+        setPasswordChanges(changes);
     }, [user, router]);
 
     const handleResetPassword = (targetUser: User) => {
@@ -36,13 +46,16 @@ export default function AdminPanel() {
 
         // 실제로는 백엔드 API를 통해 처리해야 하지만,
         // 여기서는 localStorage에 변경 기록을 저장
-        const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
-        passwordChanges[selectedUser.id] = {
+        const updatedChanges = { ...passwordChanges };
+        updatedChanges[selectedUser.id] = {
             newPassword: newPassword,
             changedBy: user?.name,
             changedAt: new Date().toISOString()
         };
-        localStorage.setItem('password_changes', JSON.stringify(passwordChanges));
+        localStorage.setItem('password_changes', JSON.stringify(updatedChanges));
+
+        // 상태 업데이트하여 즉시 반영
+        setPasswordChanges(updatedChanges);
 
         alert(`${selectedUser.name}님의 비밀번호가 재설정되었습니다.\n새 비밀번호: ${newPassword}`);
         setSelectedUser(null);
@@ -114,7 +127,7 @@ export default function AdminPanel() {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center space-x-2">
                                                     <span className="text-sm font-mono text-gray-300">
-                                                        {showPassword ? u.password : '••••••••'}
+                                                        {showPassword ? getActualPassword(u.id, u.password) : '••••••••'}
                                                     </span>
                                                     <button
                                                         onClick={() => setShowPassword(!showPassword)}
@@ -132,9 +145,9 @@ export default function AdminPanel() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                                        u.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
-                                                            u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                                                'bg-gray-500/20 text-gray-300'
+                                                    u.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
+                                                        u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
+                                                            'bg-gray-500/20 text-gray-300'
                                                     }`}>
                                                     {u.role === 'ceo' ? 'CEO' :
                                                         u.role === 'executive' ? '책임임원' :
