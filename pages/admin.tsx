@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
 import { authorizedUsers, User } from '../data/users';
-import { syncPassword } from '../lib/supabase';
+import { syncPassword, getAllRemotePasswords } from '../lib/supabase';
 
 export default function AdminPanel() {
     const router = useRouter();
@@ -13,14 +13,25 @@ export default function AdminPanel() {
     const [newPassword, setNewPassword] = useState('');
     const [visiblePasswords, setVisiblePasswords] = useState<Record<string, boolean>>({});
     const [passwordChanges, setPasswordChanges] = useState<Record<string, any>>({});
+    const [isLoading, setIsLoading] = useState(false);
 
     // 데이터 로드 함수
-    const loadData = () => {
+    const loadData = async () => {
+        setIsLoading(true);
         if (typeof window !== 'undefined') {
-            const changes = JSON.parse(localStorage.getItem('password_changes') || '{}');
-            setPasswordChanges(changes);
+            // 1. 로컬 저장소 데이터 로드
+            const localChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+
+            // 2. 원격 DB 데이터 로드 (최신본)
+            const remoteChanges = await getAllRemotePasswords();
+
+            // 두 데이터를 통합 (원격 데이터 우선)
+            const combinedChanges = { ...localChanges, ...remoteChanges };
+
+            setPasswordChanges(combinedChanges);
             setUsers([...authorizedUsers]);
         }
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -104,9 +115,10 @@ export default function AdminPanel() {
                     </div>
                     <button
                         onClick={loadData}
-                        className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm transition-colors border border-slate-700 flex items-center gap-2"
+                        disabled={isLoading}
+                        className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm transition-colors border border-slate-700 flex items-center gap-2 disabled:opacity-50"
                     >
-                        🔄 데이터 새로고침
+                        {isLoading ? '⌛ 동기화 중...' : '🔄 데이터 새로고침'}
                     </button>
                 </div>
 
