@@ -138,8 +138,24 @@ export const authorizedUsers: User[] = [
 
 // 로그인 검증 함수
 export function validateUser(username: string, password: string): User | null {
-    const user = authorizedUsers.find(
-        u => u.username === username && u.password === password
-    );
-    return user || null;
+    // 사용자 찾기
+    const user = authorizedUsers.find(u => u.username === username);
+
+    if (!user) {
+        return null;
+    }
+
+    // localStorage에서 비밀번호 변경 기록 확인
+    if (typeof window !== 'undefined') {
+        const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+        const changedPassword = passwordChanges[user.id]?.newPassword;
+
+        // 변경된 비밀번호가 있으면 그것으로 확인
+        if (changedPassword) {
+            return password === changedPassword ? user : null;
+        }
+    }
+
+    // 변경 기록이 없으면 기본 비밀번호로 확인
+    return password === user.password ? user : null;
 }
