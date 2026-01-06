@@ -43,8 +43,8 @@ export default function Header() {
         { path: '/exhibitions', label: '박람회' },
     ];
 
-    // CEO와 리더만 관리자 링크 표시
-    const showAdminLink = user && (user.role === 'ceo' || user.role === 'leader');
+    // 김무빈 팀장만 관리자 링크 표시
+    const showAdminLink = user && user.id === 'kim-mu-bin';
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">

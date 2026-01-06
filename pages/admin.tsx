@@ -13,8 +13,8 @@ export default function AdminPanel() {
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-        // CEO나 리더만 접근 가능
-        if (!user || (user.role !== 'ceo' && user.role !== 'leader')) {
+        // 김무빈 팀장만 접근 가능
+        if (!user || user.id !== 'kim-mu-bin') {
             router.push('/');
             return;
         }
@@ -49,7 +49,7 @@ export default function AdminPanel() {
         setNewPassword('');
     };
 
-    if (!user || (user.role !== 'ceo' && user.role !== 'leader')) {
+    if (!user || user.id !== 'kim-mu-bin') {
         return null;
     }
 
@@ -77,7 +77,7 @@ export default function AdminPanel() {
                             <span className="font-semibold">마스터 권한</span>
                         </div>
                         <p className="text-sm mt-2">
-                            이 페이지는 CEO 및 팀장만 접근 가능합니다. 비밀번호 재설정은 신중하게 진행하세요.
+                            이 페이지는 팀장(김무빈)만 접근 가능합니다. 모든 사용자의 계정 정보를 확인하고 비밀번호를 재설정할 수 있습니다.
                         </p>
                     </div>
 
@@ -132,8 +132,8 @@ export default function AdminPanel() {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                                        u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                                            'bg-gray-500/20 text-gray-300'
+                                                    u.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
+                                                        'bg-gray-500/20 text-gray-300'
                                                     }`}>
                                                     {u.role === 'ceo' ? 'CEO' : u.role === 'leader' ? '리더' : '멤버'}
                                                 </span>
