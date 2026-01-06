@@ -36,7 +36,7 @@ export default function Header() {
     };
 
     const navItems = [
-        { path: '/about', label: '미래전략TF소개' },
+        { path: '/seowon-vision2030', label: '미래전략TF소개' },
         { path: '/', label: '트렌드' },
         { path: '/collaboration', label: '산학협력' },
         { path: '/organization', label: '스마트 협업' },
