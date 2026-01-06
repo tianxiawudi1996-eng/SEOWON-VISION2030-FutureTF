@@ -108,18 +108,26 @@ export default function AdminPanel() {
             </Head>
 
             <div className="container mx-auto px-4 max-w-6xl">
-                <div className="flex justify-between items-end mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold mb-2">관리 시스템</h1>
-                        <p className="text-slate-400">인가 사용자 13명 계정 관리</p>
+                        <h1 className="text-3xl font-bold mb-2 text-white">관리 시스템</h1>
+                        <div className="flex items-center gap-4">
+                            <p className="text-slate-400 text-sm">인가 사용자 13명 계정 관리</p>
+                            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-500/10 border border-green-500/20">
+                                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                <span className="text-[10px] font-bold text-green-500 uppercase">Remote DB Online</span>
+                            </div>
+                        </div>
                     </div>
-                    <button
-                        onClick={loadData}
-                        disabled={isLoading}
-                        className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm transition-colors border border-slate-700 flex items-center gap-2 disabled:opacity-50"
-                    >
-                        {isLoading ? '⌛ 동기화 중...' : '🔄 데이터 새로고침'}
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={loadData}
+                            disabled={isLoading}
+                            className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm transition-colors border border-slate-700 flex items-center gap-2 disabled:opacity-50"
+                        >
+                            {isLoading ? '⌛ 동기화 중...' : '🔄 데이터 새로고침'}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-slate-800/50 rounded-2xl border border-slate-700 overflow-hidden backdrop-blur-sm">

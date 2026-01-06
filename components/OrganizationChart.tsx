@@ -2,17 +2,24 @@ import { useState, useEffect } from 'react';
 import { tracksData } from '../data/organization';
 import { Task } from '../interfaces/Organization';
 import { useDeviceMode } from '../contexts/DeviceModeContext';
+import { fetchRemoteTasks } from '../lib/supabase';
 
 export default function OrganizationChart() {
     const { isMobileMode } = useDeviceMode();
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Load tasks from localStorage
     useEffect(() => {
-        const savedTasks = localStorage.getItem('tf_tasks');
-        if (savedTasks) {
-            setTasks(JSON.parse(savedTasks));
-        }
+        const loadRemoteTasks = async () => {
+            const remoteTasks = await fetchRemoteTasks();
+            setTasks(remoteTasks);
+            setIsLoading(false);
+        };
+        loadRemoteTasks();
+
+        // 데이터 실시간 새로고침 간격 (선택사항)
+        const interval = setInterval(loadRemoteTasks, 30000);
+        return () => clearInterval(interval);
     }, []);
 
     // Get active tasks for a specific member

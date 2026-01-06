@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Task } from '../interfaces/Organization';
 import { tracksData, allMembers } from '../data/organization';
+import { Task } from '../interfaces/Organization';
+import { fetchRemoteTasks, syncTask, deleteRemoteTask } from '../lib/supabase';
 
 export default function TaskAssignment() {
     const [directive, setDirective] = useState('');
     const [tasks, setTasks] = useState<Task[]>([]);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [selectedTrack, setSelectedTrack] = useState<string>('all');
     const [selectedMember, setSelectedMember] = useState<string>('');
     const [manualTask, setManualTask] = useState({
@@ -15,29 +17,34 @@ export default function TaskAssignment() {
         dueDate: ''
     });
 
-    // 로컬 스토리지에서 데이터 불러오기
+    // 데이터 로드 (Remote DB 우선)
     useEffect(() => {
-        const savedTasks = localStorage.getItem('tf_tasks');
-        const savedDirective = localStorage.getItem('tf_directive');
-
-        if (savedTasks) {
-            try {
-                setTasks(JSON.parse(savedTasks));
-            } catch (e) {
-                console.error('Failed to parse saved tasks', e);
+        const loadInitialData = async () => {
+            setIsLoading(true);
+            const remoteTasks = await fetchRemoteTasks();
+            if (remoteTasks.length > 0) {
+                setTasks(remoteTasks);
+            } else {
+                const savedTasks = localStorage.getItem('tf_tasks');
+                if (savedTasks) {
+                    try {
+                        setTasks(JSON.parse(savedTasks));
+                    } catch (e) {
+                        console.error('Failed to parse saved tasks', e);
+                    }
+                }
             }
-        }
 
-        if (savedDirective) {
-            setDirective(savedDirective);
-        }
+            const savedDirective = localStorage.getItem('tf_directive');
+            if (savedDirective) {
+                setDirective(savedDirective);
+            }
+            setIsLoading(false);
+        };
+        loadInitialData();
     }, []);
 
-    // 데이터가 변경될 때마다 로컬 스토리지에 저장
-    useEffect(() => {
-        localStorage.setItem('tf_tasks', JSON.stringify(tasks));
-    }, [tasks]);
-
+    // 지침 변경 시 로컬 저장
     useEffect(() => {
         localStorage.setItem('tf_directive', directive);
     }, [directive]);
@@ -49,12 +56,13 @@ export default function TaskAssignment() {
         setIsGenerating(true);
 
         // 시뮬레이션: 실제로는 AI API 호출
-        setTimeout(() => {
+        setTimeout(async () => {
             const autoTasks: Task[] = [];
+            const timestamp = Date.now();
 
-            // 시공 트랙 업무
+            // 시공 트랙
             autoTasks.push({
-                id: `task-${Date.now()}-1`,
+                id: `task-${timestamp}-1`,
                 title: '스마트 시공 기술 도입 계획 수립',
                 description: '디지털 트윈 및 BIM 기반 시공 관리 시스템 도입 로드맵 작성',
                 assignedTo: 'yoo-byung-ki',
@@ -65,9 +73,9 @@ export default function TaskAssignment() {
                 createdAt: new Date().toISOString()
             });
 
-            // 원가 트랙 업무
+            // 원가 트랙
             autoTasks.push({
-                id: `task-${Date.now()}-2`,
+                id: `task-${timestamp}-2`,
                 title: 'AI 기반 원가 절감 방안 분석',
                 description: '프리캐스트 콘크리트 적용 시 원가 절감 효과 분석 및 보고서 작성',
                 assignedTo: 'hwang-se-won',
@@ -78,9 +86,9 @@ export default function TaskAssignment() {
                 createdAt: new Date().toISOString()
             });
 
-            // 안전 트랙 업무
+            // 안전 트랙
             autoTasks.push({
-                id: `task-${Date.now()}-3`,
+                id: `task-${timestamp}-3`,
                 title: 'AI 안전 관리 시스템 도입 검토',
                 description: '실시간 위험 예측 및 예방 시스템 벤치마킹 및 도입 방안 수립',
                 assignedTo: 'lim-sung-yoon',
@@ -91,52 +99,18 @@ export default function TaskAssignment() {
                 createdAt: new Date().toISOString()
             });
 
-            // 품질 트랙 업무
-            autoTasks.push({
-                id: `task-${Date.now()}-4`,
-                title: '스마트 품질 관리 프로세스 설계',
-                description: 'IoT 센서 기반 자재 품질 실시간 모니터링 체계 구축',
-                assignedTo: 'jung-hee-joong',
-                trackId: 'quality',
-                status: 'pending',
-                priority: 'medium',
-                dueDate: '2026-01-25',
-                createdAt: new Date().toISOString()
-            });
+            // DB에 순차적으로 저장
+            for (const task of autoTasks) {
+                await syncTask(task);
+            }
 
-            // 구매 트랙 업무
-            autoTasks.push({
-                id: `task-${Date.now()}-5`,
-                title: '스마트 건설 자재 공급업체 발굴',
-                description: '첨단 건설 자재 및 장비 공급업체 리스트 작성 및 협력 방안 수립',
-                assignedTo: 'kim-ga-yoon',
-                trackId: 'procurement',
-                status: 'pending',
-                priority: 'medium',
-                dueDate: '2026-01-22',
-                createdAt: new Date().toISOString()
-            });
-
-            // 전산/데이터 트랙 업무
-            autoTasks.push({
-                id: `task-${Date.now()}-6`,
-                title: '건설 데이터 통합 플랫폼 구축',
-                description: '각 트랙의 데이터를 통합 관리할 수 있는 클라우드 기반 시스템 설계',
-                assignedTo: 'chun-ji-yeon',
-                trackId: 'it-data',
-                status: 'pending',
-                priority: 'high',
-                dueDate: '2026-02-01',
-                createdAt: new Date().toISOString()
-            });
-
-            setTasks([...tasks, ...autoTasks]);
+            setTasks(prev => [...prev, ...autoTasks]);
             setIsGenerating(false);
         }, 2000);
     };
 
     // 수동 업무 추가
-    const handleManualAssign = () => {
+    const handleManualAssign = async () => {
         if (!manualTask.title || !selectedMember) return;
 
         const member = allMembers.find(m => m.id === selectedMember);
@@ -154,21 +128,35 @@ export default function TaskAssignment() {
             createdAt: new Date().toISOString()
         };
 
-        setTasks([...tasks, newTask]);
-        setManualTask({ title: '', description: '', priority: 'medium', dueDate: '' });
-        setSelectedMember('');
+        const success = await syncTask(newTask);
+        if (success) {
+            setTasks(prev => [newTask, ...prev]);
+            setManualTask({ title: '', description: '', priority: 'medium', dueDate: '' });
+            setSelectedMember('');
+        } else {
+            alert('DB 동기화에 실패했습니다. 네트워크를 확인해주세요.');
+        }
     };
 
     // 업무 상태 변경
-    const updateTaskStatus = (taskId: string, status: Task['status']) => {
-        setTasks(tasks.map(task =>
-            task.id === taskId ? { ...task, status } : task
-        ));
+    const updateTaskStatus = async (taskId: string, status: Task['status']) => {
+        const taskToUpdate = tasks.find(t => t.id === taskId);
+        if (!taskToUpdate) return;
+
+        const updatedTask = { ...taskToUpdate, status };
+        const success = await syncTask(updatedTask);
+
+        if (success) {
+            setTasks(tasks.map(t => t.id === taskId ? updatedTask : t));
+        }
     };
 
     // 업무 삭제
-    const deleteTask = (taskId: string) => {
-        setTasks(tasks.filter(task => task.id !== taskId));
+    const deleteTask = async (taskId: string) => {
+        const success = await deleteRemoteTask(taskId);
+        if (success) {
+            setTasks(tasks.filter(t => t.id !== taskId));
+        }
     };
 
     const filteredTasks = selectedTrack === 'all'
@@ -193,7 +181,7 @@ export default function TaskAssignment() {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 pb-20">
             {/* 임원 지침 입력 & AI 자동 할당 */}
             <div className="card-glass p-6">
                 <h3 className="text-xl font-bold text-white mb-4 flex items-center">
@@ -211,20 +199,9 @@ export default function TaskAssignment() {
                 <button
                     onClick={handleAutoAssign}
                     disabled={isGenerating || !directive.trim()}
-                    className={`mt-4 w-full py-3 rounded-lg font-semibold transition-all duration-300 ${isGenerating || !directive.trim()
-                        ? 'bg-gray-600 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 hover:scale-105'
-                        } text-white`}
+                    className="mt-4 w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed text-white"
                 >
-                    {isGenerating ? (
-                        <span className="flex items-center justify-center">
-                            <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            AI 업무 할당 중...
-                        </span>
-                    ) : '🤖 AI 자동 업무 할당'}
+                    {isGenerating ? '🤖 AI 업무 할당 중...' : '🤖 AI 자동 업무 할당'}
                 </button>
             </div>
 
@@ -263,7 +240,7 @@ export default function TaskAssignment() {
                             value={manualTask.title}
                             onChange={(e) => setManualTask({ ...manualTask, title: e.target.value })}
                             placeholder="업무 제목을 입력하세요"
-                            className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10 focus:border-primary focus:outline-none"
+                            className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10"
                         />
                     </div>
 
@@ -272,8 +249,7 @@ export default function TaskAssignment() {
                         <textarea
                             value={manualTask.description}
                             onChange={(e) => setManualTask({ ...manualTask, description: e.target.value })}
-                            placeholder="업무 내용을 상세히 입력하세요"
-                            className="w-full h-24 bg-slate-800 text-white rounded-lg p-3 border border-white/10 focus:border-primary focus:outline-none resize-none"
+                            className="w-full h-24 bg-slate-800 text-white rounded-lg p-3 border border-white/10"
                         />
                     </div>
 
@@ -283,21 +259,20 @@ export default function TaskAssignment() {
                             <select
                                 value={manualTask.priority}
                                 onChange={(e) => setManualTask({ ...manualTask, priority: e.target.value as any })}
-                                className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10 focus:border-primary focus:outline-none"
+                                className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10"
                             >
                                 <option value="low">낮음</option>
                                 <option value="medium">중간</option>
                                 <option value="high">높음</option>
                             </select>
                         </div>
-
                         <div>
                             <label className="block text-sm font-medium text-gray-300 mb-2">마감일</label>
                             <input
                                 type="date"
                                 value={manualTask.dueDate}
                                 onChange={(e) => setManualTask({ ...manualTask, dueDate: e.target.value })}
-                                className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10 focus:border-primary focus:outline-none"
+                                className="w-full bg-slate-800 text-white rounded-lg p-3 border border-white/10"
                             />
                         </div>
                     </div>
@@ -305,10 +280,7 @@ export default function TaskAssignment() {
                     <button
                         onClick={handleManualAssign}
                         disabled={!manualTask.title || !selectedMember}
-                        className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${!manualTask.title || !selectedMember
-                            ? 'bg-gray-600 cursor-not-allowed'
-                            : 'bg-gradient-to-r from-accent to-orange-600 hover:shadow-lg hover:shadow-accent/50 hover:scale-105'
-                            } text-white`}
+                        className="w-full py-3 rounded-lg font-semibold bg-gradient-to-r from-accent to-orange-600 text-white disabled:opacity-50"
                     >
                         업무 추가
                     </button>
@@ -320,14 +292,12 @@ export default function TaskAssignment() {
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-xl font-bold text-white flex items-center">
                         <span className="mr-2">📋</span>
-                        업무 현황 ({filteredTasks.length})
+                        업무 현황 ({isLoading ? '...' : filteredTasks.length})
                     </h3>
-
-                    {/* 트랙 필터 */}
                     <select
                         value={selectedTrack}
                         onChange={(e) => setSelectedTrack(e.target.value)}
-                        className="bg-slate-800 text-white rounded-lg px-4 py-2 border border-white/10 focus:border-primary focus:outline-none"
+                        className="bg-slate-800 text-white rounded-lg px-4 py-2 border border-white/10"
                     >
                         <option value="all">전체 트랙</option>
                         {tracksData.map(track => (
@@ -337,52 +307,29 @@ export default function TaskAssignment() {
                 </div>
 
                 <div className="space-y-4">
-                    {filteredTasks.length === 0 ? (
-                        <div className="text-center py-12 text-gray-400">
-                            <p className="text-lg mb-2">할당된 업무가 없습니다</p>
-                            <p className="text-sm">임원 지침을 입력하거나 수동으로 업무를 추가하세요</p>
-                        </div>
+                    {isLoading ? (
+                        <div className="text-center py-10 text-gray-400 animate-pulse">데이터를 불러오는 중...</div>
+                    ) : filteredTasks.length === 0 ? (
+                        <div className="text-center py-12 text-gray-400">할당된 업무가 없습니다</div>
                     ) : (
                         filteredTasks.map(task => {
                             const member = allMembers.find(m => m.id === task.assignedTo);
                             const track = tracksData.find(t => t.id === task.trackId);
-
                             return (
-                                <div key={task.id} className="bg-white/5 p-5 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <div className="flex-grow">
-                                            <h4 className="text-lg font-bold text-white mb-2">{task.title}</h4>
-                                            <p className="text-gray-300 text-sm mb-3">{task.description}</p>
-
-                                            <div className="flex items-center flex-wrap gap-2">
-                                                <span
-                                                    className="px-3 py-1 rounded-full text-xs font-semibold"
-                                                    style={{ backgroundColor: track?.color, color: 'white' }}
-                                                >
-                                                    {track?.name}
-                                                </span>
-                                                <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-gray-300">
-                                                    👤 {member?.name} ({member?.position})
-                                                </span>
-                                                <span className={`px-3 py-1 text-xs rounded-full border ${getPriorityColor(task.priority)}`}>
-                                                    {task.priority === 'high' ? '높음' : task.priority === 'medium' ? '중간' : '낮음'}
-                                                </span>
-                                                {task.dueDate && (
-                                                    <span className="px-3 py-1 text-xs rounded-full bg-white/10 text-gray-300">
-                                                        📅 {new Date(task.dueDate).toLocaleDateString('ko-KR')}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
+                                <div key={task.id} className="bg-white/5 p-5 rounded-lg border border-white/10 transition-all">
+                                    <h4 className="text-lg font-bold text-white mb-2">{task.title}</h4>
+                                    <p className="text-gray-300 text-sm mb-3">{task.description}</p>
+                                    <div className="flex flex-wrap gap-2 text-xs">
+                                        <span className="px-3 py-1 rounded-full text-white" style={{ backgroundColor: track?.color }}>{track?.name}</span>
+                                        <span className="px-3 py-1 rounded-full bg-white/10 text-gray-300">👤 {member?.name}</span>
+                                        <span className={`px-3 py-1 rounded-full border ${getPriorityColor(task.priority)}`}>{task.priority}</span>
                                     </div>
-
-                                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
-                                        <div className="flex items-center space-x-2">
-                                            <span className="text-sm text-gray-400">상태:</span>
+                                    <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
                                             <select
                                                 value={task.status}
                                                 onChange={(e) => updateTaskStatus(task.id, e.target.value as any)}
-                                                className="bg-slate-800 text-white text-sm rounded px-3 py-1 border border-white/10 focus:border-primary focus:outline-none"
+                                                className="bg-slate-800 text-white text-xs rounded px-2 py-1"
                                             >
                                                 <option value="pending">대기</option>
                                                 <option value="in-progress">진행중</option>
@@ -390,13 +337,7 @@ export default function TaskAssignment() {
                                             </select>
                                             <div className={`w-2 h-2 rounded-full ${getStatusColor(task.status)}`}></div>
                                         </div>
-
-                                        <button
-                                            onClick={() => deleteTask(task.id)}
-                                            className="text-red-400 hover:text-red-300 text-sm transition-colors"
-                                        >
-                                            🗑️ 삭제
-                                        </button>
+                                        <button onClick={() => deleteTask(task.id)} className="text-red-400 hover:text-red-300 text-sm">🗑️ 삭제</button>
                                     </div>
                                 </div>
                             );

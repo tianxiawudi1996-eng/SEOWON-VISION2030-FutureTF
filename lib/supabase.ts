@@ -83,3 +83,89 @@ export const getAllRemotePasswords = async () => {
         return {};
     }
 };
+
+// --- 업무 (Task) 관련 함수 ---
+export const syncTask = async (task: any) => {
+    if (!supabase) return false;
+    try {
+        const { error } = await supabase
+            .from('tf_tasks')
+            .upsert({
+                id: task.id,
+                user_id: task.assignedTo, // assignedTo -> user_id
+                title: task.title,
+                content: task.description, // description -> content
+                priority: task.priority,
+                status: task.status,
+                track_id: task.trackId, // trackId -> track_id
+                due_date: task.dueDate, // dueDate -> due_date
+                created_at: task.createdAt
+            }, { onConflict: 'id' });
+
+        if (error) throw error;
+        return true;
+    } catch (e) {
+        console.error('업무 동기화 실패:', e);
+        return false;
+    }
+};
+
+export const fetchRemoteTasks = async () => {
+    if (!supabase) return [];
+    try {
+        const { data, error } = await supabase
+            .from('tf_tasks')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data.map((t: any) => ({
+            id: t.id,
+            assignedTo: t.user_id,
+            title: t.title,
+            description: t.content,
+            priority: t.priority,
+            status: t.status,
+            trackId: t.track_id,
+            dueDate: t.due_date,
+            createdAt: t.created_at
+        }));
+    } catch (e) {
+        console.error('업무 로드 실패:', e);
+        return [];
+    }
+};
+
+export const deleteRemoteTask = async (taskId: string) => {
+    if (!supabase) return false;
+    try {
+        const { error } = await supabase.from('tf_tasks').delete().eq('id', taskId);
+        return !error;
+    } catch (e) {
+        console.error('업무 삭제 실패:', e);
+        return false;
+    }
+};
+
+// --- 파일 저장 (Storage) 관련 함수 ---
+export const uploadFile = async (file: File) => {
+    if (!supabase) return null;
+    try {
+        const fileName = `${Date.now()}_${file.name}`;
+        const { data, error } = await supabase.storage
+            .from('tf_files')
+            .upload(fileName, file);
+
+        if (error) throw error;
+
+        const { data: { publicUrl } } = supabase.storage
+            .from('tf_files')
+            .getPublicUrl(fileName);
+
+        return publicUrl;
+    } catch (e) {
+        console.error('파일 업로드 실패:', e);
+        return null;
+    }
+};
+
