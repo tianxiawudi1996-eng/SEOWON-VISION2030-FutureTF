@@ -30,9 +30,28 @@ export default function OrganizationChart() {
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-8 border border-white/10">
                 {/* 총괄 책임임원 */}
                 <div className="flex justify-center mb-8">
-                    <div className="bg-gradient-to-r from-purple-600 to-purple-800 px-10 py-5 rounded-xl shadow-2xl border-2 border-purple-400">
-                        <div className="text-white font-bold text-xl">이강범 전무</div>
-                        <div className="text-purple-100 text-sm mt-1">총괄 책임임원</div>
+                    <div className="bg-gradient-to-r from-purple-600 to-purple-800 px-10 py-5 rounded-xl shadow-2xl border-2 border-purple-400 min-w-[250px]">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <div className="text-white font-bold text-xl">이강범 전무</div>
+                                <div className="text-purple-100 text-sm mt-1">총괄 책임임원</div>
+                            </div>
+                            {getMemberTasks('executive-lee-kang-beom').length > 0 && (
+                                <div className="bg-white/20 text-white text-xs px-2 py-1 rounded-full font-semibold border border-white/30">
+                                    {getMemberTasks('executive-lee-kang-beom').length}
+                                </div>
+                            )}
+                        </div>
+                        {getMemberTasks('executive-lee-kang-beom').length > 0 && (
+                            <div className="mt-3 pt-3 border-t border-purple-400/30 space-y-1">
+                                {getMemberTasks('executive-lee-kang-beom').map(task => (
+                                    <div key={task.id} className="text-xs text-purple-100 flex items-center space-x-2">
+                                        <span className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-400' : task.priority === 'medium' ? 'bg-yellow-400' : 'bg-green-400'}`}></span>
+                                        <span className="truncate">{task.title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -43,8 +62,28 @@ export default function OrganizationChart() {
 
                 {/* 팀장 */}
                 <div className="flex justify-center mb-8">
-                    <div className="bg-gradient-to-r from-primary to-secondary px-8 py-4 rounded-xl shadow-lg">
-                        <div className="text-white font-bold text-lg">김무빈 팀장</div>
+                    <div className="bg-gradient-to-r from-primary to-secondary px-8 py-4 rounded-xl shadow-lg min-w-[220px]">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <div className="text-white font-bold text-lg">김무빈 팀장</div>
+                                <div className="text-blue-100 text-xs mt-1">기획/총괄</div>
+                            </div>
+                            {getMemberTasks('kim-mu-bin').length > 0 && (
+                                <div className="bg-white/20 text-white text-xs px-2 py-1 rounded-full font-semibold border border-white/30">
+                                    {getMemberTasks('kim-mu-bin').length}
+                                </div>
+                            )}
+                        </div>
+                        {getMemberTasks('kim-mu-bin').length > 0 && (
+                            <div className="mt-2 pt-2 border-t border-white/20 space-y-1">
+                                {getMemberTasks('kim-mu-bin').map(task => (
+                                    <div key={task.id} className="text-xs flex items-center space-x-2 text-blue-50">
+                                        <span className={`w-2 h-2 rounded-full ${task.priority === 'high' ? 'bg-red-400' : task.priority === 'medium' ? 'bg-yellow-400' : 'bg-green-400'}`}></span>
+                                        <span className="truncate opacity-90">{task.title}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -55,7 +94,7 @@ export default function OrganizationChart() {
 
                 {/* Tracks grid */}
                 <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6"}>
-                    {tracksData.filter(t => t.id !== 'management').map((track) => (
+                    {tracksData.filter(t => t.id !== 'management' && t.id !== 'executive').map((track) => (
                         <div key={track.id} className="relative">
                             {/* Track header */}
                             <div

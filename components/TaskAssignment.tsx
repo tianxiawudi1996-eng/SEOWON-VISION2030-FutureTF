@@ -17,8 +17,8 @@ export default function TaskAssignment() {
 
     // 로컬 스토리지에서 데이터 불러오기
     useEffect(() => {
-        const savedTasks = localStorage.getItem('tf-tasks');
-        const savedDirective = localStorage.getItem('tf-directive');
+        const savedTasks = localStorage.getItem('tf_tasks');
+        const savedDirective = localStorage.getItem('tf_directive');
 
         if (savedTasks) {
             try {
@@ -35,11 +35,11 @@ export default function TaskAssignment() {
 
     // 데이터가 변경될 때마다 로컬 스토리지에 저장
     useEffect(() => {
-        localStorage.setItem('tf-tasks', JSON.stringify(tasks));
+        localStorage.setItem('tf_tasks', JSON.stringify(tasks));
     }, [tasks]);
 
     useEffect(() => {
-        localStorage.setItem('tf-directive', directive);
+        localStorage.setItem('tf_directive', directive);
     }, [directive]);
 
     // AI 기반 자동 업무 할당

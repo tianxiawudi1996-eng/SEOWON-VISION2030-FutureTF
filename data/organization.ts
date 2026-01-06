@@ -2,6 +2,26 @@ import { Track, TeamMember } from '../interfaces/Organization';
 
 export const tracksData: Track[] = [
     {
+        id: 'executive',
+        name: '책임임원',
+        color: '#7c3aed',
+        members: [
+            {
+                id: 'executive-lee-kang-beom',
+                name: '이강범',
+                position: '전무 (총괄 책임임원)',
+                track: 'executive',
+                email: 'lkb@seowon.co.kr',
+                responsibilities: ['TF 총괄 지휘', '의사결정 보좌', '경영진 가이드 전달']
+            }
+        ],
+        mainResponsibilities: [
+            '미래전략TF 활동 총괄 지휘 및 의사결정',
+            '대표이사 지침 전달 및 실행 감독',
+            '대내외 주요 안건 협의 및 조정'
+        ]
+    },
+    {
         id: 'management',
         name: '기획/총괄',
         color: '#6366f1',

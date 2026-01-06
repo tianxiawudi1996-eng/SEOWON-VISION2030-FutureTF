@@ -13,6 +13,15 @@ export default function AdminPanel() {
     const [showPassword, setShowPassword] = useState(false);
     const [passwordChanges, setPasswordChanges] = useState<Record<string, any>>({});
 
+    // 데이터 로드 함수
+    const loadPasswordChanges = () => {
+        if (typeof window !== 'undefined') {
+            const changes = JSON.parse(localStorage.getItem('password_changes') || '{}');
+            setPasswordChanges(changes);
+            setUsers([...authorizedUsers]); // 최신 상태로 강제 갱신
+        }
+    };
+
     // 실제 비밀번호 가져오기 (변경된 것 포함)
     const getActualPassword = (userId: string, defaultPassword: string) => {
         return passwordChanges[userId]?.newPassword || defaultPassword;
@@ -25,12 +34,18 @@ export default function AdminPanel() {
             return;
         }
 
-        // 사용자 목록 로드
-        setUsers(authorizedUsers);
+        // 초기 데이터 로드
+        loadPasswordChanges();
 
-        // 비밀번호 변경 기록 로드
-        const changes = JSON.parse(localStorage.getItem('password_changes') || '{}');
-        setPasswordChanges(changes);
+        // 다른 탭에서 변경 시 실시간 반영
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === 'password_changes') {
+                loadPasswordChanges();
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
     }, [user, router]);
 
     const handleResetPassword = (targetUser: User) => {
@@ -44,17 +59,19 @@ export default function AdminPanel() {
             return;
         }
 
-        // 실제로는 백엔드 API를 통해 처리해야 하지만,
-        // 여기서는 localStorage에 변경 기록을 저장
-        const updatedChanges = { ...passwordChanges };
+        // 최신 데이터 다시 읽기 (덮어쓰기 방지)
+        const currentChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+        const updatedChanges = { ...currentChanges };
+
         updatedChanges[selectedUser.id] = {
             newPassword: newPassword,
             changedBy: user?.name,
             changedAt: new Date().toISOString()
         };
+
         localStorage.setItem('password_changes', JSON.stringify(updatedChanges));
 
-        // 상태 업데이트하여 즉시 반영
+        // 상태 업데이트
         setPasswordChanges(updatedChanges);
 
         alert(`${selectedUser.name}님의 비밀번호가 재설정되었습니다.\n새 비밀번호: ${newPassword}`);
@@ -96,8 +113,17 @@ export default function AdminPanel() {
 
                     {/* 사용자 목록 */}
                     <div className="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 overflow-hidden">
-                        <div className="bg-white/5 px-6 py-4 border-b border-white/10">
+                        <div className="bg-white/5 px-6 py-4 border-b border-white/10 flex justify-between items-center">
                             <h2 className="text-xl font-bold text-white">전체 사용자 ({users.length}명)</h2>
+                            <button
+                                onClick={loadPasswordChanges}
+                                className="flex items-center space-x-2 text-sm bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 px-3 py-1.5 rounded-lg transition-colors border border-blue-500/30"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                <span>데이터 동기화</span>
+                            </button>
                         </div>
 
                         <div className="overflow-x-auto">
