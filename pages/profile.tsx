@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '../contexts/AuthContext';
+import { authorizedUsers } from '../data/users';
 
 export default function Profile() {
     const router = useRouter();
@@ -43,9 +44,16 @@ export default function Profile() {
         if (savedUser) {
             const userData = JSON.parse(savedUser);
 
+            // authorizedUsers에서 실제 기본 비밀번호 찾기
+            const actualUser = authorizedUsers.find(u => u.id === userData.id);
+            if (!actualUser) {
+                setError('사용자 정보를 찾을 수 없습니다.');
+                return;
+            }
+
             // 비밀번호 변경 기록 확인
             const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
-            const actualPassword = passwordChanges[userData.id]?.newPassword || user.password;
+            const actualPassword = passwordChanges[userData.id]?.newPassword || actualUser.password;
 
             if (currentPassword !== actualPassword) {
                 setError('현재 비밀번호가 일치하지 않습니다.');
@@ -113,9 +121,9 @@ export default function Profile() {
                             <div className="flex justify-between items-center py-3">
                                 <span className="text-gray-400">역할</span>
                                 <span className={`px-3 py-1 text-sm font-semibold rounded-full ${user.role === 'ceo' ? 'bg-purple-500/20 text-purple-300' :
-                                        user.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
-                                            user.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
-                                                'bg-gray-500/20 text-gray-300'
+                                    user.role === 'executive' ? 'bg-indigo-500/20 text-indigo-300' :
+                                        user.role === 'leader' ? 'bg-blue-500/20 text-blue-300' :
+                                            'bg-gray-500/20 text-gray-300'
                                     }`}>
                                     {user.role === 'ceo' ? 'CEO' :
                                         user.role === 'executive' ? '책임임원' :
