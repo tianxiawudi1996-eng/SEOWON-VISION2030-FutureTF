@@ -2,12 +2,13 @@ import Head from 'next/head';
 import { useState } from 'react';
 import OrganizationChart from '../components/OrganizationChart';
 import TaskAssignment from '../components/TaskAssignment';
+import StrategicPlan from '../components/StrategicPlan';
 import { tracksData } from '../data/organization';
 import { useDeviceMode } from '../contexts/DeviceModeContext';
 
 export default function Organization() {
     const { isMobileMode } = useDeviceMode();
-    const [activeTab, setActiveTab] = useState<'org-chart' | 'tasks' | 'responsibilities'>('org-chart');
+    const [activeTab, setActiveTab] = useState<'strategic-plan' | 'org-chart' | 'tasks' | 'responsibilities'>('strategic-plan');
 
     return (
         <>
@@ -33,6 +34,15 @@ export default function Organization() {
                 <section className="py-8 border-b border-gray-200">
                     <div className="container-minimal">
                         <div className={isMobileMode ? "flex flex-col justify-center space-y-2" : "flex flex-col md:flex-row justify-center space-y-2 md:space-y-0 md:space-x-4"}>
+                            <button
+                                onClick={() => setActiveTab('strategic-plan')}
+                                className={`px-6 py-3 rounded-lg font-semibold transition-all text-sm md:text-base ${activeTab === 'strategic-plan'
+                                    ? 'bg-black text-white'
+                                    : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+                                    }`}
+                            >
+                                전략 계획
+                            </button>
                             <button
                                 onClick={() => setActiveTab('org-chart')}
                                 className={`px-6 py-3 rounded-lg font-semibold transition-all text-sm md:text-base ${activeTab === 'org-chart'
@@ -67,6 +77,11 @@ export default function Organization() {
                 {/* Content */}
                 <section className="section-spacing">
                     <div className="container-minimal">
+                        {activeTab === 'strategic-plan' && (
+                            <div className="animate-fade-in">
+                                <StrategicPlan />
+                            </div>
+                        )}
                         {activeTab === 'org-chart' && (
                             <div className="animate-fade-in">
                                 <OrganizationChart />
@@ -87,10 +102,15 @@ export default function Organization() {
                                                 <h3 className="text-xl font-bold mb-4 text-black">{track.name}</h3>
                                                 <ul className="space-y-2">
                                                     {track.members.map((member, idx) => (
-                                                        <li key={idx} className="flex items-center text-gray-700">
-                                                            <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                                                            <span className="font-medium">{member.name}</span>
-                                                            <span className="ml-2 text-sm text-gray-500">({member.position})</span>
+                                                        <li key={idx} className="flex flex-col text-gray-700">
+                                                            <div className="flex items-center">
+                                                                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                                                                <span className="font-medium">{member.name}</span>
+                                                                <span className="ml-2 text-sm text-gray-500">({member.position})</span>
+                                                            </div>
+                                                            <div className="ml-5 mt-1 text-sm text-gray-500">
+                                                                📋 {member.responsibilities.join(', ')}
+                                                            </div>
                                                         </li>
                                                     ))}
                                                 </ul>

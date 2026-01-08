@@ -41,7 +41,8 @@ export default function OrganizationChart() {
                         <div className="flex justify-between items-start">
                             <div>
                                 <div className="text-white font-bold text-xl">이강범 전무</div>
-                                <div className="text-purple-100 text-sm mt-1">총괄 책임임원</div>
+                                <div className="text-purple-100 text-sm mt-1">총괄</div>
+                                <div className="text-purple-200 text-xs mt-2 opacity-80">📋 총괄</div>
                             </div>
                             {getMemberTasks('executive-lee-kang-beom').length > 0 && (
                                 <div className="bg-white/20 text-white text-xs px-2 py-1 rounded-full font-semibold border border-white/30">
@@ -73,7 +74,8 @@ export default function OrganizationChart() {
                         <div className="flex justify-between items-start">
                             <div>
                                 <div className="text-white font-bold text-lg">김무빈 팀장</div>
-                                <div className="text-blue-100 text-xs mt-1">기획/총괄</div>
+                                <div className="text-blue-100 text-xs mt-1">팀장</div>
+                                <div className="text-blue-200 text-xs mt-2 opacity-80">📋 기획, 추진, 제안</div>
                             </div>
                             {getMemberTasks('kim-mu-bin').length > 0 && (
                                 <div className="bg-white/20 text-white text-xs px-2 py-1 rounded-full font-semibold border border-white/30">
@@ -121,7 +123,7 @@ export default function OrganizationChart() {
                                                 key={member.id}
                                                 className="bg-slate-800/50 p-3 rounded-lg hover:bg-slate-700/50 transition-all duration-300 border border-white/5"
                                             >
-                                                <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center justify-between mb-1">
                                                     <div>
                                                         <div className="text-white font-semibold">{member.name}</div>
                                                         <div className="text-gray-400 text-sm">{member.position}</div>
@@ -138,6 +140,11 @@ export default function OrganizationChart() {
                                                             style={{ backgroundColor: track.color }}
                                                         ></div>
                                                     </div>
+                                                </div>
+
+                                                {/* 상세업무 표시 */}
+                                                <div className="text-xs text-gray-300 mt-2 bg-slate-900/50 px-2 py-1.5 rounded">
+                                                    📋 {member.responsibilities.join(', ')}
                                                 </div>
 
                                                 {/* Task list */}

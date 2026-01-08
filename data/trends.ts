@@ -1,5 +1,61 @@
 import { Trend } from '../interfaces/Trend';
 
+// 이강범 전무님 지침 - 2026년 미래전략 TF 상세계획
+export const tfStrategicPlan = {
+    title: '미래전략 TF 상세계획순서',
+    updatedAt: '2026-01-07',
+    phases: [
+        {
+            order: 1,
+            title: '영상기반 AI 안전, 품질관리 플랫폼',
+            description: '모바일, siis통합관리',
+            priority: 'high',
+            status: 'planning'
+        },
+        {
+            order: 2,
+            title: '품질 원가 관리시 5D BIM 검토',
+            description: '관리 부서 창설 가능여부, 플랫폼 연동. 최근 원청사는 5D BIM이 표준 기술로 자리잡았으며, 6D(지속가능성), 7D(시설관리)까지 개발중',
+            priority: 'high',
+            status: 'planning'
+        },
+        {
+            order: 3,
+            title: '로봇 개발 및 임대',
+            description: '특허 확보, 개발 가능한 재원 및 영역 검토, 현장 적용 가능 로봇 서치. 참고: 로봇산업협회 https://www.racp.or.kr/kr/',
+            priority: 'medium',
+            status: 'research'
+        },
+        {
+            order: 4,
+            title: '디지털 트윈 플랫폼 완성',
+            description: '1, 2, 3을 통한 디지털 트윈 플랫폼 완성 (10년 장기 계획)',
+            priority: 'medium',
+            status: 'long-term'
+        }
+    ],
+    executionPlan: {
+        title: '전반기 실행 계획',
+        steps: [
+            {
+                phase: '1차',
+                title: '성균관대 MOU 체결',
+                tasks: ['성균관대 미팅', '적용가능 현장 및 적용 방법 협의', '지출금액 등 협의']
+            },
+            {
+                phase: '2차',
+                title: '현장 시연 및 검증',
+                tasks: ['적용 현장 시연', '검증', '데이터 입력 및 수집 지원']
+            },
+            {
+                phase: '3차',
+                title: '박람회 참관 및 하반기 계획',
+                tasks: ['박람회 참관', '보고서 작성', '하반기 미팅']
+            }
+        ]
+    }
+};
+
 export const trendsData: Trend[] = [
     {
         id: 'osc-modular',

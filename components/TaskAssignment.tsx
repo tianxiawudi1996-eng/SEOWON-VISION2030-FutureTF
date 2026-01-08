@@ -49,53 +49,118 @@ export default function TaskAssignment() {
         localStorage.setItem('tf_directive', directive);
     }, [directive]);
 
-    // AI 기반 자동 업무 할당
+    // AI 기반 자동 업무 할당 (전반기 실행 계획 기반)
     const handleAutoAssign = async () => {
         if (!directive.trim()) return;
 
         setIsGenerating(true);
 
-        // 시뮬레이션: 실제로는 AI API 호출
+        // 전반기 실행 계획에 맞는 태스크 자동 생성
         setTimeout(async () => {
             const autoTasks: Task[] = [];
             const timestamp = Date.now();
 
-            // 시공 트랙
+            // 1차: 성균관대 MOU 체결 관련 태스크
             autoTasks.push({
                 id: `task-${timestamp}-1`,
-                title: '스마트 시공 기술 도입 계획 수립',
-                description: '디지털 트윈 및 BIM 기반 시공 관리 시스템 도입 로드맵 작성',
-                assignedTo: 'yoo-byung-ki',
-                trackId: 'construction',
+                title: '[1차] 성균관대 MOU 체결 준비',
+                description: '성균관대 미팅 일정 조율, 적용가능 현장 및 적용 방법 협의, 지출금액 등 협의',
+                assignedTo: 'kim-mu-bin',
+                trackId: 'management',
                 status: 'pending',
                 priority: 'high',
-                dueDate: '2026-01-15',
+                dueDate: '2026-01-31',
                 createdAt: new Date().toISOString()
             });
 
-            // 원가 트랙
+            // 1차: 영상기반 AI 안전/품질관리 플랫폼 검토
             autoTasks.push({
                 id: `task-${timestamp}-2`,
-                title: 'AI 기반 원가 절감 방안 분석',
-                description: '프리캐스트 콘크리트 적용 시 원가 절감 효과 분석 및 보고서 작성',
-                assignedTo: 'hwang-se-won',
-                trackId: 'cost',
-                status: 'pending',
-                priority: 'high',
-                dueDate: '2026-01-20',
-                createdAt: new Date().toISOString()
-            });
-
-            // 안전 트랙
-            autoTasks.push({
-                id: `task-${timestamp}-3`,
-                title: 'AI 안전 관리 시스템 도입 검토',
-                description: '실시간 위험 예측 및 예방 시스템 벤치마킹 및 도입 방안 수립',
+                title: '[1차] 영상기반 AI 안전/품질관리 플랫폼 검토',
+                description: '모바일, siis통합관리 플랫폼 도입 가능성 검토 및 보고서 작성',
                 assignedTo: 'lim-sung-yoon',
                 trackId: 'safety',
                 status: 'pending',
                 priority: 'high',
-                dueDate: '2026-01-18',
+                dueDate: '2026-01-25',
+                createdAt: new Date().toISOString()
+            });
+
+            // 2차: 적용 현장 시연 준비
+            autoTasks.push({
+                id: `task-${timestamp}-3`,
+                title: '[2차] 적용 현장 시연 준비',
+                description: '적용 현장 선정, 시연 일정 수립, 검증 계획 수립',
+                assignedTo: 'yoo-byung-ki',
+                trackId: 'construction',
+                status: 'pending',
+                priority: 'high',
+                dueDate: '2026-02-28',
+                createdAt: new Date().toISOString()
+            });
+
+            // 2차: 데이터 입력 및 수집 지원
+            autoTasks.push({
+                id: `task-${timestamp}-4`,
+                title: '[2차] 데이터 입력 및 수집 지원',
+                description: '공사 데이터 입력 및 발취, 검증 데이터 수집',
+                assignedTo: 'um-tae-hyun',
+                trackId: 'engineering',
+                status: 'pending',
+                priority: 'medium',
+                dueDate: '2026-02-28',
+                createdAt: new Date().toISOString()
+            });
+
+            // 3차: 박람회 참관 계획
+            autoTasks.push({
+                id: `task-${timestamp}-5`,
+                title: '[3차] 박람회 참관 및 보고서 작성',
+                description: '로봇 관련 박람회 참관, 활성미장/먹통 자동화 로봇 개발 가능여부 판단, 보고서 작성',
+                assignedTo: 'hwang-se-won',
+                trackId: 'admin',
+                status: 'pending',
+                priority: 'medium',
+                dueDate: '2026-03-31',
+                createdAt: new Date().toISOString()
+            });
+
+            // 5D BIM 검토 태스크
+            autoTasks.push({
+                id: `task-${timestamp}-6`,
+                title: '5D BIM 검토 및 관리 부서 창설 가능여부 분석',
+                description: '5D BIM 표준 기술 검토, 6D(지속가능성), 7D(시설관리) 개발 현황 파악, 플랫폼 연동 방안 수립',
+                assignedTo: 'sim-wan-su',
+                trackId: 'engineering',
+                status: 'pending',
+                priority: 'high',
+                dueDate: '2026-02-15',
+                createdAt: new Date().toISOString()
+            });
+
+            // 로봇 개발 검토 태스크
+            autoTasks.push({
+                id: `task-${timestamp}-7`,
+                title: '로봇 개발 및 임대 사업 검토',
+                description: '특허 확보 방안 검토, 개발 가능한 재원 및 영역 검토, 현장 적용 가능 로봇 서치 (참고: 로봇산업협회)',
+                assignedTo: 'kim-ga-yoon',
+                trackId: 'support',
+                status: 'pending',
+                priority: 'medium',
+                dueDate: '2026-03-15',
+                createdAt: new Date().toISOString()
+            });
+
+            // 전산/데이터 관리 태스크
+            autoTasks.push({
+                id: `task-${timestamp}-8`,
+                title: '디지털 트윈 BIM 연동 모듈 가능성 검토',
+                description: '디지털 트윈 BIM 연동 모듈 가능성 및 가능시점, 재원 마련 여부 검토',
+                assignedTo: 'chun-ji-yeon',
+                trackId: 'support',
+                status: 'pending',
+                priority: 'medium',
+                dueDate: '2026-03-31',
                 createdAt: new Date().toISOString()
             });
 

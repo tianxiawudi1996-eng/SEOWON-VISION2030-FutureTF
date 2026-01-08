@@ -3,27 +3,23 @@ import { Track, TeamMember } from '../interfaces/Organization';
 export const tracksData: Track[] = [
     {
         id: 'executive',
-        name: '책임임원',
+        name: '총괄',
         color: '#7c3aed',
         members: [
             {
                 id: 'executive-lee-kang-beom',
                 name: '이강범',
-                position: '전무 (총괄 책임임원)',
+                position: '전무',
                 track: 'executive',
                 email: 'lkb@seowon.co.kr',
-                responsibilities: ['TF 총괄 지휘', '의사결정 보좌', '경영진 가이드 전달']
+                responsibilities: ['총괄']
             }
         ],
-        mainResponsibilities: [
-            '미래전략TF 활동 총괄 지휘 및 의사결정',
-            '대표이사 지침 전달 및 실행 감독',
-            '대내외 주요 안건 협의 및 조정'
-        ]
+        mainResponsibilities: ['미래전략TF 활동 총괄 지휘 및 의사결정']
     },
     {
         id: 'management',
-        name: '기획/총괄',
+        name: '팀장',
         color: '#6366f1',
         members: [
             {
@@ -32,18 +28,14 @@ export const tracksData: Track[] = [
                 position: '팀장',
                 track: 'management',
                 email: 'kmb@seowon.co.kr',
-                responsibilities: ['TF 총괄 관리', '임원 지침 이행', '트랙 간 조율']
+                responsibilities: ['기획', '추진', '제안']
             }
         ],
-        mainResponsibilities: [
-            '미래전략TF 실무 총괄 및 프로젝트 일정 관리',
-            '임원 지침 구체화 및 박승희교수 연구팀 기술 협력 조율',
-            '이슈 해결 및 트랙 간 협업 조율'
-        ]
+        mainResponsibilities: ['TF 기획, 추진, 제안 업무 총괄']
     },
     {
         id: 'construction',
-        name: '시공 트랙',
+        name: '공사',
         color: '#1a56db',
         members: [
             {
@@ -52,7 +44,7 @@ export const tracksData: Track[] = [
                 position: '이사',
                 track: 'construction',
                 email: 'ybk@seowon.co.kr',
-                responsibilities: ['시공 계획 총괄', '현장 관리 감독', '품질 확보']
+                responsibilities: ['공사 관리 검증', '제안']
             },
             {
                 id: 'song-kyu-nam',
@@ -60,84 +52,14 @@ export const tracksData: Track[] = [
                 position: '차장',
                 track: 'construction',
                 email: 'skn@seowon.co.kr',
-                responsibilities: ['현장 인력 관리', '공정 관리', '안전 규정 이행']
+                responsibilities: ['공사 관리 검증', '제안']
             }
         ],
-        mainResponsibilities: [
-            '시공 계획 수립 및 현장 인력/장비 관리',
-            '공정 준수 및 시공 품질 확보',
-            '관련 법규 및 안전 규정 이행',
-            '현장에서 발생하는 문제 해결 및 조율'
-        ]
-    },
-    {
-        id: 'cost',
-        name: '원가 트랙',
-        color: '#0e7490',
-        members: [
-            {
-                id: 'hwang-se-won',
-                name: '황세원',
-                position: '차장',
-                track: 'cost',
-                email: 'hsw@seowon.co.kr',
-                responsibilities: ['예산 수립 및 관리', '원가 분석', '비용 통제']
-            },
-            {
-                id: 'um-tae-hyun',
-                name: '엄태현',
-                position: '과장',
-                track: 'cost',
-                email: 'uth@seowon.co.kr',
-                responsibilities: ['비용 예측', '재무 위험 관리', '원가 절감']
-            },
-            {
-                id: 'sim-wan-su',
-                name: '심완수',
-                position: '과장',
-                track: 'cost',
-                email: 'sws@seowon.co.kr',
-                responsibilities: ['변경 비용 분석', '예산 조정', '원가 보고']
-            }
-        ],
-        mainResponsibilities: [
-            '예산 수립, 관리, 비용 예측 및 분석',
-            '원가 절감 기회 식별 및 재무 위험 관리',
-            '변경 사항 발생 시 비용 영향 분석 및 조정'
-        ]
-    },
-    {
-        id: 'safety',
-        name: '안전 트랙',
-        color: '#dc2626',
-        members: [
-            {
-                id: 'lim-sung-yoon',
-                name: '임성윤',
-                position: '차장',
-                track: 'safety',
-                email: 'lsy@seowon.co.kr',
-                responsibilities: ['안전 정책 수립', '현장 안전 점검', '사고 예방']
-            },
-            {
-                id: 'lee-sang-hun',
-                name: '이상헌',
-                position: '대리',
-                track: 'safety',
-                email: 'lsh@seowon.co.kr',
-                responsibilities: ['안전 교육', '비상 대응', '안전 감사']
-            }
-        ],
-        mainResponsibilities: [
-            '안전 정책 및 절차 개발과 이행',
-            '현장 안전 점검/감사 및 안전 교육/훈련 제공',
-            '사고 예방 및 비상 대응 계획 수립',
-            '사고 발생 시 원인 조사 및 재발 방지 대책 수립'
-        ]
+        mainResponsibilities: ['공사 관리 검증 및 제안']
     },
     {
         id: 'quality',
-        name: '품질 트랙',
+        name: '품질',
         color: '#16a34a',
         members: [
             {
@@ -146,19 +68,70 @@ export const tracksData: Track[] = [
                 position: '부장',
                 track: 'quality',
                 email: 'jhj@seowon.co.kr',
-                responsibilities: ['품질 관리 총괄', '품질 검사', '표준 준수']
+                responsibilities: ['공사 품질 관리 검증']
             }
         ],
-        mainResponsibilities: [
-            '품질 관리 계획 수립 및 실행',
-            '자재 및 작업 결과물에 대한 품질 검사 및 테스트',
-            '품질 부적합 사항 문서화 및 시정 조치 요구',
-            '관련 표준 및 규정 준수 여부 확인'
-        ]
+        mainResponsibilities: ['공사 품질 관리 검증']
+    },
+    {
+        id: 'safety',
+        name: '안전',
+        color: '#dc2626',
+        members: [
+            {
+                id: 'lim-sung-yoon',
+                name: '임성윤',
+                position: '차장',
+                track: 'safety',
+                email: 'lsy@seowon.co.kr',
+                responsibilities: ['안전 관리 검증(시연)', '제안']
+            },
+            {
+                id: 'lee-sang-hyun',
+                name: '이상현',
+                position: '대리',
+                track: 'safety',
+                email: 'lsh@seowon.co.kr',
+                responsibilities: ['안전 관리 검증(시연)', '제안']
+            }
+        ],
+        mainResponsibilities: ['안전 관리 검증(시연) 및 제안']
+    },
+    {
+        id: 'engineering',
+        name: '공무',
+        color: '#0e7490',
+        members: [
+            {
+                id: 'um-tae-hyun',
+                name: '엄태현',
+                position: '과장',
+                track: 'engineering',
+                email: 'uth@seowon.co.kr',
+                responsibilities: ['공사 데이터 입력 및 발취']
+            },
+            {
+                id: 'sim-wan-su',
+                name: '심완수',
+                position: '과장',
+                track: 'engineering',
+                email: 'sws@seowon.co.kr',
+                responsibilities: ['공사 데이터 입력 및 발취']
+            },
+            {
+                id: 'hwang-se-won',
+                name: '황세원',
+                position: '차장 (총무)',
+                track: 'engineering',
+                email: 'hsw@seowon.co.kr',
+                responsibilities: ['공지', '공유', '미팅일정', '출장기획']
+            }
+        ],
+        mainResponsibilities: ['공사 데이터 입력 및 발취', '공지/공유/미팅일정/출장기획']
     },
     {
         id: 'procurement',
-        name: '구매 트랙',
+        name: '구매',
         color: '#f59e0b',
         members: [
             {
@@ -167,19 +140,14 @@ export const tracksData: Track[] = [
                 position: '과장',
                 track: 'procurement',
                 email: 'kgy@seowon.co.kr',
-                responsibilities: ['조달 전략', '공급업체 선정', '계약 관리']
+                responsibilities: ['해당 업무 데이터 수집 및 총무지원']
             }
         ],
-        mainResponsibilities: [
-            '조달 전략 수립, 실행 및 공급망 관리',
-            '공급업체 선정 및 계약 협상',
-            '자재/서비스의 품질 및 비용 효율성 평가',
-            '적시 납품 관리, 계약 및 변경 주문 관리'
-        ]
+        mainResponsibilities: ['해당 업무 데이터 수집 및 총무지원']
     },
     {
         id: 'it-data',
-        name: '전산/데이터 트랙',
+        name: '전산',
         color: '#8b5cf6',
         members: [
             {
@@ -188,18 +156,24 @@ export const tracksData: Track[] = [
                 position: '대리',
                 track: 'it-data',
                 email: 'cjy@seowon.co.kr',
-                responsibilities: ['데이터 관리', 'IT 인프라', '시스템 구현']
+                responsibilities: ['해당 업무 데이터 수집 및 총무지원']
             }
         ],
-        mainResponsibilities: [
-            '데이터 관리 역할 및 프로세스 확립',
-            '건설 데이터 수집, 저장, 조직화',
-            '클라우드 기반 플랫폼/시스템 구현',
-            '데이터 정확성/적시성 확보, 통합 및 분석',
-            '데이터 보안 조치 및 규정 준수'
-        ]
+        mainResponsibilities: ['해당 업무 데이터 수집 및 총무지원']
     }
 ];
 
 // 모든 팀원 목록
 export const allMembers: TeamMember[] = tracksData.flatMap(track => track.members);
+
+// 결의 순서 (개발 방향에 따른 품의(제안) 및 결의 순서)
+export const approvalFlow = {
+    description: '개발 방향에 따른 품의(제안) 및 결의 순서(지출포함)',
+    steps: [
+        { order: 1, role: '대표', name: '대표이사' },
+        { order: 2, role: '총괄', name: '이강범 전무' },
+        { order: 3, role: '팀장', name: '김무빈 팀장' },
+        { order: 4, role: '총무', name: '황세원 총무' },
+        { order: 5, role: '실행부서', examples: ['안전관련 임성윤차장', '구매관련 김가윤과장', '전산관련 천지연대리'] }
+    ]
+};

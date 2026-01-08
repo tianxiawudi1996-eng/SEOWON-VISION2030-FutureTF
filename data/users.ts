@@ -32,7 +32,7 @@ export const authorizedUsers: User[] = [
     {
         id: 'kim-mu-bin',
         username: 'kmb',
-        password: 'seowon2026',
+        password: 'woaini96!!',
         name: '김무빈',
         position: '팀장',
         track: 'management',

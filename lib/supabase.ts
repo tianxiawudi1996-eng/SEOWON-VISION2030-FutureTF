@@ -169,3 +169,80 @@ export const uploadFile = async (file: File) => {
     }
 };
 
+// --- 전략 계획 관련 함수 ---
+export interface StrategicPlanData {
+    id?: string;
+    type: 'agenda' | 'plan' | 'execution' | 'approval' | 'departments';
+    data: any;
+    updated_at?: string;
+    updated_by?: string;
+}
+
+export const saveStrategicPlan = async (planData: StrategicPlanData) => {
+    // 로컬 스토리지에 저장 (Supabase 테이블 없으면 폴백)
+    const key = `strategic_plan_${planData.type}`;
+    localStorage.setItem(key, JSON.stringify({
+        ...planData,
+        updated_at: new Date().toISOString()
+    }));
+
+    if (!supabase) return true;
+
+    try {
+        const { error } = await supabase
+            .from('tf_strategic_plans')
+            .upsert({
+                id: planData.type,
+                type: planData.type,
+                data: planData.data,
+                updated_at: new Date().toISOString(),
+                updated_by: planData.updated_by || 'unknown'
+            }, { onConflict: 'id' });
+
+        if (error) {
+            console.log('DB 저장 실패, 로컬만 저장:', error.message);
+        }
+        return true;
+    } catch (e) {
+        console.error('전략 계획 저장 실패:', e);
+        return true;
+    }
+};
+
+export const fetchStrategicPlan = async (type: string): Promise<any | null> => {
+    const key = `strategic_plan_${type}`;
+    const localData = localStorage.getItem(key);
+
+    if (!supabase) {
+        return localData ? JSON.parse(localData) : null;
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('tf_strategic_plans')
+            .select('*')
+            .eq('type', type)
+            .maybeSingle();
+
+        if (error || !data) {
+            return localData ? JSON.parse(localData) : null;
+        }
+        return data;
+    } catch (e) {
+        return localData ? JSON.parse(localData) : null;
+    }
+};
+
+export const fetchAllStrategicPlans = async (): Promise<Record<string, any>> => {
+    const types = ['agenda', 'plan', 'execution', 'approval', 'departments'];
+    const result: Record<string, any> = {};
+
+    for (const type of types) {
+        const data = await fetchStrategicPlan(type);
+        if (data?.data) {
+            result[type] = data.data;
+        }
+    }
+
+    return result;
+};
