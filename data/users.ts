@@ -136,8 +136,8 @@ export const authorizedUsers: User[] = [
     }
 ];
 
-// 로그인 검증 함수
-export function validateUser(username: string, password: string): User | null {
+// 로그인 검증 함수 (비동기 - Supabase 동기화 지원)
+export async function validateUser(username: string, password: string): Promise<User | null> {
     // 사용자 찾기
     const user = authorizedUsers.find(u => u.username === username);
 
@@ -145,17 +145,33 @@ export function validateUser(username: string, password: string): User | null {
         return null;
     }
 
-    // localStorage에서 비밀번호 변경 기록 확인
+    // 1. Supabase에서 원격 비밀번호 확인 (크로스 브라우저/기기 동기화)
+    try {
+        const { getRemotePassword } = await import('../lib/supabase');
+        const remotePassword = await getRemotePassword(user.id);
+        if (remotePassword) {
+            // 원격 비밀번호가 있으면 로컬에도 동기화
+            if (typeof window !== 'undefined') {
+                const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+                passwordChanges[user.id] = { newPassword: remotePassword };
+                localStorage.setItem('password_changes', JSON.stringify(passwordChanges));
+            }
+            return password === remotePassword ? user : null;
+        }
+    } catch (e) {
+        console.log('Supabase 연결 실패, 로컬 확인으로 폴백');
+    }
+
+    // 2. 로컬 스토리지에서 비밀번호 변경 기록 확인 (폴백)
     if (typeof window !== 'undefined') {
         const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
         const changedPassword = passwordChanges[user.id]?.newPassword;
 
-        // 변경된 비밀번호가 있으면 그것으로 확인
         if (changedPassword) {
             return password === changedPassword ? user : null;
         }
     }
 
-    // 변경 기록이 없으면 기본 비밀번호로 확인
+    // 3. 변경 기록이 없으면 기본 비밀번호로 확인
     return password === user.password ? user : null;
 }
