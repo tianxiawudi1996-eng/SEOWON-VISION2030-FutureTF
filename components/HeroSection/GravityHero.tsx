@@ -13,6 +13,7 @@ declare global {
 }
 
 export default function GravityHero() {
+    // Vercel Deploy Trigger v2
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const physicsContainerRef = useRef<HTMLDivElement>(null);
     const [threeLoaded, setThreeLoaded] = useState(false);
