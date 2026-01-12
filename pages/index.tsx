@@ -24,6 +24,7 @@ const GravityHero = dynamic(
 
 
 export default function Home() {
+    console.log('[Deploy Check] Version 0.1.1 - Titanium Planet');
     const { isMobileMode } = useDeviceMode();
     const [filter, setFilter] = useState<string>('전체');
 
