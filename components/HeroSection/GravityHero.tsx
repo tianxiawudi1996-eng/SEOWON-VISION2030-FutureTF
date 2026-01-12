@@ -1,46 +1,39 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import * as THREE from 'three';
+import Matter from 'matter-js';
 import { useDeviceMode } from '../../contexts/DeviceModeContext';
 
-declare global {
-    interface Window {
-        Matter: any;
-        THREE: any;
-    }
-}
+// Add type declaration if needed (or rely on @types)
+// declare global { interface Window { THREE: any; Matter: any; } } 
+// -> We don't need window.THREE anymore properly, but some plugins might.
+// But we are using pure modules here.
 
 export default function GravityHero() {
-    // Vercel Deploy Trigger v2
+    // Vercel Deploy Trigger v3
     const canvasContainerRef = useRef<HTMLDivElement>(null);
     const physicsContainerRef = useRef<HTMLDivElement>(null);
-    const [threeLoaded, setThreeLoaded] = useState(false);
-    const [matterLoaded, setMatterLoaded] = useState(false);
+    // No loading states needed anymore
     const initializedRef = useRef(false);
     const { isMobileMode } = useDeviceMode();
 
-    // 라이브러리가 로드되거나 모바일 모드가 변경되면 초기화
+    // 모바일 모드가 변경되면 초기화
     useEffect(() => {
-        if (threeLoaded && matterLoaded) {
-            // Delay initialization slightly to allow CSS transitions to complete
-            const timer = setTimeout(() => {
-                initializedRef.current = false;
-                const isMobile = isMobileMode || window.innerWidth < 768;
-                initThreeJS(isMobile);
-                initPhysics();
-                initializedRef.current = true;
-            }, 500); // 500ms delay for smooth transition
+        // Delay initialization slightly to allow CSS transitions to complete
+        const timer = setTimeout(() => {
+            initializedRef.current = false;
+            const isMobile = isMobileMode || window.innerWidth < 768;
+            initThreeJS(isMobile);
+            initPhysics();
+            initializedRef.current = true;
+        }, 100); // reduced delay as we don't wait for scripts
 
-            return () => clearTimeout(timer);
-        }
-    }, [threeLoaded, matterLoaded, isMobileMode]);
+        return () => clearTimeout(timer);
+    }, [isMobileMode]);
 
     const initThreeJS = (isMobile: boolean) => {
-        const THREE = window.THREE;
-        if (!THREE) return;
-
         const container = canvasContainerRef.current;
         if (!container) return;
 
@@ -490,25 +483,7 @@ export default function GravityHero() {
 
     return (
         <>
-            {/* CDN Scripts - unpkg 사용 (더 안정적) */}
-            <Script
-                src="https://unpkg.com/three@0.160.0/build/three.min.js"
-                strategy="afterInteractive"
-                onLoad={() => {
-                    console.log('[GravityHero] Three.js loaded:', !!window.THREE);
-                    setThreeLoaded(true);
-                }}
-                onError={(e) => console.error('[GravityHero] Three.js load error:', e)}
-            />
-            <Script
-                src="https://unpkg.com/matter-js@0.19.0/build/matter.min.js"
-                strategy="afterInteractive"
-                onLoad={() => {
-                    console.log('[GravityHero] Matter.js loaded:', !!window.Matter);
-                    setMatterLoaded(true);
-                }}
-                onError={(e) => console.error('[GravityHero] Matter.js load error:', e)}
-            />
+            {/* Google Fonts */}
 
             {/* Google Fonts */}
             <link
@@ -521,14 +496,7 @@ export default function GravityHero() {
                 style={{ backgroundColor: '#000' }}
             >
                 {/* Loading State */}
-                {(!threeLoaded || !matterLoaded) && (
-                    <div className="absolute inset-0 flex items-center justify-center z-50">
-                        <div className="text-center">
-                            <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-cyan-400 mb-4"></div>
-                            <p className="text-cyan-400 text-xl font-mono">INITIALIZING GRAVITY PROTOCOL...</p>
-                        </div>
-                    </div>
-                )}
+                {/* Loading State Removed */}
 
                 {/* Background: Three.js */}
                 <div
