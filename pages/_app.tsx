@@ -1,32 +1,68 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
+import React, { useEffect } from 'react';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { DeviceModeProvider, useDeviceMode } from '../contexts/DeviceModeContext';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
     const { isAuthenticated } = useAuth();
     const router = useRouter();
+    const [isLocalDev, setIsLocalDev] = React.useState(false);
+    const [mounted, setMounted] = React.useState(false);
 
     useEffect(() => {
-        // 로그인 페이지가 아니고, 인증되지 않은 경우 로그인 페이지로 리다이렉트
+        // 클라이언트에서만 로컬 환경 체크
+        setMounted(true);
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        setIsLocalDev(isLocal);
+
+        if (isLocal) {
+            console.log('[DEV] Local development - authentication bypassed');
+            return;
+        }
+
+        // 프로덕션에서만 로그인 체크
         if (!isAuthenticated && router.pathname !== '/login') {
             router.push('/login');
         }
     }, [isAuthenticated, router]);
+
+    // 마운트되기 전에는 로딩 표시 (SSR과 일치)
+    if (!mounted) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400 mb-4"></div>
+                    <p className="text-cyan-400 font-mono">LOADING...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // 로컬 개발 환경에서는 인증 없이 바로 통과
+    if (isLocalDev) {
+        return <>{children}</>;
+    }
 
     // 로그인 페이지는 인증 없이 접근 가능
     if (router.pathname === '/login') {
         return <>{children}</>;
     }
 
-    // 인증되지 않은 경우 빈 화면 (리다이렉트 대기)
+    // 인증되지 않은 경우 로딩 표시
     if (!isAuthenticated) {
-        return null;
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-400 mb-4"></div>
+                    <p className="text-cyan-400 font-mono">AUTHENTICATING...</p>
+                </div>
+            </div>
+        );
     }
 
     // 인증된 경우 정상 렌더링

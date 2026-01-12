@@ -4,6 +4,24 @@ import TrendCard from '../components/TrendCard';
 import { trendsData } from '../data/trends';
 import { useState } from 'react';
 import { useDeviceMode } from '../contexts/DeviceModeContext';
+import dynamic from 'next/dynamic';
+
+// Gravity Hero는 클라이언트 사이드에서만 렌더링 (Three.js + Matter.js)
+const GravityHero = dynamic(
+    () => import('../components/HeroSection/GravityHero'),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="w-screen h-screen bg-black flex items-center justify-center">
+                <div className="text-center">
+                    <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-cyan-400 mb-4"></div>
+                    <p className="text-cyan-400 text-xl font-mono">INITIALIZING GRAVITY PROTOCOL...</p>
+                </div>
+            </div>
+        )
+    }
+);
+
 
 export default function Home() {
     const { isMobileMode } = useDeviceMode();
@@ -23,41 +41,8 @@ export default function Home() {
             </Head>
 
             <div className="bg-white">
-                {/* Hero Section - 미니멀 */}
-                <section className="section-spacing">
-                    <div className="container-minimal">
-                        <div className="max-w-4xl mx-auto text-center animate-slide-up">
-                            {/* 배지 */}
-                            <div className="mb-4 md:mb-8">
-                                <span className="badge-minimal text-xs md:text-sm">2026 스마트건설 기술 혁신</span>
-                            </div>
-
-                            {/* 메인 헤드라인 */}
-                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-4 md:mb-8 text-black leading-tight">
-                                Building the<br />Future
-                            </h1>
-
-                            {/* 부제목 */}
-                            <p className="text-lg md:text-2xl text-gray-600 mb-8 md:mb-12 font-light max-w-2xl mx-auto">
-                                AI와 스마트건설 기술로<br />건설 산업의 새로운 표준을 만듭니다
-                            </p>
-
-                            {/* CTA 버튼 */}
-                            <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-                                <Link href="/about">
-                                    <button className="btn-minimal-primary">
-                                        미래전략TF소개
-                                    </button>
-                                </Link>
-                                <Link href="/exhibitions">
-                                    <button className="btn-minimal-secondary">
-                                        글로벌 박람회
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                {/* Hero Section - Gravity Protocol */}
+                <GravityHero />
 
                 {/* 통계 섹션 */}
                 <section className="py-12 md:py-24 bg-gray-50">

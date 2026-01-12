@@ -31,19 +31,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const foundUser = authorizedUsers.find(u => u.username === username);
         if (!foundUser) return false;
 
-        // 2. 비밀번호 결정 로직 (DB -> LocalStorage -> Default)
+        // 로컬 개발 환경 체크
+        const isLocalDev = typeof window !== 'undefined' &&
+            (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+        // 2. 비밀번호 결정 로직
         let actualPassword = foundUser.password;
 
-        // DB에서 최신 바뀐 비밀번호 가져오기 시도
-        const remotePassword = await getRemotePassword(foundUser.id);
-        if (remotePassword) {
-            actualPassword = remotePassword;
-        } else {
-            // DB에 없으면 로컬 기록 확인 (기존 방식 유지)
-            const localChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
-            if (localChanges[foundUser.id]?.newPassword) {
-                actualPassword = localChanges[foundUser.id].newPassword;
+        // 로컬 환경에서는 Supabase 호출 건너뛰기 (빠른 로그인)
+        if (!isLocalDev) {
+            // DB에서 최신 바뀐 비밀번호 가져오기 시도 (프로덕션만)
+            const remotePassword = await getRemotePassword(foundUser.id);
+            if (remotePassword) {
+                actualPassword = remotePassword;
+            } else {
+                // DB에 없으면 로컬 기록 확인 (기존 방식 유지)
+                const localChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
+                if (localChanges[foundUser.id]?.newPassword) {
+                    actualPassword = localChanges[foundUser.id].newPassword;
+                }
             }
+        } else {
+            console.log('[DEV] Skipping Supabase password check for local development');
         }
 
         // 3. 검증
