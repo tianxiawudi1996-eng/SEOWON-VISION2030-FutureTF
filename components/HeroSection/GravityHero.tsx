@@ -424,6 +424,7 @@ export default function GravityHero() {
         };
 
         const handleTouchStart = (e: TouchEvent) => {
+            state.lastInteractionTime = Date.now(); // Reset auto-return timer
             if (e.touches.length === 1) {
                 state.isTouching = true;
                 state.lastTouchX = e.touches[0].clientX;
@@ -435,6 +436,7 @@ export default function GravityHero() {
 
         const handleTouchMove = (e: TouchEvent) => {
             e.preventDefault();
+            state.lastInteractionTime = Date.now(); // Reset auto-return timer
 
             if (e.touches.length === 1 && state.isTouching) {
                 // Single finger = rotate/move camera
