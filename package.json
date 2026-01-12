@@ -1,6 +1,6 @@
 {
   "name": "my-construction-2026-mvp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/drei": "^9.121.3",
+    "@react-three/fiber": "^8.16.8",
     "@supabase/supabase-js": "^2.89.0",
     "lucide-react": "^0.562.0",
     "matter-js": "^0.20.0",
