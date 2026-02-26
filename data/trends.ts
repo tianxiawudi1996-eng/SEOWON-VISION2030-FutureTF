@@ -124,34 +124,6 @@ export const trendsData: Trend[] = [
         ]
     },
     {
-        id: 'smart-execution-bim',
-        title: 'BIM 기반 현장 관리 및 공정 최적화',
-        category: '스마트 시공 전략',
-        icon: '📐',
-        description: '3D 모델링을 넘어 공정(4D)과 원가(5D) 정보가 결합된 BIM 데이터를 통해 현장의 모든 활동을 최적화합니다. 시공 전 가상 시뮬레이션을 통해 간섭 및 오류를 사전에 제거하고, 최적의 자원 투입 계획을 수립하여 시공 품질을 확보하고 공기를 획기적으로 단축합니다.',
-        ideas: [
-            {
-                title: '4D/5D BIM 통합 관리 플랫폼',
-                description: '시간(4D)과 비용(5D) 정보를 BIM 모델에 동기화하여 프로젝트 전 생애주기를 가시적으로 추적하고 관리합니다.',
-                aiAnalysis: {
-                    summary: 'BIM은 단순한 협업 도구를 넘어 "디지털 경영의 핵심"이 되었습니다. 5D BIM을 통해 설계 변경이 원가에 미치는 영향을 즉각 산출하고 신속한 의사결정을 지원합니다.',
-                    keyStatistics: [
-                        '재작업 감소: 시뮬레이션을 통한 설계 오류 사전 발견으로 재지시 30% 감소',
-                        '원가 관리: 정밀 물량 산출을 통한 자재 잉여분 발생률 10% 미만 관리',
-                        '투명성: 발주자-시공사 간 객관적 데이터 기반의 기성 관리 체계 구축'
-                    ],
-                    globalCases: [
-                        '영국: 공공 프로젝트 5D BIM 도입 의무화로 건설 생산성 20% 향상 사례 보고',
-                        '미국: DPR Construction, BIM 기반 VDC(Virtual Design & Construction)로 대형 주축 공기 20% 단축',
-                        '한국: 국토부 2026년 BIM 전면 적용 로드맵에 따른 스마트 건설 기술 표준화'
-                    ],
-                    technicalDetails: 'IFC 표준 형식을 기반으로 데이터 상호 운용성을 확보하고, 클라우드 서버에서 다수의 이해관계자가 참여하는 실시간 협업 환경(CDE)을 구축합니다.',
-                    futureOutlook: 'BIM 데이터가 현장 로봇 및 드론과 직접 연동되어 로봇이 BIM 경로를 따라 자율적으로 시공하고 검사하는 "BIM to Field" 프로세스가 완성될 것입니다.'
-                }
-            }
-        ]
-    },
-    {
         id: 'ai-smart-construction',
         title: 'AI 기반 스마트건설',
         category: '첨단기술 & AI',

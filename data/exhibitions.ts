@@ -61,10 +61,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '독일',
         startDate: '2026-03-24',
         endDate: '2026-03-26',
-        description: '★★★★☆ 건설 산업의 디지털 솔루션 박람회',
+        description: '★★★☆☆ [4순위] 건설 산업의 디지털 솔루션 박람회 (일정상 참석 어려움)',
         website: 'https://digital-bau.com/',
         isRecommended: true,
-        priority: 2,
+        priority: 4,
         season: 'H1',
         detailedInfo: {
             exhibitionDetails: '독일 최대 건설 디지털화 전문 박람회입니다. BIM, 디지털 트윈, AI 기반 현장 관리, 스마트 센서 등 건설 산업의 전 과정을 디지털화하는 솔루션이 전시됩니다.',
@@ -82,31 +82,33 @@ export const exhibitionsData: Exhibition[] = [
 
     // ===== [상반기 추천 일정] =====
 
-    // [1순위] 5월 광저우-선전 연속 동선 (통합 카드)
+    // [2순위] 5월 광저우 통합 박람회 (CIHIE + WCME)
     {
         id: 'china-may-route-2026',
-        name: '광저우-선전 연속 동선 (5월)',
+        name: '광저우 통합 박람회 (CIHIE + WCME)',
         category: '스마트건설',
-        location: '광저우 → 선전',
+        location: '광저우 (Pazhou Complex)',
         country: '중국',
         startDate: '2026-05-08',
-        endDate: '2026-05-13',
-        description: '★★★★★ [1순위] 5/8-10 광저우 CIHIE (PC공법, 골조 자동화) + 5/11-13 선전 AI 안전기업 방문 (KOTRA 매칭). 연속 출장 6일',
+        endDate: '2026-05-10',
+        description: '★★★★☆ [상반기 확정] CIHIE (주택산업전) + WCME 2026 (세계 콘크리트 박람회) 동시 개최. 골조 및 콘크리트 분야 집중 공략',
         website: 'http://www.cihie.net',
+        secondaryWebsite: 'http://ykhw.gihaexpo.com/',
+        secondaryWebsiteLabel: 'WCME 2026 방문',
         isRecommended: true,
         priority: 1,
         season: 'H1',
         detailedInfo: {
-            exhibitionDetails: 'CIHIE는 중국 최대 규모의 주택산업 및 건축 공업화 전문 박람회입니다. PC(프리캐스트 콘크리트) 공법, 모듈러 건축, 스마트 건설 기술, 친환경 건자재 등을 집중 전시합니다. 광저우 박람회 직후 선전으로 이동하여 AI 안전관리 기업 방문이 포함된 연속 일정입니다.',
+            exhibitionDetails: '광저우에서 CIHIE(국제 주택산업 박람회)와 WCME 2026(세계 콘크리트 박람회)가 동시에 개최됩니다. PC공법, 모듈러 건축과 더불어 콘크리트 타설, 믹싱, 유지보수 등 골조 공사의 모든 과정을 한자리에서 확인할 수 있는 최적의 통합 일정입니다.',
             keyHighlights: [
-                'PC공법 및 골조 자동화 최신 기술 집중 전시',
-                '철근 가공 로봇, 콘크리트 타설 장비 등 현장 직결 장비',
-                '선전 AI 안전 기업 직접 방문 및 기술 교류',
-                '1회 출장으로 박람회 + 기업방문 효율적 일정'
+                'CIHIE: PC공법 및 모듈러 건축 최신 기술',
+                'WCME 2026: 콘크리트 믹싱, 타설, 펌핑 장비',
+                '골조 공사 자동화 및 친환경 콘크리트 솔루션',
+                '두 개의 대형 박람회를 한 장소에서 동시 관람'
             ],
-            targetAudience: '건설사 골조팀, 기술연구소, 스마트건설 담당자, 안전관리팀',
-            expectedVisitors: '10만명+',
-            exhibitorCount: '800개사'
+            targetAudience: '골조팀, 콘크리트 시공 담당자, 기술연구소, 자재구매팀',
+            expectedVisitors: '15만명+',
+            exhibitorCount: '1,200개사'
         }
     },
 
@@ -119,10 +121,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-03-31',
         endDate: '2026-04-03',
-        description: '★★★★☆ [2순위] ITES (로봇 팔·AGV) + SIMM (기계전) 같은 장소 동시 개최. 1회 방문으로 2개 박람회 관람',
+        description: '★★★☆☆ [3순위] ITES (로봇 팔·AGV) + SIMM (기계전) 같은 장소 동시 개최. 1회 방문으로 2개 박람회 관람',
         website: 'https://www.iteschina.com',
         isRecommended: true,
-        priority: 2,
+        priority: 3,
         season: 'H1',
         detailedInfo: {
             exhibitionDetails: 'ITES와 SIMM은 선전 세계박람관에서 동시에 개최되는 아시아 최대 산업 자동화 및 로봇 전시회입니다. ITES는 산업용 로봇, AGV, 협동로봇에 특화되어 있으며, SIMM은 정밀 기계 및 자동화 설비를 다룹니다. 같은 장소 인접 전시관에서 열려 1회 방문으로 두 박람회를 모두 관람할 수 있습니다.',
@@ -136,6 +138,34 @@ export const exhibitionsData: Exhibition[] = [
             targetAudience: '로봇 도입 검토팀, 자동화 담당자, 스마트 팩토리 기획팀',
             expectedVisitors: '15만명+',
             exhibitorCount: '1,200개사'
+        }
+    },
+
+    // [신규 추가] CIOSH 상하이 안전보건 박람회
+    {
+        id: 'ciosh-shanghai-2026',
+        name: 'CIOSH 2026 (중국 국제 안전보건용품 박람회)',
+        category: '스마트건설',
+        location: '상하이 (SNIEC)',
+        country: '중국',
+        startDate: '2026-04-07',
+        endDate: '2026-04-09',
+        description: '★★★★☆ [2순위] 아시아 최대 안전보건전, 스마트 PPE 및 추락방지 솔루션',
+        website: 'https://www.ciosh.com/en/',
+        isRecommended: true,
+        priority: 2,
+        season: 'H1',
+        detailedInfo: {
+            exhibitionDetails: '아시아 최대 규모의 안전 및 보건 전문 박람회입니다. 스마트 안전모, 웨어러블 에어백, 추락 방지 시스템 등 건설 현장 안전을 위한 모든 최신 장비와 솔루션이 전시됩니다.',
+            keyHighlights: [
+                '스마트 PPE (IoT 안전모, 웨어러블 기기)',
+                '추락 방지 및 고소 작업 안전 장비',
+                '호흡기 보호 및 방진 시스템',
+                '건설 현장 안전 관리 솔루션'
+            ],
+            targetAudience: '안전관리팀, 현장소장, 보건관리자, 구매팀',
+            expectedVisitors: '3만명+',
+            exhibitorCount: '1,500개사'
         }
     },
 
@@ -274,10 +304,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-08-26',
         endDate: '2026-08-28',
-        description: '★★★★☆ [하반기] AI 안전 시스템, 스마트 팩토리 솔루션, 산업용 로봇',
+        description: '★★★★☆ [하반기 3순위] AI 안전 시스템, 스마트 팩토리 솔루션, 산업용 로봇',
         website: 'http://www.are-expo.com',
         isRecommended: true,
-        priority: 1,
+        priority: 3,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '선전 로봇 및 자동화 국제전시회입니다. 산업용 로봇, AI 안전 시스템, 스마트 팩토리 솔루션 등이 전시되며, 건설 현장 자동화에 적용 가능한 최신 기술을 확인할 수 있습니다.',
@@ -326,10 +356,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-11-15',
         endDate: '2026-11-19',
-        description: '★★★★★ [하반기] 종합 AI, 드론 현장 감시, 스마트 도시 기술 (중국 최대)',
+        description: '★★★★★ [하반기 확정] 종합 AI, 드론 현장 감시, 스마트 도시 기술 (중국 최대)',
         website: 'https://www.chtf.com',
         isRecommended: true,
-        priority: 3,
+        priority: 1,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '중국 최대 첨단 기술 종합 박람회입니다. AI, 드론, 로봇, 스마트 도시 기술 등 모든 첨단 기술이 한자리에 모입니다. 건설 분야에서는 드론 현장 감시, AI 안전 관리, 스마트 시티 솔루션 등을 확인할 수 있습니다.',
@@ -428,10 +458,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-11-24',
         endDate: '2026-11-27',
-        description: '★★★★★ [하반기 최우선] 전 세계 건설 기술의 정점, 스마트 굴착기 (2년 주기 대형 전시)',
+        description: '★★★★★ [하반기 2순위] 전 세계 건설 기술의 정점, 스마트 굴착기 (2년 주기 대형 전시)',
         website: 'https://www.bauma-china.com',
         isRecommended: true,
-        priority: 4,
+        priority: 2,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '세계 최대 건설 기계 박람회인 bauma의 중국 버전입니다. 스마트 굴삭기, 건설 중장비, 철근 가공 로봇, 콘크리트 장비 등 건설 장비의 모든 것이 전시되는 2년 주기 대형 행사입니다.',
@@ -531,7 +561,7 @@ export const exhibitionsData: Exhibition[] = [
         country: '일본',
         startDate: '2026-11-25',
         endDate: '2026-11-28',
-        description: '★★★★☆ 일본 최대 국제 로봇 전시회 (2년 주기), 산업용 로봇 & AI',
+        description: '★★★★☆ [하반기 확정] 일본 최대 국제 로봇 전시회 (2년 주기), 산업용 로봇 & AI',
         website: 'https://biz.nikkan.co.jp/eve/irex/',
         isRecommended: true,
         priority: 1,

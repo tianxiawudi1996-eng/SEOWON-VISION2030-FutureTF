@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import ExhibitionCard from '../components/ExhibitionCard';
 import ExhibitionDetailModal from '../components/ExhibitionDetailModal';
+import ExhibitionUpdates from '../components/ExhibitionUpdates';
 import { exhibitionsData } from '../data/exhibitions';
 import { useState, useEffect } from 'react';
 import { Exhibition } from '../interfaces/Exhibition';
@@ -76,6 +77,9 @@ export default function Exhibitions() {
                         </p>
                     </div>
                 </section>
+
+                {/* Updates Notice */}
+                <ExhibitionUpdates />
 
                 {/* Filters */}
                 <section className="py-12 border-y border-gray-200">
@@ -161,7 +165,7 @@ export default function Exhibitions() {
                                 {h1RecommendedExhibitions.map((exhibition, index) => (
                                     <div key={exhibition.id} className="relative">
                                         <div className="absolute -top-3 -right-3 z-10 bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                            {index === 0 ? '최우선!' : index === 1 ? '2순위' : `${index + 1}순위`}
+                                            {index === 0 ? '상반기 확정' : `${index + 1}순위`}
                                         </div>
                                         <ExhibitionCard
                                             exhibition={exhibition}
@@ -191,7 +195,7 @@ export default function Exhibitions() {
                                 {h2RecommendedExhibitions.map((exhibition, index) => (
                                     <div key={exhibition.id} className="relative">
                                         <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                            {index === 0 ? '하반기 최우선!' : `하반기 ${index + 1}순위`}
+                                            {index === 0 ? '하반기 확정' : `하반기 ${index + 1}순위`}
                                         </div>
                                         <ExhibitionCard
                                             exhibition={exhibition}

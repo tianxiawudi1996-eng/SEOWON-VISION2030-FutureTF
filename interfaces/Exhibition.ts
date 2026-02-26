@@ -9,6 +9,8 @@ export interface Exhibition {
     description: string;
 
     website?: string;
+    secondaryWebsite?: string; // 추가 웹사이트 URL
+    secondaryWebsiteLabel?: string; // 추가 웹사이트 라벨 (예: "WCME 방문하기")
     isRecommended?: boolean;
     priority?: number; // Strategic priority ranking (1 = highest)
     season?: 'H1' | 'H2'; // 상반기/하반기

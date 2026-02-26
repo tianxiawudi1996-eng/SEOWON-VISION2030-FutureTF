@@ -116,6 +116,16 @@ export default function ExhibitionDetailModal({ exhibition, isOpen, onClose }: E
                             웹사이트 방문 →
                         </a>
                     )}
+                    {exhibition.secondaryWebsite && (
+                        <a
+                            href={exhibition.secondaryWebsite}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 bg-white border border-gray-300 text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-all text-center"
+                        >
+                            {exhibition.secondaryWebsiteLabel || '추가 웹사이트'} →
+                        </a>
+                    )}
                     <button
                         onClick={onClose}
                         className="flex-1 bg-gray-200 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-all"

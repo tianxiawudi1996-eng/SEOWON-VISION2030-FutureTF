@@ -1,12 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
-// 최신 키값 유지
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export const supabase = (supabaseUrl && supabaseKey)
-    ? createClient(supabaseUrl, supabaseKey)
-    : null;
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 비밀번호 동기화를 위한 헬퍼 함수
 export const syncPassword = async (userId: string, newPassword: string) => {

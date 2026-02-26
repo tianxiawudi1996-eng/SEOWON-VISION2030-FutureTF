@@ -49,19 +49,12 @@ npm run dev
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-### Build for Production (Standard)
+### Build for Production
 
 ```bash
 npm run build
 npm start
 ```
-
-### Build for Cloudflare Pages
-
-```bash
-npm run pages:build
-```
-This will generate the worker and static assets in `.vercel/output`.
 
 ## 🎨 Tech Stack
 
