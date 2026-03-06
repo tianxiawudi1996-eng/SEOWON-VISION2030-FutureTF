@@ -368,26 +368,37 @@ export default function TFActivities() {
 
                             {/* Real Image Upload Implementation */}
                             <div>
-                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">활동 사진 (Images)</label>
-                                <div className="grid grid-cols-3 gap-3 mb-4">
+                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">활동 사진 관리 (Images)</label>
+                                <div className="grid grid-cols-3 gap-4 mb-4">
                                     {currentActivity.images?.map((img, idx) => (
-                                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100 group">
+                                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100 group shadow-sm bg-gray-50">
                                             <img src={img} alt="preview" className="w-full h-full object-cover" />
+                                            {/* 삭제 버튼 - 상시 노출로 변경하여 가시성 확보 */}
                                             <button
+                                                type="button"
                                                 onClick={() => {
                                                     const newImages = [...(currentActivity.images || [])];
                                                     newImages.splice(idx, 1);
                                                     setCurrentActivity({ ...currentActivity, images: newImages });
                                                 }}
-                                                className="absolute top-1 right-1 bg-black/50 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-red-500"
+                                                className="absolute top-2 right-2 bg-red-500 text-white p-1.5 rounded-full shadow-lg hover:bg-red-600 transition-all hover:scale-110 active:scale-90 z-20"
+                                                title="이미지 삭제"
                                             >
-                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
                                             </button>
+                                            {/* 오버레이 효과 */}
+                                            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                                         </div>
                                     ))}
-                                    <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-2xl bg-gray-50 hover:bg-white hover:border-blue-200 transition-all cursor-pointer group">
-                                        <div className="text-xl mb-1 grayscale group-hover:grayscale-0">📸</div>
-                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">사진 추가</span>
+
+                                    {/* 사진 추가 버튼 */}
+                                    <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group relative overflow-hidden">
+                                        <div className="flex flex-col items-center transition-transform group-hover:-translate-y-1">
+                                            <div className="text-2xl mb-1.5">📸</div>
+                                            <span className="text-[10px] font-black text-gray-400 group-hover:text-blue-500 uppercase tracking-tighter">사진 추가</span>
+                                        </div>
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -410,6 +421,7 @@ export default function TFActivities() {
                                         />
                                     </label>
                                 </div>
+                                <p className="text-[10px] text-gray-400 font-medium">* 가로형 사진을 권장하며, 여러 장 선택이 가능합니다.</p>
                             </div>
 
                             <div className="flex items-center gap-4 py-2 px-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
