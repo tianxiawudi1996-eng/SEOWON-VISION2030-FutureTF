@@ -1,4 +1,4 @@
-// 서원토건 미래전략TF 인가 사용자 (13명)
+// 서원토건 미래전략TF 인가 사용자 (14명)
 export interface User {
     id: string;
     username: string;
@@ -16,6 +16,14 @@ export const authorizedUsers: User[] = [
         username: 'psml',
         password: '1111',
         name: 'PSML',
+        position: 'Observer',
+        role: 'observer'
+    },
+    {
+        id: 'external-observer-gs',
+        username: 'gsenc',
+        password: '1111',
+        name: 'GS건설',
         position: 'Observer',
         role: 'observer'
     },

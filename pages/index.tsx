@@ -74,7 +74,7 @@ export default function Home() {
                 </section>
 
                 {/* 트렌드 섹션 */}
-                <section className="section-spacing">
+                <section className="section-spacing pb-0">
                     <div className="container-minimal">
                         {/* 섹션 헤더 */}
                         <div className="text-center mb-8 md:mb-16">
@@ -102,6 +102,49 @@ export default function Home() {
                             {filteredTrends.map((trend) => (
                                 <TrendCard key={trend.id} trend={trend} />
                             ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 미래전략TF 활동 기록 섹션 추가 */}
+                <section className="py-16 md:py-32">
+                    <div className="container-minimal bg-gray-50 rounded-[2rem] md:rounded-[4rem] p-8 md:p-20 overflow-hidden relative group">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-10 relative z-10">
+                            <div className="flex-1 text-center md:text-left">
+                                <span className="text-blue-600 font-bold text-xs md:text-sm tracking-widest uppercase mb-4 block">
+                                    TF Performance & Record
+                                </span>
+                                <h2 className="text-3xl md:text-5xl font-bold text-black mb-6 leading-tight">
+                                    미래전략TF<br />눈부신 성장의 기록
+                                </h2>
+                                <p className="text-gray-500 text-sm md:text-lg mb-8 max-w-lg leading-relaxed">
+                                    1월 성균관대 MOU부터 2월 과천G타운 현장 답사까지,<br className="hidden md:block" />
+                                    미래를 향한 TF의 모든 발자취를 투명하게 공유합니다.
+                                </p>
+                                <Link href="/tf-activities" className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-2xl font-bold hover:bg-gray-800 transition-all group-hover:scale-105 duration-300 shadow-xl">
+                                    활동 기록 전체보기
+                                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </Link>
+                            </div>
+                            <div className="flex-1 w-full max-w-md relative">
+                                {/* 데코레이티브 타임라인 프리뷰 */}
+                                <div className="space-y-4">
+                                    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 translate-x-4 md:translate-x-12 opacity-80">
+                                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">02.24</div>
+                                        <div className="font-bold text-gray-800 text-sm md:text-base truncate">과천G타운 현장 답사 (성대 김한선박사팀)</div>
+                                    </div>
+                                    <div className="bg-white p-5 rounded-2xl shadow-md border border-gray-100 flex items-center gap-4 relative z-20">
+                                        <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm shrink-0">01.26</div>
+                                        <div className="font-bold text-black text-sm md:text-base truncate">미래전략TF 본사 출장 및 SAFE-LINK 발표</div>
+                                    </div>
+                                    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 -translate-x-4 md:-translate-x-12 opacity-80">
+                                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0">01.14</div>
+                                        <div className="font-bold text-gray-800 text-sm md:text-base truncate">성균관대학교 건설환경공학부 MOU 진행</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
