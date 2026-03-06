@@ -8,8 +8,10 @@ import { TFActivity } from '../interfaces/TFActivity';
 export default function TFActivities() {
     const { isMobileMode } = useDeviceMode();
     const { user, isAuthenticated } = useAuth();
-    // 테스트 및 MVP 단계에서는 로컬에서 항상 수정을 허용하도록 설정 (또는 로그인한 경우에만 권한 체크)
-    const isObserver = isAuthenticated ? user?.role === 'observer' : false;
+    // 테스트 및 MVP 단계에서는 gsenc, psml도 관리가 가능하도록 허용
+    const isObserver = isAuthenticated
+        ? (user?.role === 'observer' && user?.username !== 'gsenc' && user?.username !== 'psml')
+        : true;
 
     const [activities, setActivities] = useState<TFActivity[]>([]);
     const [filter, setFilter] = useState<string>('all');
