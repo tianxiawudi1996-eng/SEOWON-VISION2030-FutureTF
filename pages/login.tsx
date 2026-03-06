@@ -69,9 +69,9 @@ export default function Login() {
                                     type="text"
                                     required
                                     value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    onChange={(e) => setUsername(e.target.value.trim().toLowerCase())}
                                     className="appearance-none relative block w-full px-4 py-3 border border-gray-600 bg-gray-800/50 placeholder-gray-400 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="사용자 아이디 입력"
+                                    placeholder="사용자 아이디 입력 (예: gsenc)"
                                 />
                             </div>
 
