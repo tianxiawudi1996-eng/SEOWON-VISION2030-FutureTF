@@ -37,8 +37,11 @@ export default function TFActivities() {
             category: '회의 및 업무 협의',
             isMilestone: false,
             title: '',
+            summary: '',
             details: '',
-            location: ''
+            location: '',
+            participants: [],
+            images: []
         });
         setIsEditing(true);
     };
@@ -118,8 +121,8 @@ export default function TFActivities() {
                         key={cat}
                         onClick={() => setFilter(cat)}
                         className={`px-5 py-2.5 rounded-full text-xs font-semibold transition-all border ${filter === cat
-                                ? 'bg-black text-white border-black shadow-md'
-                                : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
+                            ? 'bg-black text-white border-black shadow-md'
+                            : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
                             }`}
                     >
                         {cat === 'all' ? '전체보기' : cat}
@@ -128,68 +131,122 @@ export default function TFActivities() {
             </div>
 
             {/* Timeline View */}
-            <section className="py-12 container-minimal max-w-4xl">
-                <div className="relative border-l-2 border-gray-100 ml-4 md:ml-0 md:left-1/2 md:translate-x-[-1px]">
-                    {filteredActivities.sort((a, b) => b.date.localeCompare(a.date)).map((activity, index) => (
-                        <div key={activity.id} className="mb-12 relative">
-                            {/* Dot */}
-                            <div className={`absolute left-[-9px] md:left-[-7px] top-0 w-4 h-4 rounded-full border-2 bg-white z-10 ${activity.isMilestone ? 'border-blue-600 h-5 w-5 left-[-11px] md:left-[-9px]' : 'border-gray-300'
-                                }`}></div>
-
-                            {/* Content Card */}
-                            <div className={`ml-8 md:ml-0 md:w-[45%] ${index % 2 === 0 ? 'md:mr-auto text-left' : 'md:ml-auto text-left md:pl-12'}`}>
-                                <div className="group bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all relative">
-                                    {!isObserver && (
-                                        <div className="absolute top-4 right-4 flex gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all">
-                                            <button
-                                                onClick={() => handleEdit(activity)}
-                                                className="p-2 text-gray-400 hover:text-blue-600 bg-gray-50 hover:bg-white rounded-xl border border-transparent hover:border-gray-100 transition-all"
-                                                title="수정"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(activity.id)}
-                                                className="p-2 text-gray-400 hover:text-red-600 bg-gray-50 hover:bg-white rounded-xl border border-transparent hover:border-gray-100 transition-all"
-                                                title="삭제"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v2m3 3h.01" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    )}
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded uppercase">
-                                            {activity.category}
-                                        </span>
-                                        <span className="text-xs text-gray-400 font-medium">
-                                            {activity.date} ({activity.dayOfWeek})
-                                        </span>
-                                    </div>
-                                    <h3 className={`text-lg font-bold text-black mb-2 ${activity.isMilestone ? 'text-blue-900 border-l-4 border-blue-600 pl-3' : ''}`}>
-                                        {activity.title}
-                                    </h3>
-                                    {activity.details && (
-                                        <p className="text-sm text-gray-600 leading-relaxed mb-3">
-                                            {activity.details}
-                                        </p>
-                                    )}
-                                    {activity.location && (
-                                        <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            {activity.location}
-                                        </div>
+            <section className="py-20 container-minimal max-w-5xl">
+                <div className="relative border-l-2 border-gray-100 ml-6 md:ml-0 md:left-1/2 md:translate-x-[-1px]">
+                    {activities.sort((a, b) => b.date.localeCompare(a.date))
+                        .filter(a => filter === 'all' || a.category === filter)
+                        .map((activity, index) => (
+                            <div key={activity.id} className="mb-20 relative">
+                                {/* Dot with Pulse Effect if Milestone */}
+                                <div className={`absolute left-[-11px] md:left-[-9px] top-0 w-5 h-5 rounded-full border-4 bg-white z-10 transition-all duration-500 ${activity.isMilestone
+                                        ? 'border-blue-600 scale-125 shadow-[0_0_15px_rgba(37,99,235,0.5)] bg-blue-50'
+                                        : 'border-gray-200'
+                                    }`}>
+                                    {activity.isMilestone && (
+                                        <div className="absolute inset-0 rounded-full animate-ping bg-blue-400/30"></div>
                                     )}
                                 </div>
+
+                                {/* Content Card */}
+                                <div className={`ml-10 md:ml-0 md:w-[46%] ${index % 2 === 0 ? 'md:mr-auto text-right md:pr-14' : 'md:ml-auto text-left md:pl-14'}`}>
+                                    <div className="group bg-white rounded-[2.5rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:border-blue-100 transition-all duration-500 overflow-hidden relative">
+
+                                        {/* Edit/Delete Actions */}
+                                        {!isObserver && (
+                                            <div className={`absolute top-6 ${index % 2 === 0 ? 'left-6' : 'right-6'} flex gap-2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-[-10px] group-hover:translate-y-0`}>
+                                                <button
+                                                    onClick={() => handleEdit(activity)}
+                                                    className="p-2.5 text-gray-400 hover:text-blue-600 bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm transition-all"
+                                                    title="수정"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(activity.id)}
+                                                    className="p-2.5 text-gray-400 hover:text-red-600 bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 shadow-sm transition-all"
+                                                    title="삭제"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v2m3 3h.01" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Activity Image (If exists) */}
+                                        {activity.images && activity.images.length > 0 && (
+                                            <div className="relative h-56 w-full overflow-hidden">
+                                                <img
+                                                    src={activity.images[0]}
+                                                    alt={activity.title}
+                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                                {activity.images.length > 1 && (
+                                                    <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                                                        +{activity.images.length - 1} Photos
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
+                                        <div className="p-8">
+                                            <div className={`flex flex-wrap items-center gap-3 mb-4 ${index % 2 === 0 ? 'justify-end' : 'justify-start'}`}>
+                                                <span className="text-[10px] font-black tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full uppercase">
+                                                    {activity.category}
+                                                </span>
+                                                <span className="text-xs text-gray-400 font-semibold tracking-tighter">
+                                                    {activity.date} ({activity.dayOfWeek})
+                                                </span>
+                                            </div>
+
+                                            <h3 className={`text-xl md:text-2xl font-bold text-black mb-3 leading-tight ${activity.isMilestone ? 'text-blue-900 border-l-4 border-blue-600 pl-4' : ''}`}>
+                                                {activity.title}
+                                            </h3>
+
+                                            {activity.summary && (
+                                                <p className="text-sm font-bold text-gray-800 mb-4 bg-gray-50 p-4 rounded-2xl border-l-2 border-gray-200 italic">
+                                                    "{activity.summary}"
+                                                </p>
+                                            )}
+
+                                            {activity.details && (
+                                                <div className="text-[13px] text-gray-500 leading-relaxed mb-6 space-y-1">
+                                                    {activity.details.split('\n').map((line, i) => (
+                                                        <p key={i} className="flex items-start gap-2">
+                                                            <span className="text-blue-300 mt-1">•</span>
+                                                            {line}
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                            <div className={`flex flex-wrap items-center gap-6 pt-6 border-t border-gray-50 ${index % 2 === 0 ? 'justify-end' : 'justify-start'}`}>
+                                                {activity.location && (
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                                        <svg className="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        {activity.location}
+                                                    </div>
+                                                )}
+                                                {activity.participants && activity.participants.length > 0 && (
+                                                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                                        <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                        </svg>
+                                                        {activity.participants.length} Participants
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             </section>
 
@@ -205,24 +262,24 @@ export default function TFActivities() {
                                 </svg>
                             </button>
                         </div>
-                        <div className="p-6 space-y-5 overflow-y-auto">
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="p-8 space-y-6 overflow-y-auto">
+                            <div className="grid grid-cols-2 gap-6">
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-400 uppercase mb-2">날짜</label>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">날짜</label>
                                     <input
                                         type="date"
                                         value={currentActivity.date}
                                         onChange={(e) => setCurrentActivity({ ...currentActivity, date: e.target.value })}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all"
+                                        className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-gray-400 uppercase mb-2">카테고리</label>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">카테고리</label>
                                     <select
                                         value={currentActivity.category}
                                         onChange={(e) => setCurrentActivity({ ...currentActivity, category: e.target.value as any })}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black outline-none bg-white transition-all appearance-none"
-                                        style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 0.75rem center', backgroundSize: '1.2em 1.2em', backgroundRepeat: 'no-repeat' }}
+                                        className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm appearance-none cursor-pointer"
+                                        style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 1rem center', backgroundSize: '1.2em 1.2em', backgroundRepeat: 'no-repeat' }}
                                     >
                                         <option value="현장출장">현장출장</option>
                                         <option value="회의 및 업무 협의">회의 및 업무 협의</option>
@@ -233,53 +290,87 @@ export default function TFActivities() {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">활동 제목</label>
+                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">활동 제목 (Core Title)</label>
                                 <input
                                     type="text"
                                     value={currentActivity.title || ''}
                                     onChange={(e) => setCurrentActivity({ ...currentActivity, title: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all"
-                                    placeholder="핵심 활동을 입력하세요"
+                                    className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm"
+                                    placeholder="회의 내용 혹은 출장 목적을 입력하세요"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">상세 내용 (활동 항목)</label>
+                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">한 줄 요약 (Summary)</label>
+                                <input
+                                    type="text"
+                                    value={currentActivity.summary || ''}
+                                    onChange={(e) => setCurrentActivity({ ...currentActivity, summary: e.target.value })}
+                                    className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm italic"
+                                    placeholder="활동을 관통하는 핵심 메시지를 입력하세요"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">상세 내역 (Details - 줄바꿈으로 구분)</label>
                                 <textarea
                                     value={currentActivity.details || ''}
                                     onChange={(e) => setCurrentActivity({ ...currentActivity, details: e.target.value })}
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all resize-none"
-                                    rows={3}
-                                    placeholder="항목별 상세 내용을 입력하세요"
+                                    className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-medium text-sm min-h-[120px]"
+                                    placeholder="활동의 구체적인 항목들을 입력하세요"
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-gray-400 uppercase mb-2">장소 (Location)</label>
-                                <div className="relative">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">장소 (Location)</label>
                                     <input
                                         type="text"
                                         value={currentActivity.location || ''}
                                         onChange={(e) => setCurrentActivity({ ...currentActivity, location: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all"
-                                        placeholder="장소 정보를 입력하세요"
+                                        className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm"
+                                        placeholder="현장 혹은 회의실 정보"
                                     />
-                                    <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">참석자 (쉼표로 구분)</label>
+                                    <input
+                                        type="text"
+                                        value={currentActivity.participants?.join(', ') || ''}
+                                        onChange={(e) => setCurrentActivity({ ...currentActivity, participants: e.target.value.split(',').map(p => p.trim()).filter(p => p !== '') })}
+                                        className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm"
+                                        placeholder="홍길동, 김철수..."
+                                    />
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 py-1">
+                            {/* Image Attachment (Placeholder for User) */}
+                            <div className="p-6 border-2 border-dashed border-gray-100 rounded-[2rem] bg-gray-50/50 text-center group hover:border-blue-200 hover:bg-blue-50/10 transition-all">
+                                <div className="text-3xl mb-3 grayscale group-hover:grayscale-0 transition-all">📸</div>
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-tighter mb-1">사진 첨부를 준비중입니다</p>
+                                <p className="text-[10px] text-gray-400 leading-tight">사용자가 직접 촬영한 프리미엄 현장 사진을<br />이곳에 드래그하여 업로드할 수 있습니다.</p>
+
+                                {/* URL Input fallback for MVP testing */}
+                                <input
+                                    className="mt-4 w-full text-[10px] p-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-400"
+                                    placeholder="테스트용 이미지 URL 입력 (Optional)"
+                                    onChange={(e) => {
+                                        if (e.target.value) setCurrentActivity({ ...currentActivity, images: [e.target.value] });
+                                    }}
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-4 py-2 px-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
                                 <input
                                     type="checkbox"
                                     id="milestone"
+                                    className="w-6 h-6 rounded-lg border-gray-200 text-blue-600 focus:ring-blue-100 transition-all cursor-pointer"
                                     checked={currentActivity.isMilestone}
                                     onChange={(e) => setCurrentActivity({ ...currentActivity, isMilestone: e.target.checked })}
-                                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                                 />
-                                <label htmlFor="milestone" className="text-sm font-bold text-gray-700 cursor-pointer">주요 마일스톤(성과)으로 설정</label>
+                                <label htmlFor="milestone" className="text-sm font-bold text-blue-900 cursor-pointer">
+                                    이 항목을 <span className="underline decoration-blue-300 decoration-2 underline-offset-4">주요 마일스톤(핵심 성과)</span>으로 지정합니다
+                                </label>
                             </div>
                         </div>
                         <div className="p-6 bg-gray-50 flex gap-3 shrink-0">

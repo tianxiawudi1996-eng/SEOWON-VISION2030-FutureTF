@@ -5,6 +5,9 @@ export interface TFActivity {
     category: '현장출장' | '회의 및 업무 협의' | '미래전략TF 기획' | '기타 업무';
     title: string;
     details?: string;
+    summary?: string;
     location?: string;
     isMilestone?: boolean;
+    images?: string[];
+    participants?: string[];
 }
