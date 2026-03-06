@@ -208,7 +208,7 @@ export default function TFActivities() {
 
                                             {activity.summary && (
                                                 <p className="text-sm font-bold text-gray-800 mb-4 bg-gray-50 p-4 rounded-2xl border-l-2 border-gray-200 italic">
-                                                    "{activity.summary}"
+                                                    &quot;{activity.summary}&quot;
                                                 </p>
                                             )}
 

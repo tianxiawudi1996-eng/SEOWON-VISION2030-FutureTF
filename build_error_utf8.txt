@@ -1,0 +1,8 @@
+﻿
+> my-construction-2026-mvp@0.1.3 build
+> next build
+
+  ??Next.js 14.2.35
+  - Environments: .env.local
+
+   Linting and checking validity of types ...
