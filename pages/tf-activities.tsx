@@ -15,6 +15,8 @@ export default function TFActivities() {
 
     const [activities, setActivities] = useState<TFActivity[]>(initialActivities);
     const [isEditing, setIsEditing] = useState(false);
+    const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [currentActivity, setCurrentActivity] = useState<Partial<TFActivity>>({});
     const [isExpanded, setIsExpanded] = useState(false);
     const [filterStatus, setFilterStatus] = useState<'전체' | '예정' | '완료'>('전체');
@@ -317,17 +319,28 @@ export default function TFActivities() {
                                             </div>
 
                                             {activity.images && activity.images.length > 0 && (
-                                                <div className="w-full xl:w-48 xl:h-48 shrink-0 rounded-2xl overflow-hidden shadow-sm group-hover:scale-[1.02] transition-transform duration-500 border border-gray-100 relative">
+                                                <div
+                                                    className="w-full xl:w-48 xl:h-48 shrink-0 rounded-2xl overflow-hidden shadow-sm hover:scale-[1.05] transition-transform duration-500 border border-gray-100 relative cursor-pointer"
+                                                    onClick={() => {
+                                                        setSelectedImages(activity.images || null);
+                                                        setCurrentImageIndex(0);
+                                                    }}
+                                                >
                                                     <img
                                                         src={activity.images[0]}
                                                         alt={activity.title}
                                                         className="w-full h-full object-cover"
                                                     />
                                                     {activity.images.length > 1 && (
-                                                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
                                                             <span className="text-white text-xs font-black">+{activity.images.length - 1} PHOTOS</span>
                                                         </div>
                                                     )}
+                                                    <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-4H6" />
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -553,6 +566,71 @@ export default function TFActivities() {
                     </div>
                 </div>
             )}
+            {/* Image Lightbox */}
+            {selectedImages && (
+                <div className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[200] flex items-center justify-center p-4 md:p-10">
+                    <button
+                        onClick={() => setSelectedImages(null)}
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2 z-[210]"
+                    >
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+
+                    {selectedImages.length > 1 && (
+                        <>
+                            <button
+                                onClick={() => setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedImages.length - 1))}
+                                className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 p-4 bg-white/5 hover:bg-white/10 rounded-full text-white transition-all z-[210]"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={() => setCurrentImageIndex((prev) => (prev < selectedImages.length - 1 ? prev + 1 : 0))}
+                                className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 p-4 bg-white/5 hover:bg-white/10 rounded-full text-white transition-all z-[210]"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </>
+                    )}
+
+                    <div className="relative w-full h-full flex flex-col items-center justify-center gap-6">
+                        <img
+                            src={selectedImages[currentImageIndex]}
+                            className="max-w-full max-h-[80vh] object-contain shadow-2xl rounded-lg animate-in zoom-in-95 duration-300"
+                            alt="Preview"
+                        />
+                        <div className="flex gap-2">
+                            {selectedImages.map((_, i) => (
+                                <div
+                                    key={i}
+                                    className={`w-1.5 h-1.5 rounded-full transition-all ${i === currentImageIndex ? 'bg-white w-4' : 'bg-white/20'}`}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <style jsx global>{`
+                .container-minimal {
+                    width: 100%;
+                    padding-left: 1.5rem;
+                    padding-right: 1.5rem;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+                @media (min-width: 1280px) {
+                    .container-minimal {
+                        max-width: 1280px;
+                    }
+                }
+            `}</style>
         </div>
     );
 }
