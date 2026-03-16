@@ -13,9 +13,15 @@ export default function ExhibitionUpdates() {
                         </h3>
                         <ul className="space-y-1 text-yellow-800 text-sm">
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-red-600 flex-shrink-0">[일정 변경]</span>
+                                <span className="font-bold text-green-600 flex-shrink-0">[하반기 최우선]</span>
                                 <span>
-                                    <span className="font-semibold text-red-700">CHTF 2026 (선전):</span> 11월 15~19일 → <span className="bg-red-100 px-1 font-bold italic text-red-800 underline decoration-red-500 decoration-2 underline-offset-4">11월 26~28일</span>로 일정 최종 확정
+                                    <span className="font-semibold text-green-700 underline decoration-double decoration-green-500">CHTF 2026 (선전):</span> 2026년 하반기 <span className="font-bold text-red-600 underline">유일한 최종 확정 박람회</span> (11월 26~28일)
+                                </span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="font-bold text-blue-600 flex-shrink-0">[우선순위 조정]</span>
+                                <span>
+                                    <span className="font-semibold">iREX (일본):</span> 2순위로 조정 및 국가 정보 정정 (중국 박람회 최우선 편성)
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">

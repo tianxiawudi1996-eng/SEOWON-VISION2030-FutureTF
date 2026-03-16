@@ -1,0 +1,8 @@
+﻿deploy	https://github.com/tianxiawudi1996-eng/SEOWON-VISION2030-FutureTF.git (fetch)
+deploy	https://github.com/tianxiawudi1996-eng/SEOWON-VISION2030-FutureTF.git (push)
+legacy-origin	https://github.com/tianxiawudi1996-eng/SEOWON-VISION2030-FutureTF.git (fetch)
+legacy-origin	https://github.com/tianxiawudi1996-eng/SEOWON-VISION2030-FutureTF.git (push)
+origin	https://github.com/visionlab-coder/Only-homepage.git (fetch)
+origin	https://github.com/visionlab-coder/Only-homepage.git (push)
+real-deploy	https://github.com/seowontogeon-vision/FutureTF.git (fetch)
+real-deploy	https://github.com/seowontogeon-vision/FutureTF.git (push)
