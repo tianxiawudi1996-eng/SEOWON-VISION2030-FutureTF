@@ -13,6 +13,12 @@ export default function ExhibitionUpdates() {
                         </h3>
                         <ul className="space-y-1 text-yellow-800 text-sm">
                             <li className="flex items-start gap-2">
+                                <span className="font-bold text-red-600 flex-shrink-0">[일정 변경]</span>
+                                <span>
+                                    <span className="font-semibold text-red-700">CHTF 2026 (선전):</span> 11월 15~19일 → <span className="bg-red-100 px-1 font-bold italic text-red-800 underline decoration-red-500 decoration-2 underline-offset-4">11월 26~28일</span>로 일정 최종 확정
+                                </span>
+                            </li>
+                            <li className="flex items-start gap-2">
                                 <span className="font-bold text-red-600">[취소]</span>
                                 <span>
                                     <span className="font-semibold">World of Concrete (미국):</span> 1월 일정으로 참석 불가 (추천 제외)
@@ -40,12 +46,6 @@ export default function ExhibitionUpdates() {
                                 <span className="font-bold text-gray-600 flex-shrink-0">[조정]</span>
                                 <span>
                                     <span className="font-semibold">4순위 변경:</span> DigitalBAU 2026 (뮌헨) - 일정상 참석 어려움으로 순위 하향
-                                </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="font-bold text-green-600 flex-shrink-0">[신규]</span>
-                                <span>
-                                    <span className="font-semibold">하반기 확정(최우선):</span> <span className="underline decoration-wavy decoration-emerald-500">CHTF 2026 (선전)</span> - 11월 15일~19일 (일정 확정)
                                 </span>
                             </li>
                         </ul>
