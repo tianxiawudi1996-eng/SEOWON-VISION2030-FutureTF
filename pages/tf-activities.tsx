@@ -31,18 +31,34 @@ export default function TFActivities() {
     useEffect(() => {
         const loadData = async () => {
             const remoteData = await fetchStrategicPlan('activities');
+            const saved = localStorage.getItem('tf-activities');
+            let finalActivities = [...initialActivities];
+
             if (remoteData?.data && Array.isArray(remoteData.data)) {
-                setActivities(remoteData.data);
-            } else {
-                const saved = localStorage.getItem('tf-activities');
-                if (saved) {
-                    try {
-                        setActivities(JSON.parse(saved));
-                    } catch (e) {
-                        console.error('Failed to parse activities', e);
+                // 원격 데이터가 있으면 우선 적용
+                finalActivities = remoteData.data;
+            } else if (saved) {
+                try {
+                    const localData = JSON.parse(saved);
+                    if (Array.isArray(localData)) {
+                        finalActivities = localData;
                     }
+                } catch (e) {
+                    console.error('Failed to parse local activities', e);
                 }
             }
+
+            // 하드코딩된 데이터(initialActivities) 중 이미지가 있는 항목은 병합 시 보존 확인
+            const activitiesWithImages = initialActivities.filter(a => a.images && a.images.length > 0);
+            const merged = finalActivities.map(fa => {
+                const initialMatch = activitiesWithImages.find(ia => ia.id === fa.id);
+                if (initialMatch && (!fa.images || fa.images.length === 0)) {
+                    return { ...fa, images: initialMatch.images };
+                }
+                return fa;
+            });
+
+            setActivities(merged);
         };
         loadData();
     }, []);
