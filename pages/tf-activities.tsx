@@ -9,11 +9,19 @@ import { TFActivity } from '../interfaces/TFActivity';
 export default function TFActivities() {
     const { isMobileMode } = useDeviceMode();
     const { user, isAuthenticated } = useAuth();
-    const isAdmin = isAuthenticated && (user?.role === 'leader' || user?.role === 'ceo' || user?.role === 'executive');
+
+    // 로컬 환경 및 권한 체크 개선
+    const [isLocalDev, setIsLocalDev] = useState(false);
+    useEffect(() => {
+        setIsLocalDev(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    }, []);
+
+    const isAdmin = (isAuthenticated && (user?.role === 'leader' || user?.role === 'ceo' || user?.role === 'executive')) || isLocalDev;
     const isMember = isAuthenticated && (user?.role === 'member' || user?.role === 'executive');
     const isObserver = !isAuthenticated || user?.role === 'observer';
 
     const [activities, setActivities] = useState<TFActivity[]>(initialActivities);
+    const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
     const [isEditing, setIsEditing] = useState(false);
     const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -31,18 +39,25 @@ export default function TFActivities() {
     useEffect(() => {
         const loadData = async () => {
             const remoteData = await fetchStrategicPlan('activities');
+            let loadedActivities: TFActivity[] = [];
+
             if (remoteData?.data && Array.isArray(remoteData.data)) {
-                setActivities(remoteData.data);
+                loadedActivities = remoteData.data;
             } else {
                 const saved = localStorage.getItem('tf-activities');
                 if (saved) {
                     try {
-                        setActivities(JSON.parse(saved));
+                        loadedActivities = JSON.parse(saved);
                     } catch (e) {
                         console.error('Failed to parse activities', e);
+                        loadedActivities = [...initialActivities];
                     }
+                } else {
+                    loadedActivities = [...initialActivities];
                 }
             }
+
+            setActivities(loadedActivities);
         };
         loadData();
     }, []);
@@ -155,7 +170,7 @@ export default function TFActivities() {
                     <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed mb-8">
                         실질적인 성과 창출과 미래 비전 공유를 위해 TF팀의 모든 발자취를 투명하게 기록합니다.
                     </p>
-                    {isAuthenticated && !isObserver && (
+                    {(isAdmin || (isAuthenticated && !isObserver)) && (
                         <div className="flex gap-4 justify-center">
                             {isAdmin && (
                                 <button
@@ -234,10 +249,10 @@ export default function TFActivities() {
 
                                         {/* Edit/Delete Actions */}
                                         {isAdmin && (
-                                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                            <div className={`absolute top-4 right-4 flex gap-2 transition-all duration-300 ${isMobileMode ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'}`}>
                                                 <button
                                                     onClick={() => handleEdit(activity)}
-                                                    className="p-1.5 text-gray-400 hover:text-blue-600 bg-gray-50 rounded-lg transition-all"
+                                                    className="p-1.5 text-gray-400 hover:text-blue-600 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-lg shadow-sm transition-all"
                                                     title="수정"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,7 +261,7 @@ export default function TFActivities() {
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(activity.id)}
-                                                    className="p-1.5 text-gray-400 hover:text-red-600 bg-gray-50 rounded-lg transition-all"
+                                                    className="p-1.5 text-gray-400 hover:text-red-600 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-lg shadow-sm transition-all"
                                                     title="삭제"
                                                 >
                                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,27 +335,39 @@ export default function TFActivities() {
 
                                             {activity.images && activity.images.length > 0 && (
                                                 <div
-                                                    className="w-full xl:w-48 xl:h-48 shrink-0 rounded-2xl overflow-hidden shadow-sm hover:scale-[1.05] transition-transform duration-500 border border-gray-100 relative cursor-pointer"
+                                                    className="w-full xl:w-48 h-48 sm:h-64 xl:h-48 shrink-0 rounded-2xl overflow-hidden shadow-sm hover:scale-[1.05] transition-transform duration-500 border border-gray-100 relative cursor-pointer group"
                                                     onClick={() => {
                                                         setSelectedImages(activity.images || null);
                                                         setCurrentImageIndex(0);
                                                     }}
                                                 >
-                                                    <img
-                                                        src={activity.images[0]}
-                                                        alt={activity.title}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                    {activity.images.length > 1 && (
-                                                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                                            <span className="text-white text-xs font-black">+{activity.images.length - 1} PHOTOS</span>
+                                                    {brokenImages[activity.id] ? (
+                                                        <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center gap-2 text-gray-400">
+                                                            <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                            <span className="text-[10px] font-bold uppercase tracking-tighter">이미지 점검 중</span>
                                                         </div>
+                                                    ) : (
+                                                        <>
+                                                            <img
+                                                                src={activity.images[0]}
+                                                                alt={activity.title}
+                                                                className="w-full h-full object-cover"
+                                                                onError={() => setBrokenImages(prev => ({ ...prev, [activity.id]: true }))}
+                                                            />
+                                                            {activity.images.length > 1 && (
+                                                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <span className="text-white text-xs font-black">+{activity.images.length - 1} PHOTOS</span>
+                                                                </div>
+                                                            )}
+                                                            <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-4H6" />
+                                                                </svg>
+                                                            </div>
+                                                        </>
                                                     )}
-                                                    <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <svg className="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-4H6" />
-                                                        </svg>
-                                                    </div>
                                                 </div>
                                             )}
                                         </div>
