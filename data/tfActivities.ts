@@ -45,7 +45,8 @@ export const tfActivities: TFActivity[] = [
         date: '2026-01-14',
         title: '성균관대학교 MOU 체결',
         images: [
-            '/images/skku-collaboration.jpg'
+            'https://gupftsskcmtkzpjqrlpc.supabase.co/storage/v1/object/public/tf_files/1772852030957_KakaoTalk_20260114_162554764_09.jpg',
+            'https://gupftsskcmtkzpjqrlpc.supabase.co/storage/v1/object/public/tf_files/1772852041616_KakaoTalk_20260114_162554764_14.jpg'
         ],
         status: '완료',
         details: 'AI 기반 건설안전 분야 산학협력 MOU 공식 체결 완료.',
