@@ -35,29 +35,27 @@ export default function TFActivities() {
         setExpandedDetails(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
-    // Supabase 및 로컬 스토리지에서 데이터 불러오기
+    // Supabase + 하드코딩 데이터 병합 로드 (소실 방지)
     useEffect(() => {
         const loadData = async () => {
             const remoteData = await fetchStrategicPlan('activities');
-            let loadedActivities: TFActivity[] = [];
+            const supabaseActivities: TFActivity[] =
+                remoteData?.data && Array.isArray(remoteData.data) ? remoteData.data : [];
 
-            if (remoteData?.data && Array.isArray(remoteData.data)) {
-                loadedActivities = remoteData.data;
-            } else {
-                const saved = localStorage.getItem('tf-activities');
-                if (saved) {
-                    try {
-                        loadedActivities = JSON.parse(saved);
-                    } catch (e) {
-                        console.error('Failed to parse activities', e);
-                        loadedActivities = [...initialActivities];
-                    }
-                } else {
-                    loadedActivities = [...initialActivities];
-                }
-            }
+            // 하드코딩 ID 목록
+            const hardcodedIds = new Set(initialActivities.map(a => a.id));
+            // Supabase 데이터 ID→항목 맵
+            const supabaseById = new Map(supabaseActivities.map(a => [a.id, a]));
 
+            // 하드코딩 항목: Supabase 버전 우선 (사진 등 추가 데이터 포함 가능)
+            const mergedHardcoded = initialActivities.map(a => supabaseById.get(a.id) || a);
+
+            // 웹에서 직접 추가한 항목 (하드코딩에 없는 ID)
+            const webOnlyEntries = supabaseActivities.filter(a => !hardcodedIds.has(a.id));
+
+            const loadedActivities = [...mergedHardcoded, ...webOnlyEntries];
             setActivities(loadedActivities);
+            localStorage.setItem('tf-activities', JSON.stringify(loadedActivities));
         };
         loadData();
     }, []);
@@ -66,11 +64,14 @@ export default function TFActivities() {
     const syncActivities = async (data: TFActivity[]) => {
         setActivities(data);
         localStorage.setItem('tf-activities', JSON.stringify(data));
-        await saveStrategicPlan({
+        const result = await saveStrategicPlan({
             type: 'activities',
             data: data,
             updated_by: user?.username || 'unknown'
         });
+        if (!result.ok) {
+            alert(`⚠️ 서버 저장 실패: ${result.error}\n\n데이터가 이 기기에만 임시 저장됩니다. 다른 기기에서는 보이지 않을 수 있습니다.`);
+        }
     };
 
     const handleAdd = () => {

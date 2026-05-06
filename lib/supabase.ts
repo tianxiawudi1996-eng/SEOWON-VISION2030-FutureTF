@@ -177,15 +177,14 @@ export interface StrategicPlanData {
     updated_by?: string;
 }
 
-export const saveStrategicPlan = async (planData: StrategicPlanData) => {
-    // 로컬 스토리지에 저장 (Supabase 테이블 없으면 폴백)
+export const saveStrategicPlan = async (planData: StrategicPlanData): Promise<{ ok: boolean; error?: string }> => {
     const key = `strategic_plan_${planData.type}`;
     localStorage.setItem(key, JSON.stringify({
         ...planData,
         updated_at: new Date().toISOString()
     }));
 
-    if (!supabase) return true;
+    if (!supabase) return { ok: false, error: 'Supabase 클라이언트 없음' };
 
     try {
         const { error } = await supabase
@@ -199,12 +198,13 @@ export const saveStrategicPlan = async (planData: StrategicPlanData) => {
             }, { onConflict: 'id' });
 
         if (error) {
-            console.log('DB 저장 실패, 로컬만 저장:', error.message);
+            console.error('DB 저장 실패:', error.message);
+            return { ok: false, error: error.message };
         }
-        return true;
-    } catch (e) {
+        return { ok: true };
+    } catch (e: any) {
         console.error('전략 계획 저장 실패:', e);
-        return true;
+        return { ok: false, error: e?.message || '알 수 없는 오류' };
     }
 };
 

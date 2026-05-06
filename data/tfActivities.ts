@@ -154,12 +154,38 @@ export const tfActivities: TFActivity[] = [
         title: '미래전략TF 3월 팀 미팅',
         images: [],
         status: '예정',
-        details: '과천 G-Town 현장에서 미팅, 현재 진행되고 있는 산학협력과정 점검',
-        summary: '진행중인 산학협력과 실증 운영 점검',
+        details: '지능형 안전 관리 솔루션 실무 적용 및 실시간 소통 강화를 위한 구체적 방안 검토. 주요 안건: 1) 안전모 착용 인식 기능 개발 및 현장 실사. 2) 외국인 근로자 소통 대응을 위한 현장별 전용 네트워크 구축. 3) 공정별 작업 설명 사진 데이터 보완 요청 및 홍보 강화 계획 수립.',
+        summary: '현장 실시간 소통 시스템 및 지능형 안전 관리 솔루션 도입 전략 구체화',
         category: '[TF 미팅]',
         location: '과천G-Town현장',
         dayOfWeek: '금요일',
         isMilestone: true,
         participants: ['TF팀전원']
+    },
+    {
+        id: 'user-id-12',
+        date: '2026-04-21',
+        title: 'K-finco AI 세미나 참석',
+        images: [],
+        status: '완료',
+        details: '전문건설공제조합 주관 AI 세미나 참석. 건설업 AI 도입 동향 및 활용 사례 청취.',
+        summary: '건설업 특화 AI 기술 동향 파악 및 네트워킹',
+        category: '[세미나]',
+        dayOfWeek: '화요일',
+        isMilestone: false,
+        location: '전문건설공제조합 소회의실'
+    },
+    {
+        id: 'user-id-13',
+        date: '2026-04-22',
+        title: 'WIS 2026 코엑스 박람회 참관',
+        images: [],
+        status: '완료',
+        details: '최첨단 AI시스템, 스마트글래스, 실시간언어통역 AI 등 참관 및 문의. 건설현장 적용 가능한 최신 AI 기술 트렌드 직접 확인.',
+        summary: '최신 AI 건설안전 기술 트렌드 파악 및 도입 가능성 현장 검토',
+        category: '[박람회]',
+        dayOfWeek: '수요일',
+        isMilestone: true,
+        location: '코엑스, 서울'
     }
 ];
