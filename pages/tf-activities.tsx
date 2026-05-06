@@ -553,20 +553,32 @@ export default function TFActivities() {
                                                 const files = Array.from(e.target.files || []);
                                                 if (files.length === 0) return;
 
-                                                try {
-                                                    const newUrls: string[] = [];
-                                                    for (const file of files) {
+                                                const newUrls: string[] = [];
+                                                const failures: string[] = [];
+
+                                                for (const file of files) {
+                                                    try {
                                                         const url = await uploadFile(file);
-                                                        if (url) newUrls.push(url);
+                                                        newUrls.push(url);
+                                                    } catch (err: any) {
+                                                        console.error(`Upload failed for ${file.name}:`, err);
+                                                        failures.push(`• ${file.name}: ${err?.message || '알 수 없는 오류'}`);
                                                     }
+                                                }
+
+                                                if (newUrls.length > 0) {
                                                     setCurrentActivity(prev => ({
                                                         ...prev,
                                                         images: [...(prev.images || []), ...newUrls]
                                                     }));
-                                                } catch (err) {
-                                                    console.error('Image upload failed:', err);
-                                                    alert('이미지 업로드에 실패했습니다.');
                                                 }
+
+                                                if (failures.length > 0) {
+                                                    alert(`이미지 ${failures.length}/${files.length}개 업로드 실패:\n\n${failures.join('\n')}`);
+                                                }
+
+                                                // 동일 파일 재선택 가능하도록 input 초기화
+                                                e.target.value = '';
                                             }}
                                         />
                                     </label>
