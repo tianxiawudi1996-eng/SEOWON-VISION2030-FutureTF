@@ -161,31 +161,5 @@ export const tfActivities: TFActivity[] = [
         dayOfWeek: '금요일',
         isMilestone: true,
         participants: ['TF팀전원']
-    },
-    {
-        id: 'user-id-12',
-        date: '2026-04-21',
-        title: 'K-finco AI 세미나 참석',
-        images: [],
-        status: '완료',
-        details: '전문건설공제조합 주관 AI 세미나 참석. 건설업 AI 도입 동향 및 활용 사례 청취.',
-        summary: '건설업 특화 AI 기술 동향 파악 및 네트워킹',
-        category: '[세미나]',
-        dayOfWeek: '화요일',
-        isMilestone: false,
-        location: '전문건설공제조합 소회의실'
-    },
-    {
-        id: 'user-id-13',
-        date: '2026-04-22',
-        title: 'WIS 2026 코엑스 박람회 참관',
-        images: [],
-        status: '완료',
-        details: '최첨단 AI시스템, 스마트글래스, 실시간언어통역 AI 등 참관 및 문의. 건설현장 적용 가능한 최신 AI 기술 트렌드 직접 확인.',
-        summary: '최신 AI 건설안전 기술 트렌드 파악 및 도입 가능성 현장 검토',
-        category: '[박람회]',
-        dayOfWeek: '수요일',
-        isMilestone: true,
-        location: '코엑스, 서울'
     }
 ];
