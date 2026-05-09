@@ -576,33 +576,34 @@ export default function TFActivities() {
                                             onChange={async (e) => {
                                                 const files = Array.from(e.target.files || []);
                                                 if (files.length === 0) return;
+
                                                 setIsUploading(true);
-                                                try {
-                                                    const newUrls: string[] = [];
-                                                    const failed: string[] = [];
-                                                    for (const file of files) {
+                                                const newUrls: string[] = [];
+                                                const failures: string[] = [];
+
+                                                for (const file of files) {
+                                                    try {
                                                         const url = await uploadFile(file);
-                                                        if (url) {
-                                                            newUrls.push(url);
-                                                        } else {
-                                                            failed.push(file.name);
-                                                        }
+                                                        newUrls.push(url);
+                                                    } catch (err: any) {
+                                                        console.error(`Upload failed for ${file.name}:`, err);
+                                                        failures.push(`• ${file.name}: ${err?.message || '알 수 없는 오류'}`);
                                                     }
-                                                    if (newUrls.length > 0) {
-                                                        setCurrentActivity(prev => ({
-                                                            ...prev,
-                                                            images: [...(prev.images || []), ...newUrls]
-                                                        }));
-                                                    }
-                                                    if (failed.length > 0) {
-                                                        alert(`⚠️ 다음 파일 업로드 실패: ${failed.join(', ')}\n\nSupabase 서버가 오프라인 상태입니다.\n아래 "URL 직접 입력"으로 사진을 추가하세요.`);
-                                                    }
-                                                } catch (err) {
-                                                    alert('⚠️ 이미지 업로드 실패. 서버 연결을 확인하세요.');
-                                                } finally {
-                                                    setIsUploading(false);
-                                                    e.target.value = '';
                                                 }
+
+                                                if (newUrls.length > 0) {
+                                                    setCurrentActivity(prev => ({
+                                                        ...prev,
+                                                        images: [...(prev.images || []), ...newUrls]
+                                                    }));
+                                                }
+
+                                                if (failures.length > 0) {
+                                                    alert(`⚠️ 이미지 ${failures.length}/${files.length}개 업로드 실패:\n\n${failures.join('\n')}\n\n아래 "URL 직접 입력"으로 사진을 추가할 수 있습니다.`);
+                                                }
+
+                                                setIsUploading(false);
+                                                e.target.value = '';
                                             }}
                                         />
                                     </label>

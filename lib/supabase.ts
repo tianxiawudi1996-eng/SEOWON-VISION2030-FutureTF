@@ -3,6 +3,21 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
 
+// 환경변수 누락 시 명확한 경고 (브라우저 콘솔 + 서버 로그 모두)
+export const isSupabaseConfigured =
+    !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY &&
+    supabaseUrl !== 'https://placeholder.supabase.co';
+
+if (!isSupabaseConfigured) {
+    const msg = '[Supabase] 환경변수 누락: NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY 가 설정되지 않았습니다. Vercel 환경변수를 확인하세요.';
+    if (typeof window !== 'undefined') {
+        console.error(msg);
+    } else {
+        console.warn(msg);
+    }
+}
+
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 비밀번호 동기화를 위한 헬퍼 함수
@@ -147,25 +162,46 @@ export const deleteRemoteTask = async (taskId: string) => {
 };
 
 // --- 파일 저장 (Storage) 관련 함수 ---
-export const uploadFile = async (file: File) => {
-    if (!supabase) return null;
-    try {
-        const fileName = `${Date.now()}_${file.name}`;
-        const { data, error } = await supabase.storage
-            .from('tf_files')
-            .upload(fileName, file);
-
-        if (error) throw error;
-
-        const { data: { publicUrl } } = supabase.storage
-            .from('tf_files')
-            .getPublicUrl(fileName);
-
-        return publicUrl;
-    } catch (e) {
-        console.error('파일 업로드 실패:', e);
-        return null;
+// 실패 시 구체적 에러를 throw 하여 호출 측에서 사용자에게 표시 가능하게 함
+export const uploadFile = async (file: File): Promise<string> => {
+    if (!isSupabaseConfigured) {
+        throw new Error('Supabase 환경변수가 설정되지 않았습니다. Vercel 설정을 확인하세요.');
     }
+
+    // 파일명에 한글/공백 등이 있으면 Storage 경로 오류 가능 → 안전한 슬러그로 정규화
+    const safeName = file.name
+        .replace(/[^\w.\-]/g, '_')   // 영문/숫자/_/-/. 외 모두 _ 로 치환
+        .replace(/_+/g, '_');         // 연속 _ 압축
+    const fileName = `${Date.now()}_${safeName}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from('tf_files')
+        .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false
+        });
+
+    if (uploadError) {
+        // RLS / 버킷 미존재 / 권한 부족 등을 구분해 메시지 강화
+        const raw = uploadError.message || String(uploadError);
+        let hint = '';
+        if (/row-level security|policy|permission|unauthorized/i.test(raw)) {
+            hint = '\n\n[원인 추정] Supabase Storage 정책(RLS)이 anon 역할의 업로드를 차단하고 있습니다. tf_files 버킷의 INSERT 정책을 확인하세요.';
+        } else if (/bucket.*not found|not_found/i.test(raw)) {
+            hint = '\n\n[원인 추정] tf_files 버킷이 존재하지 않습니다. Supabase Storage에서 버킷을 생성하세요.';
+        }
+        throw new Error(`이미지 업로드 실패: ${raw}${hint}`);
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+        .from('tf_files')
+        .getPublicUrl(fileName);
+
+    if (!publicUrl) {
+        throw new Error('이미지 업로드 후 공개 URL을 가져오지 못했습니다.');
+    }
+
+    return publicUrl;
 };
 
 // --- 연결 상태 확인 ---
@@ -208,8 +244,15 @@ export const saveStrategicPlan = async (planData: StrategicPlanData): Promise<{ 
             }, { onConflict: 'id' });
 
         if (error) {
-            console.error('DB 저장 실패:', error.message);
-            return { ok: false, error: error.message };
+            console.error('DB 저장 실패:', error);
+            const raw = error.message || String(error);
+            let hint = '';
+            if (/row-level security|policy|permission|unauthorized/i.test(raw)) {
+                hint = '\n\n[원인 추정] tf_strategic_plans 테이블의 RLS 정책이 anon 역할의 INSERT/UPDATE를 차단하고 있습니다.';
+            } else if (/relation.*does not exist|table.*not found/i.test(raw)) {
+                hint = '\n\n[원인 추정] tf_strategic_plans 테이블이 존재하지 않습니다. Supabase에서 테이블을 생성하세요.';
+            }
+            return { ok: false, error: `${raw}${hint}` };
         }
         return { ok: true };
     } catch (e: any) {
