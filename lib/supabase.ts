@@ -168,6 +168,16 @@ export const uploadFile = async (file: File) => {
     }
 };
 
+// --- 연결 상태 확인 ---
+export const testSupabaseConnection = async (): Promise<boolean> => {
+    try {
+        const { error } = await supabase.from('tf_strategic_plans').select('id').limit(1);
+        return !error;
+    } catch {
+        return false;
+    }
+};
+
 // --- 전략 계획 관련 함수 ---
 export interface StrategicPlanData {
     id?: string;

@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { tfActivities as initialActivities } from '../data/tfActivities';
 import { useDeviceMode } from '../contexts/DeviceModeContext';
 import { useAuth } from '../contexts/AuthContext';
-import { uploadFile, fetchStrategicPlan, saveStrategicPlan } from '../lib/supabase';
+import { uploadFile, fetchStrategicPlan, saveStrategicPlan, testSupabaseConnection } from '../lib/supabase';
 import { TFActivity } from '../interfaces/TFActivity';
 
 export default function TFActivities() {
@@ -29,11 +29,19 @@ export default function TFActivities() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [filterStatus, setFilterStatus] = useState<'전체' | '예정' | '완료'>('전체');
     const [expandedDetails, setExpandedDetails] = useState<Record<string, boolean>>({});
+    const [dbStatus, setDbStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+    const [manualImageUrl, setManualImageUrl] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
 
     const toggleDetails = (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
         setExpandedDetails(prev => ({ ...prev, [id]: !prev[id] }));
     };
+
+    // Supabase 연결 상태 확인
+    useEffect(() => {
+        testSupabaseConnection().then(ok => setDbStatus(ok ? 'online' : 'offline'));
+    }, []);
 
     // Supabase + 하드코딩 데이터 병합 로드 (소실 방지)
     useEffect(() => {
@@ -158,6 +166,19 @@ export default function TFActivities() {
             <Head>
                 <title>미래전략TF 마일스톤 | 서원토건</title>
             </Head>
+
+            {/* Admin: Supabase 연결 상태 배너 */}
+            {isAdmin && (
+                <div className={`text-center text-xs font-bold py-2 px-4 ${
+                    dbStatus === 'checking' ? 'bg-yellow-50 text-yellow-700' :
+                    dbStatus === 'online'   ? 'bg-green-50 text-green-700' :
+                                             'bg-red-50 text-red-700'
+                }`}>
+                    {dbStatus === 'checking' && '⏳ 서버 연결 확인 중...'}
+                    {dbStatus === 'online'   && '✅ 서버 연결됨 — 저장 내용이 모든 기기에 반영됩니다'}
+                    {dbStatus === 'offline'  && '⚠️ 서버 연결 끊김 — 저장이 이 기기에만 됩니다. Supabase 프로젝트를 확인하세요.'}
+                </div>
+            )}
 
             {/* Header */}
             <section className="py-12 md:py-20 bg-gray-50 border-b border-gray-100">
@@ -539,39 +560,79 @@ export default function TFActivities() {
                                     ))}
 
                                     {/* 사진 추가 버튼 */}
-                                    <label className="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group relative overflow-hidden">
+                                    <label className={`aspect-square flex flex-col items-center justify-center border-2 border-dashed rounded-2xl transition-all cursor-pointer group relative overflow-hidden ${isUploading ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-gray-50 hover:bg-blue-50 hover:border-blue-300'}`}>
                                         <div className="flex flex-col items-center transition-transform group-hover:-translate-y-1">
-                                            <div className="text-2xl mb-1.5">📸</div>
-                                            <span className="text-[10px] font-black text-gray-400 group-hover:text-blue-500 uppercase tracking-tighter">사진 추가</span>
+                                            <div className="text-2xl mb-1.5">{isUploading ? '⏳' : '📸'}</div>
+                                            <span className="text-[10px] font-black text-gray-400 group-hover:text-blue-500 uppercase tracking-tighter">
+                                                {isUploading ? '업로드 중...' : '사진 추가'}
+                                            </span>
                                         </div>
                                         <input
                                             type="file"
                                             accept="image/*"
                                             multiple
+                                            disabled={isUploading}
                                             className="hidden"
                                             onChange={async (e) => {
                                                 const files = Array.from(e.target.files || []);
                                                 if (files.length === 0) return;
-
+                                                setIsUploading(true);
                                                 try {
                                                     const newUrls: string[] = [];
+                                                    const failed: string[] = [];
                                                     for (const file of files) {
                                                         const url = await uploadFile(file);
-                                                        if (url) newUrls.push(url);
+                                                        if (url) {
+                                                            newUrls.push(url);
+                                                        } else {
+                                                            failed.push(file.name);
+                                                        }
                                                     }
-                                                    setCurrentActivity(prev => ({
-                                                        ...prev,
-                                                        images: [...(prev.images || []), ...newUrls]
-                                                    }));
+                                                    if (newUrls.length > 0) {
+                                                        setCurrentActivity(prev => ({
+                                                            ...prev,
+                                                            images: [...(prev.images || []), ...newUrls]
+                                                        }));
+                                                    }
+                                                    if (failed.length > 0) {
+                                                        alert(`⚠️ 다음 파일 업로드 실패: ${failed.join(', ')}\n\nSupabase 서버가 오프라인 상태입니다.\n아래 "URL 직접 입력"으로 사진을 추가하세요.`);
+                                                    }
                                                 } catch (err) {
-                                                    console.error('Image upload failed:', err);
-                                                    alert('이미지 업로드에 실패했습니다.');
+                                                    alert('⚠️ 이미지 업로드 실패. 서버 연결을 확인하세요.');
+                                                } finally {
+                                                    setIsUploading(false);
+                                                    e.target.value = '';
                                                 }
                                             }}
                                         />
                                     </label>
                                 </div>
-                                <p className="text-[10px] text-gray-400 font-medium">* 가로형 사진을 권장하며, 여러 장 선택이 가능합니다.</p>
+
+                                {/* 수동 URL 입력 (서버 다운 시 대체 수단) */}
+                                <div className="flex gap-2 mt-3">
+                                    <input
+                                        type="url"
+                                        value={manualImageUrl}
+                                        onChange={e => setManualImageUrl(e.target.value)}
+                                        placeholder="또는 이미지 URL 직접 입력 (https://...)"
+                                        className="flex-1 px-4 py-2.5 border border-gray-100 bg-gray-50 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-100"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            if (!manualImageUrl.trim()) return;
+                                            setCurrentActivity(prev => ({
+                                                ...prev,
+                                                images: [...(prev.images || []), manualImageUrl.trim()]
+                                            }));
+                                            setManualImageUrl('');
+                                        }}
+                                        className="px-4 py-2.5 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition-all shrink-0"
+                                    >
+                                        추가
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-gray-400 font-medium mt-2">* 파일 업로드 또는 URL 직접 입력 모두 가능합니다.</p>
                             </div>
 
                             <div className="flex items-center gap-4 py-2 px-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
