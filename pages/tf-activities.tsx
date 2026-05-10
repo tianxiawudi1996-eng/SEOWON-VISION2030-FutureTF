@@ -114,7 +114,6 @@ export default function TFActivities() {
     };
 
     const handleClearAll = async () => {
-        console.log('초기화 버튼 클릭됨');
         if (typeof window !== 'undefined' && window.confirm('마일스톤을 초기화 하겠습니까?')) {
             try {
                 // localStorage의 관련 키를 모두 삭제 (구데이터 복원 방지)
@@ -446,7 +445,13 @@ export default function TFActivities() {
                                     <input
                                         type="date"
                                         value={currentActivity.date}
-                                        onChange={(e) => setCurrentActivity({ ...currentActivity, date: e.target.value })}
+                                        onChange={(e) => {
+                                            const dateStr = e.target.value;
+                                            const dayOfWeek = dateStr
+                                                ? new Intl.DateTimeFormat('ko-KR', { weekday: 'long' }).format(new Date(dateStr + 'T00:00:00'))
+                                                : '';
+                                            setCurrentActivity({ ...currentActivity, date: dateStr, dayOfWeek });
+                                        }}
                                         className="w-full px-5 py-4 border border-gray-100 bg-gray-50 rounded-[1.25rem] focus:bg-white focus:ring-4 focus:ring-blue-100 outline-none transition-all font-bold text-sm"
                                     />
                                 </div>
