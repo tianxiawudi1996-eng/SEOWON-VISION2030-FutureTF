@@ -19,7 +19,7 @@ export default function Exhibitions() {
     const [showDetailModal, setShowDetailModal] = useState(false);
 
     const categories = ['전체', ...Array.from(new Set(exhibitions.map(ex => ex.category)))];
-    const countries = ['전체', '미국', '독일', '중국', '일본'];
+    const countries = ['전체', '한국', '미국', '독일', '중국', '일본'];
 
     useEffect(() => {
         setExhibitions(prev => [...prev].sort((a, b) =>

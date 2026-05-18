@@ -1,6 +1,7 @@
 export interface Exhibition {
     id: string;
     name: string;
+    nameEn?: string; // 영문 박람회명
     category: string;
     location: string;
     country: string;
