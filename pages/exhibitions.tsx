@@ -25,38 +25,32 @@ export default function Exhibitions() {
         setExhibitions(prev => [...prev].sort((a, b) =>
             new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
         ));
-
-        // isRecommended=true인 상반기 박람회만 추천으로 표시
-        const h1RecommendedExhibitions = exhibitionsData
-            .filter((ex: any) => ex.isRecommended === true && ex.season === 'H1')
-            .sort((a: any, b: any) => (a.priority || 999) - (b.priority || 999));
-
-        // if (h1RecommendedExhibitions.length > 0) {
-        //     setRecommendedExhibition(h1RecommendedExhibitions[0]); // 최우선 추천 (priority 1)
-        //     setTimeout(() => setShowRecommendPopup(true), 800);
-        // }
     }, []);
 
     const filteredExhibitions = exhibitions.filter(ex => {
         const matchCategory = filter === '전체' || ex.category === filter;
         const matchCountry = countryFilter === '전체' || ex.country === countryFilter;
-        const matchSeason = seasonFilter === 'ALL' || (ex as any).season === seasonFilter;
+        const matchSeason = seasonFilter === 'ALL' || ex.season === seasonFilter;
         return matchCategory && matchCountry && matchSeason;
     });
 
-    // 상반기 추천 박람회
-    const h1RecommendedExhibitions = filteredExhibitions
-        .filter((ex: any) => ex.isRecommended === true && ex.season === 'H1')
-        .sort((a: any, b: any) => (a.priority || 999) - (b.priority || 999));
-
-    // 하반기 추천 박람회
+    // 하반기 추천 (최상단)
     const h2RecommendedExhibitions = filteredExhibitions
-        .filter((ex: any) => ex.isRecommended === true && ex.season === 'H2')
-        .sort((a: any, b: any) => (a.priority || 999) - (b.priority || 999));
+        .filter(ex => ex.isRecommended === true && ex.season === 'H2' && !ex.isVoid)
+        .sort((a, b) => (a.priority || 999) - (b.priority || 999));
 
-    const otherExhibitions = filteredExhibitions.filter((ex: any) =>
-        ex.isRecommended !== true
+    // 남은 상반기 추천 (VOID 제외)
+    const h1RecommendedExhibitions = filteredExhibitions
+        .filter(ex => ex.isRecommended === true && ex.season === 'H1' && !ex.isVoid)
+        .sort((a, b) => (a.priority || 999) - (b.priority || 999));
+
+    // 일반 (추천 아님, VOID 아님)
+    const otherExhibitions = filteredExhibitions.filter(ex =>
+        ex.isRecommended !== true && !ex.isVoid
     );
+
+    // VOID (이미 지나간 박람회)
+    const voidExhibitions = filteredExhibitions.filter(ex => ex.isVoid === true);
 
     return (
         <>
@@ -151,43 +145,13 @@ export default function Exhibitions() {
                     </div>
                 </section>
 
-                {/* 상반기 Recommended Exhibitions */}
-                {seasonFilter !== 'H2' && h1RecommendedExhibitions.length > 0 && (
-                    <section className="py-12 bg-gradient-to-br from-blue-50 to-white animate-slide-up">
-                        <div className="container-minimal">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold">
-                                    ⭐ 상반기 추천 일정
-                                </div>
-                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
-                            </div>
-                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {h1RecommendedExhibitions.map((exhibition, index) => (
-                                    <div key={exhibition.id} className="relative">
-                                        <div className="absolute -top-3 -right-3 z-10 bg-yellow-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                            {index === 0 ? '상반기 확정' : `${index + 1}순위`}
-                                        </div>
-                                        <ExhibitionCard
-                                            exhibition={exhibition}
-                                            onDetailClick={(ex) => {
-                                                setSelectedExhibition(ex);
-                                                setShowDetailModal(true);
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* 하반기 Recommended Exhibitions */}
+                {/* ① 하반기 추천 (최상단) */}
                 {seasonFilter !== 'H1' && h2RecommendedExhibitions.length > 0 && (
                     <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
                         <div className="container-minimal">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
-                                    ⭐ 하반기 추천 일정
+                                    ⭐ 하반기 추천 일정 (7-12월)
                                 </div>
                                 <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
                             </div>
@@ -199,10 +163,7 @@ export default function Exhibitions() {
                                         </div>
                                         <ExhibitionCard
                                             exhibition={exhibition}
-                                            onDetailClick={(ex) => {
-                                                setSelectedExhibition(ex);
-                                                setShowDetailModal(true);
-                                            }}
+                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
                                         />
                                     </div>
                                 ))}
@@ -211,44 +172,84 @@ export default function Exhibitions() {
                     </section>
                 )}
 
-                {/* All Exhibitions */}
-                <section className="section-spacing">
-                    <div className="container-minimal">
-                        <h2 className="text-3xl font-bold mb-6 text-black">글로벌 박람회</h2>
-                        <div className="mb-8">
-                            <p className="text-gray-600">
-                                총 <span className="font-semibold text-black">{filteredExhibitions.length}</span>개의 박람회
-                                {otherExhibitions.length > 0 && (
-                                    <span className="ml-2 text-sm">
-                                        (추천 외 <span className="font-semibold">{otherExhibitions.length}</span>개)
-                                    </span>
-                                )}
-                            </p>
-                        </div>
-
-                        <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                            {otherExhibitions.map((exhibition, index) => (
-                                <div key={exhibition.id} className={`animate-scale-in stagger-${(index % 3) + 1}`}>
-                                    <ExhibitionCard
-                                        exhibition={exhibition}
-                                        onDetailClick={(ex) => {
-                                            setSelectedExhibition(ex);
-                                            setShowDetailModal(true);
-                                        }}
-                                    />
+                {/* ② 남은 상반기 추천 */}
+                {seasonFilter !== 'H2' && h1RecommendedExhibitions.length > 0 && (
+                    <section className="py-12 bg-gradient-to-br from-blue-50 to-white animate-slide-up">
+                        <div className="container-minimal">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold">
+                                    📅 남은 상반기 일정 (6월)
                                 </div>
-                            ))}
-                        </div>
-
-                        {filteredExhibitions.length === 0 && (
-                            <div className="text-center py-20">
-                                <p className="text-gray-500 text-lg">
-                                    해당 조건의 박람회가 없습니다.
-                                </p>
+                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
                             </div>
-                        )}
+                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                                {h1RecommendedExhibitions.map((exhibition, index) => (
+                                    <div key={exhibition.id} className="relative">
+                                        <div className="absolute -top-3 -right-3 z-10 bg-blue-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                            {index + 1}순위
+                                        </div>
+                                        <ExhibitionCard
+                                            exhibition={exhibition}
+                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* ③ 기타 박람회 */}
+                {otherExhibitions.length > 0 && (
+                    <section className="section-spacing">
+                        <div className="container-minimal">
+                            <h2 className="text-3xl font-bold mb-6 text-black">글로벌 박람회</h2>
+                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                                {otherExhibitions.map((exhibition, index) => (
+                                    <div key={exhibition.id} className={`animate-scale-in stagger-${(index % 3) + 1}`}>
+                                        <ExhibitionCard
+                                            exhibition={exhibition}
+                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* ④ VOID — 이미 지나간 박람회 */}
+                {voidExhibitions.length > 0 && (
+                    <section className="py-12 bg-gray-50">
+                        <div className="container-minimal">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="px-4 py-2 bg-gray-400 text-white rounded-full text-sm font-bold">
+                                    VOID — 종료된 박람회
+                                </div>
+                                <span className="text-sm text-gray-500">{voidExhibitions.length}개</span>
+                            </div>
+                            <div className={isMobileMode ? "grid grid-cols-1 gap-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"}>
+                                {voidExhibitions.map((exhibition) => (
+                                    <div key={exhibition.id} className="relative opacity-50 grayscale">
+                                        <div className="absolute top-3 left-3 z-10 bg-gray-700 text-white px-3 py-1 rounded text-xs font-bold tracking-widest">
+                                            VOID
+                                        </div>
+                                        <ExhibitionCard
+                                            exhibition={exhibition}
+                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {filteredExhibitions.length === 0 && (
+                    <div className="text-center py-20">
+                        <p className="text-gray-500 text-lg">해당 조건의 박람회가 없습니다.</p>
                     </div>
-                </section>
+                )}
             </div>
 
             {/* Recommendation Popup */}

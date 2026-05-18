@@ -15,7 +15,8 @@ export const exhibitionsData: Exhibition[] = [
         endDate: '2026-01-22',
         description: '콘크리트 및 골조 전문가 행사 (1월 일정으로 참석 불가)',
         website: 'https://www.worldofconcrete.com/',
-        isRecommended: false,  // 추천 제외
+        isRecommended: false,
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '북미 최대 콘크리트 및 골조 전문 박람회입니다. 콘크리트 펌프, 타설 장비, 철근 가공 기계, 비계 시스템 등 골조 공사에 특화된 장비와 자재가 전시됩니다.',
             keyHighlights: [
@@ -39,6 +40,7 @@ export const exhibitionsData: Exhibition[] = [
         endDate: '2026-01-10',
         description: '세계에서 가장 영향력 있는 기술 행사',
         website: 'https://www.ces.tech/',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '세계 최대 규모의 첨단 기술 박람회로, AI, 로봇, IoT, 자율주행, 스마트홈 등 모든 신기술이 공개됩니다. 건설 분야에서는 AI 비전 시스템, 드론, 로봇 기술 등을 확인할 수 있습니다.',
             keyHighlights: [
@@ -66,6 +68,7 @@ export const exhibitionsData: Exhibition[] = [
         isRecommended: true,
         priority: 4,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '독일 최대 건설 디지털화 전문 박람회입니다. BIM, 디지털 트윈, AI 기반 현장 관리, 스마트 센서 등 건설 산업의 전 과정을 디지털화하는 솔루션이 전시됩니다.',
             keyHighlights: [
@@ -98,6 +101,7 @@ export const exhibitionsData: Exhibition[] = [
         isRecommended: true,
         priority: 1,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '광저우에서 CIHIE(국제 주택산업 박람회)와 WCME 2026(세계 콘크리트 박람회)가 동시에 개최됩니다. PC공법, 모듈러 건축과 더불어 콘크리트 타설, 믹싱, 유지보수 등 골조 공사의 모든 과정을 한자리에서 확인할 수 있는 최적의 통합 일정입니다.',
             keyHighlights: [
@@ -126,6 +130,7 @@ export const exhibitionsData: Exhibition[] = [
         isRecommended: true,
         priority: 3,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: 'ITES와 SIMM은 선전 세계박람관에서 동시에 개최되는 아시아 최대 산업 자동화 및 로봇 전시회입니다. ITES는 산업용 로봇, AGV, 협동로봇에 특화되어 있으며, SIMM은 정밀 기계 및 자동화 설비를 다룹니다. 같은 장소 인접 전시관에서 열려 1회 방문으로 두 박람회를 모두 관람할 수 있습니다.',
             keyHighlights: [
@@ -155,6 +160,7 @@ export const exhibitionsData: Exhibition[] = [
         isRecommended: true,
         priority: 2,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '아시아 최대 규모의 안전 및 보건 전문 박람회입니다. 스마트 안전모, 웨어러블 에어백, 추락 방지 시스템 등 건설 현장 안전을 위한 모든 최신 장비와 솔루션이 전시됩니다.',
             keyHighlights: [
@@ -182,6 +188,7 @@ export const exhibitionsData: Exhibition[] = [
         website: 'http://www.cihie.net',
         isRecommended: false,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '중국 최대 규모의 프리캐스트(PC) 콘크리트 공법 및 주택 산업화 전문 박람회입니다. 철근 자동 가공, 콘크리트 타설 로봇, 모듈러 건축 시스템 등 골조 공사 자동화에 특화된 기술이 집중 전시됩니다.',
             keyHighlights: [
@@ -206,6 +213,7 @@ export const exhibitionsData: Exhibition[] = [
         description: 'CIHIE 직후 선전 이동 (광저우-선전 연속 동선 포함)',
         website: 'https://www.kotra.or.kr',
         isRecommended: false,
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '선전 지역의 AI 안전관리 기업 및 스타트업 방문 일정입니다. 건설 현장 AI 비전 시스템, 작업자 안전 모니터링, 위험 구역 감지 등 최신 AI 안전 기술을 보유한 기업들과 직접 교류할 수 있습니다.',
             keyHighlights: [
@@ -229,6 +237,7 @@ export const exhibitionsData: Exhibition[] = [
         website: 'https://www.iteschina.com',
         isRecommended: false,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '아시아 최대 산업 자동화 및 로봇 전시회입니다. 6축 로봇 팔, AGV(무인운반차), 협동로봇(Cobot) 등 건설 현장 자동화에 적용 가능한 최신 로봇 기술이 대거 전시됩니다.',
             keyHighlights: [
@@ -254,6 +263,7 @@ export const exhibitionsData: Exhibition[] = [
         website: 'https://www.simmtime.com',
         isRecommended: false,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: 'ITES와 함께 개최되는 중국 최대 정밀 기계 및 제조 장비 박람회입니다. CNC 가공기, 3D 프린팅, 레이저 절단기 등 건설 부재 제작에 활용 가능한 첨단 가공 장비가 대거 전시됩니다.',
             keyHighlights: [
@@ -280,7 +290,8 @@ export const exhibitionsData: Exhibition[] = [
         endDate: '2026-04-19',
         description: '건자재/중장비 섹션, 알루미늄 거푸집 등 직수입 라인',
         website: 'https://www.cantonfair.org.cn',
-        isRecommended: false,  // 추천에서 제외
+        isRecommended: false,
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '중국 최대 종합 무역 박람회로, 건자재, 중장비, 알루미늄 거푸집 등 건설 관련 섹션이 포함되어 있습니다. 직수입 라인 발굴 및 중국 제조사와의 직접 거래 기회를 제공합니다.',
             keyHighlights: [
@@ -491,6 +502,7 @@ export const exhibitionsData: Exhibition[] = [
         isRecommended: true,
         priority: 3,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '세계 최대 산업 기술 박람회로, 자동화, 로봇, AI, 디지털 트윈, 에너지 기술 등 모든 산업 분야의 첨단 기술이 공개됩니다. Industry 4.0 및 스마트 팩토리 솔루션의 메카입니다.',
             keyHighlights: [

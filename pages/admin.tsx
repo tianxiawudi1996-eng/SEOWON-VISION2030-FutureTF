@@ -23,7 +23,8 @@ export default function AdminPanel() {
         if (typeof window !== 'undefined') {
             const localChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
             const remoteChanges = await getAllRemotePasswords();
-            const combinedChanges = { ...localChanges, ...remoteChanges };
+            // remote가 먼저, local이 나중: 방금 변경한 로컬 값이 staloe remote를 덮어씀 (C-004 fix)
+            const combinedChanges = { ...remoteChanges, ...localChanges };
             setPasswordChanges(combinedChanges);
             setUsers([...authorizedUsers]);
         }
@@ -296,7 +297,7 @@ export default function AdminPanel() {
                             <p className="text-gray-400 text-sm mb-6 text-center">새로운 비밀번호를 입력해 주세요</p>
 
                             <input
-                                type="text"
+                                type="password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className="w-full border border-gray-200 rounded-xl px-4 py-3.5 mb-6 focus:ring-2 focus:ring-black focus:border-transparent outline-none text-black placeholder-gray-400 transition-all"

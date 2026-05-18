@@ -70,12 +70,12 @@ export default function StrategicPlan() {
         const loadData = async () => {
             try {
                 const savedData = await fetchAllStrategicPlans();
-                if (savedData.agenda) setPlanningAgenda(savedData.agenda);
-                if (savedData.plan) setDetailedPlanSteps(savedData.plan);
-                if (savedData.execution) setExecutionPlan(savedData.execution);
-                if (savedData.approval) setApprovalFlow(savedData.approval);
-                if (savedData.departments) setExecutionDepartments(savedData.departments);
-            } catch (e) { console.log('기본값 사용'); }
+                if (savedData.agenda) setPlanningAgenda(savedData.agenda as typeof defaultPlanningAgenda);
+                if (savedData.plan) setDetailedPlanSteps(savedData.plan as typeof defaultDetailedPlanSteps);
+                if (savedData.execution) setExecutionPlan(savedData.execution as typeof defaultExecutionPlan);
+                if (savedData.approval) setApprovalFlow(savedData.approval as typeof defaultApprovalFlow);
+                if (savedData.departments) setExecutionDepartments(savedData.departments as typeof defaultExecutionDepartments);
+            } catch (e) { console.error('fetchAllStrategicPlans failed, using defaults:', e); }
         };
         loadData();
     }, []);

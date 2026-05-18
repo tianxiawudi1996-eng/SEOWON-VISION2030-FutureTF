@@ -1,0 +1,92 @@
+﻿git : remote: error: GH013: R
+epository rule violations fou
+nd for refs/heads/main.      
+  
+위치 줄:1 문자:1
++ git push origin main 2>&1 |
+ Out-File push_error.txt; Get
+-Content push ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (remote:  
+   error: ...s/main.         
+   :String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+remote: 
+remote: - GITHUB PUSH PROTECT
+ION        
+remote:   ?붴붴붴붴붴붴붴붴붴
+붴붴붴붴붴붴붴붴붴붴붴붴붴붴붴
+붴붴붴붴붴붴붴붴붴붴붴붴붴붴
+붴붴?       
+remote:     Resolve the follo
+wing violations before pushin
+g again        
+remote: 
+remote:     - Push cannot con
+tain secrets        
+remote: 
+remote:             
+remote:      (?) Learn how to
+ resolve a blocked push      
+  
+remote:      https://docs.git
+hub.com/code-security/secret-
+scanning/working-with-secret-
+scanning-and-push-protection/
+working-with-push-protection-
+from-the-command-line#resolvi
+ng-a-blocked-push        
+remote:             
+remote:             
+remote:       ?붴?Supabase Se
+cret Key ?붴붴붴붴붴붴붴붴붴붴
+붴붴붴붴붴붴붴붴붴붴붴붴붴붴
+붴붴붴붴붴붴?       
+remote:        locations:    
+    
+remote:          - commit: c4
+74f6223201f3fa585d7cc1724b082
+ed2c5556b        
+remote:            path: lib/
+supabase.ts:4        
+remote:          - commit: 82
+be7e0656e03827d425fb8b96b10c6
+d3c88a7c4        
+remote:            path: lib/
+supabase.ts:5        
+remote:          - commit: 9e
+8b5810615e6308779102a60ef08ab
+3c5fe92ef        
+remote:            path: lib/
+supabase.ts:5        
+remote:          - commit: 5c
+1f3cefc4e77ae0f99802708a63e39
+1a11d7c33        
+remote:            path: lib/
+supabase.ts:5        
+remote:             
+remote:        (?) To push, r
+emove secret from commit(s) o
+r follow this URL to allow th
+e secret.        
+remote:        https://github
+.com/visionlab-coder/Only-hom
+epage/security/secret-scannin
+g/unblock-secret/39CD3uAKZCjA
+8ATKCuqMT5uMqKx        
+remote:             
+remote: 
+remote: 
+To https://github.com/visionl
+ab-coder/Only-homepage.git
+ ! [remote rejected] main -> 
+main (push declined due to re
+pository rule violations)
+error: failed to push some re
+fs to 'https://github.com/vis
+ionlab-coder/Only-homepage.gi
+t'

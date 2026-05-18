@@ -14,6 +14,7 @@ export interface Exhibition {
     isRecommended?: boolean;
     priority?: number; // Strategic priority ranking (1 = highest)
     season?: 'H1' | 'H2'; // 상반기/하반기
+    isVoid?: boolean; // 이미 지나간 박람회
 
     detailedInfo?: {
         exhibitionDetails: string; // 박람회 세부 사항

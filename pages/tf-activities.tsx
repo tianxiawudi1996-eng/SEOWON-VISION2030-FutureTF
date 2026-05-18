@@ -47,8 +47,9 @@ export default function TFActivities() {
     useEffect(() => {
         const loadData = async () => {
             const remoteData = await fetchStrategicPlan('activities');
+            const remoteObj = remoteData as { data?: unknown } | null;
             const supabaseActivities: TFActivity[] =
-                remoteData?.data && Array.isArray(remoteData.data) ? remoteData.data : [];
+                remoteObj?.data && Array.isArray(remoteObj.data) ? remoteObj.data as TFActivity[] : [];
 
             // 하드코딩 ID 목록
             const hardcodedIds = new Set(initialActivities.map(a => a.id));
@@ -63,15 +64,16 @@ export default function TFActivities() {
 
             const loadedActivities = [...mergedHardcoded, ...webOnlyEntries];
             setActivities(loadedActivities);
-            localStorage.setItem('tf-activities', JSON.stringify(loadedActivities));
+            // [C-001 fix] localStorage fallback은 saveStrategicPlan이 'strategic_plan_activities' 키로 관리함
+            // 여기서 'tf-activities' 키에 쓰면 fetchStrategicPlan이 읽지 않는 dead write가 됨
         };
         loadData();
     }, []);
 
     // 데이터 저장 시 서버 및 로컬 동기화
-    const syncActivities = async (data: TFActivity[]) => {
+    const syncActivities = async (data: TFActivity[]): Promise<{ ok: boolean; error?: string }> => {
         setActivities(data);
-        localStorage.setItem('tf-activities', JSON.stringify(data));
+        // localStorage 캐시는 saveStrategicPlan 내부에서 'strategic_plan_activities' 키로 관리됨
         const result = await saveStrategicPlan({
             type: 'activities',
             data: data,
@@ -80,6 +82,7 @@ export default function TFActivities() {
         if (!result.ok) {
             alert(`⚠️ 서버 저장 실패: ${result.error}\n\n데이터가 이 기기에만 임시 저장됩니다. 다른 기기에서는 보이지 않을 수 있습니다.`);
         }
+        return result;
     };
 
     const handleAdd = () => {
@@ -114,20 +117,25 @@ export default function TFActivities() {
     };
 
     const handleClearAll = async () => {
-        if (typeof window !== 'undefined' && window.confirm('마일스톤을 초기화 하겠습니까?')) {
+        if (typeof window !== 'undefined' && window.confirm(
+            '전체 마일스톤을 초기 상태로 되돌리겠습니까?\n\n웹에서 직접 추가한 항목은 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다.'
+        )) {
             try {
-                // localStorage의 관련 키를 모두 삭제 (구데이터 복원 방지)
-                localStorage.removeItem('tf-activities');
+                // localStorage의 관련 키를 삭제 (구데이터 복원 방지)
                 localStorage.removeItem('strategic_plan_activities');
 
                 // UI 즉시 반영 (혹시 모를 지연 방지)
                 setActivities([...initialActivities]);
 
-                // 서버 동기화 시도 (실패해도 초기화는 진행되도록)
-                await syncActivities(initialActivities).catch(err => console.error('Sync failed:', err));
+                // 서버 동기화 결과 확인 (syncActivities는 throw하지 않고 result를 반환)
+                const result = await syncActivities(initialActivities);
 
-                alert('초기화가 완료되었습니다.');
-                window.location.reload();
+                if (result.ok) {
+                    alert('초기화가 완료되었습니다.');
+                    window.location.reload();
+                }
+                // result.ok가 false인 경우: syncActivities 내부에서 이미 서버 저장 실패 alert를 표시함.
+                // UI 상태는 initialActivities로 복원됨. 서버는 이전 상태 유지.
             } catch (error) {
                 console.error('Clear All Error:', error);
                 alert('초기화 중 오류가 발생했습니다. 다시 시도해주세요.');
@@ -712,20 +720,6 @@ export default function TFActivities() {
                 </div>
             )}
 
-            <style jsx global>{`
-                .container-minimal {
-                    width: 100%;
-                    padding-left: 1.5rem;
-                    padding-right: 1.5rem;
-                    margin-left: auto;
-                    margin-right: auto;
-                }
-                @media (min-width: 1280px) {
-                    .container-minimal {
-                        max-width: 1280px;
-                    }
-                }
-            `}</style>
         </div>
     );
 }

@@ -160,13 +160,11 @@ export async function validateUser(username: string, password: string): Promise<
     const user = authorizedUsers.find(u => u.username.toLowerCase() === normalizedUsername);
 
     if (!user) {
-        console.log(`[AUTH] User not found: ${username}`);
         return null;
     }
 
     // 2. 기본 비밀번호 우선 확인 (매우 빠른 로그인 및 Fail-safe)
     if (password === user.password) {
-        console.log(`[AUTH] Login success with default password: ${user.username}`);
         return user;
     }
 
@@ -175,7 +173,6 @@ export async function validateUser(username: string, password: string): Promise<
         const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
         const changedPassword = passwordChanges[user.id]?.newPassword;
         if (changedPassword && password === changedPassword) {
-            console.log(`[AUTH] Login success with local changed password: ${user.username}`);
             return user;
         }
     }
@@ -188,17 +185,14 @@ export async function validateUser(username: string, password: string): Promise<
         if (remotePassword && password === remotePassword) {
             // 원격 비밀번호가 맞으면 로컬에도 동기화
             if (typeof window !== 'undefined') {
-                const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}');
-                passwordChanges[user.id] = { newPassword: remotePassword };
-                localStorage.setItem('password_changes', JSON.stringify(passwordChanges));
+                const passwordChanges = JSON.parse(localStorage.getItem('password_changes') || '{}') as Record<string, { newPassword: string }>;
+                const updatedChanges = { ...passwordChanges, [user.id]: { newPassword: remotePassword } };
+                localStorage.setItem('password_changes', JSON.stringify(updatedChanges));
             }
-            console.log(`[AUTH] Login success with remote password: ${user.username}`);
             return user;
         }
     } catch (e) {
-        console.error('[AUTH] Supabase check failed:', e);
     }
 
-    console.log(`[AUTH] Login failed for user: ${user.username}`);
     return null;
 }

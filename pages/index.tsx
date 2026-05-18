@@ -24,7 +24,6 @@ const GravityHero = dynamic(
 
 
 export default function Home() {
-    console.log('[Deploy Check] Version 0.1.2 - Dependency Fixed');
     const { isMobileMode } = useDeviceMode();
     const [filter, setFilter] = useState<string>('전체');
 

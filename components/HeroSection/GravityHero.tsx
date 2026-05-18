@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import * as THREE from 'three';
@@ -45,8 +43,6 @@ export default function GravityHero() {
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x000000, 0.0001);
 
-        console.log('[GravityHero] Mobile mode:', isMobile);
-
         // Mobile: camera farther away for better perspective of rings + planet
         const mobileCamera = { fov: 50, x: 0, y: 3, z: 28 };
         const desktopCamera = { fov: 35, x: 0, y: 6, z: 25 };
@@ -56,8 +52,6 @@ export default function GravityHero() {
         // Force check container size
         const width = container.clientWidth;
         const height = container.clientHeight;
-        console.log('[GravityHero] Container size:', width, height);
-
         const camera = new THREE.PerspectiveCamera(camConfig.fov, width / height, 0.1, 10000);
         camera.position.set(camConfig.x, camConfig.y, camConfig.z);
         // Always look at origin (0, 0, 0) where earth is centered

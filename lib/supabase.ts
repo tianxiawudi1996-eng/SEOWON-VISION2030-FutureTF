@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { Task } from '../interfaces/Organization';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
@@ -22,11 +23,8 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 비밀번호 동기화를 위한 헬퍼 함수
 export const syncPassword = async (userId: string, newPassword: string) => {
-    if (!supabase) return false;
-
     try {
-        // password_changes와 password_ghanges(오타) 둘 다 시도
-        const tableNames = ['password_changes', 'password_ghanges'];
+        const tableNames = ['password_changes'];
         let success = false;
 
         for (const tableName of tableNames) {
@@ -39,7 +37,6 @@ export const syncPassword = async (userId: string, newPassword: string) => {
                 }, { onConflict: 'user_id' });
 
             if (!error) {
-                console.log(`DB 저장 성공 (${tableName}):`, userId);
                 success = true;
                 break;
             }
@@ -52,10 +49,8 @@ export const syncPassword = async (userId: string, newPassword: string) => {
 };
 
 export const getRemotePassword = async (userId: string) => {
-    if (!supabase) return null;
-
     try {
-        const tableNames = ['password_changes', 'password_ghanges'];
+        const tableNames = ['password_changes'];
         for (const tableName of tableNames) {
             const { data, error } = await supabase
                 .from(tableName)
@@ -74,22 +69,20 @@ export const getRemotePassword = async (userId: string) => {
     }
 };
 
-export const getAllRemotePasswords = async () => {
-    if (!supabase) return {};
-
+export const getAllRemotePasswords = async (): Promise<Record<string, { newPassword: string }>> => {
     try {
-        const tableNames = ['password_changes', 'password_ghanges'];
+        const tableNames = ['password_changes'];
         for (const tableName of tableNames) {
             const { data, error } = await supabase
                 .from(tableName)
                 .select('user_id, new_password');
 
             if (!error && data) {
-                const map: Record<string, any> = {};
-                data.forEach((item: any) => {
-                    map[item.user_id] = { newPassword: item.new_password };
-                });
-                return map;
+                type PasswordRow = { user_id: string; new_password: string };
+                return (data as PasswordRow[]).reduce<Record<string, { newPassword: string }>>(
+                    (map, item) => ({ ...map, [item.user_id]: { newPassword: item.new_password } }),
+                    {}
+                );
             }
         }
         return {};
@@ -99,8 +92,7 @@ export const getAllRemotePasswords = async () => {
 };
 
 // --- 업무 (Task) 관련 함수 ---
-export const syncTask = async (task: any) => {
-    if (!supabase) return false;
+export const syncTask = async (task: Task): Promise<boolean> => {
     try {
         const { error } = await supabase
             .from('tf_tasks')
@@ -125,7 +117,6 @@ export const syncTask = async (task: any) => {
 };
 
 export const fetchRemoteTasks = async () => {
-    if (!supabase) return [];
     try {
         const { data, error } = await supabase
             .from('tf_tasks')
@@ -133,13 +124,15 @@ export const fetchRemoteTasks = async () => {
             .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data.map((t: any) => ({
+        type TaskRow = { id: string; user_id: string; title: string; content: string;
+            priority: string; status: string; track_id: string; due_date?: string; created_at: string };
+        return (data as TaskRow[]).map((t) => ({
             id: t.id,
             assignedTo: t.user_id,
             title: t.title,
             description: t.content,
-            priority: t.priority,
-            status: t.status,
+            priority: t.priority as Task['priority'],
+            status: t.status as Task['status'],
             trackId: t.track_id,
             dueDate: t.due_date,
             createdAt: t.created_at
@@ -151,7 +144,6 @@ export const fetchRemoteTasks = async () => {
 };
 
 export const deleteRemoteTask = async (taskId: string) => {
-    if (!supabase) return false;
     try {
         const { error } = await supabase.from('tf_tasks').delete().eq('id', taskId);
         return !error;
@@ -218,7 +210,7 @@ export const testSupabaseConnection = async (): Promise<boolean> => {
 export interface StrategicPlanData {
     id?: string;
     type: 'agenda' | 'plan' | 'execution' | 'approval' | 'departments' | 'activities';
-    data: any;
+    data: unknown;
     updated_at?: string;
     updated_by?: string;
 }
@@ -229,8 +221,6 @@ export const saveStrategicPlan = async (planData: StrategicPlanData): Promise<{ 
         ...planData,
         updated_at: new Date().toISOString()
     }));
-
-    if (!supabase) return { ok: false, error: 'Supabase 클라이언트 없음' };
 
     try {
         const { error } = await supabase
@@ -255,19 +245,16 @@ export const saveStrategicPlan = async (planData: StrategicPlanData): Promise<{ 
             return { ok: false, error: `${raw}${hint}` };
         }
         return { ok: true };
-    } catch (e: any) {
+    } catch (e) {
         console.error('전략 계획 저장 실패:', e);
-        return { ok: false, error: e?.message || '알 수 없는 오류' };
+        const message = e instanceof Error ? e.message : '알 수 없는 오류';
+        return { ok: false, error: message };
     }
 };
 
-export const fetchStrategicPlan = async (type: string): Promise<any | null> => {
+export const fetchStrategicPlan = async (type: string): Promise<unknown> => {
     const key = `strategic_plan_${type}`;
     const localData = localStorage.getItem(key);
-
-    if (!supabase) {
-        return localData ? JSON.parse(localData) : null;
-    }
 
     try {
         const { data, error } = await supabase
@@ -285,16 +272,14 @@ export const fetchStrategicPlan = async (type: string): Promise<any | null> => {
     }
 };
 
-export const fetchAllStrategicPlans = async (): Promise<Record<string, any>> => {
+export const fetchAllStrategicPlans = async (): Promise<Record<string, unknown>> => {
     const types = ['agenda', 'plan', 'execution', 'approval', 'departments'];
-    const result: Record<string, any> = {};
-
-    for (const type of types) {
-        const data = await fetchStrategicPlan(type);
-        if (data?.data) {
-            result[type] = data.data;
+    const results = await Promise.all(types.map(type => fetchStrategicPlan(type)));
+    return types.reduce<Record<string, unknown>>((acc, type, i) => {
+        const data = results[i];
+        if (data !== null && typeof data === 'object' && 'data' in data) {
+            acc[type] = (data as { data: unknown }).data;
         }
-    }
-
-    return result;
+        return acc;
+    }, {});
 };
