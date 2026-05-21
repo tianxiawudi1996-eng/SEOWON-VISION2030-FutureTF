@@ -9,8 +9,11 @@ export default function Footer() {
                     {/* Company Info */}
                     <div className="text-center md:text-left">
                         <div className="text-lg font-bold text-black mb-2">서원토건</div>
-                        <div className="text-gray-500 text-sm">
-                            © 2026 (주)서원토건 미래전략TF
+                        <div className="text-gray-500 text-sm mb-1">
+                            © 2026 (주)서원토건 미래전략TF. All Rights Reserved.
+                        </div>
+                        <div className="text-gray-400 text-xs">
+                            본 사이트의 모든 콘텐츠는 (주)서원토건의 자산입니다. 무단 복제·배포를 금합니다.
                         </div>
                     </div>
 
