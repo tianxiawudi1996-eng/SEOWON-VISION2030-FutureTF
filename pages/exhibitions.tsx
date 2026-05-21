@@ -17,6 +17,7 @@ export default function Exhibitions() {
     const [recommendedExhibition, setRecommendedExhibition] = useState<Exhibition | null>(null);
     const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showVoid, setShowVoid] = useState(false);
 
     const categories = ['전체', ...Array.from(new Set(exhibitions.map(ex => ex.category)))];
     const countries = ['전체', '한국', '미국', '독일', '중국', '일본'];
@@ -218,29 +219,35 @@ export default function Exhibitions() {
                     </section>
                 )}
 
-                {/* ④ VOID — 이미 지나간 박람회 */}
+                {/* ④ VOID — 이미 지나간 박람회 (기본 숨김) */}
                 {voidExhibitions.length > 0 && (
-                    <section className="py-12 bg-gray-50">
+                    <section className="py-8 bg-gray-50">
                         <div className="container-minimal">
-                            <div className="flex items-center gap-3 mb-6">
+                            <button
+                                onClick={() => setShowVoid(prev => !prev)}
+                                className="flex items-center gap-3 w-full text-left hover:opacity-70 transition-opacity"
+                            >
                                 <div className="px-4 py-2 bg-gray-400 text-white rounded-full text-sm font-bold">
                                     VOID — 종료된 박람회
                                 </div>
                                 <span className="text-sm text-gray-500">{voidExhibitions.length}개</span>
-                            </div>
-                            <div className={isMobileMode ? "grid grid-cols-1 gap-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"}>
-                                {voidExhibitions.map((exhibition) => (
-                                    <div key={exhibition.id} className="relative opacity-50 grayscale">
-                                        <div className="absolute top-3 left-3 z-10 bg-gray-700 text-white px-3 py-1 rounded text-xs font-bold tracking-widest">
-                                            VOID
+                                <span className="text-sm text-gray-400 ml-auto">{showVoid ? '▲ 접기' : '▼ 펼치기'}</span>
+                            </button>
+                            {showVoid && (
+                                <div className={`mt-6 ${isMobileMode ? "grid grid-cols-1 gap-4" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"}`}>
+                                    {voidExhibitions.map((exhibition) => (
+                                        <div key={exhibition.id} className="relative opacity-50 grayscale">
+                                            <div className="absolute top-3 left-3 z-10 bg-gray-700 text-white px-3 py-1 rounded text-xs font-bold tracking-widest">
+                                                VOID
+                                            </div>
+                                            <ExhibitionCard
+                                                exhibition={exhibition}
+                                                onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                            />
                                         </div>
-                                        <ExhibitionCard
-                                            exhibition={exhibition}
-                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </section>
                 )}
