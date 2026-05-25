@@ -108,7 +108,7 @@ export const authorizedUsers: User[] = [
         username: 'lsy',
         password: 'seowon2026',
         name: '임성윤',
-        position: '차장',
+        position: '부장',
         track: 'safety',
         role: 'member'
     },

@@ -81,14 +81,14 @@ export const tracksData: Track[] = [
             {
                 id: 'lim-sung-yoon',
                 name: '임성윤',
-                position: '차장',
+                position: '부장',
                 track: 'safety',
                 email: 'lsy@seowon.co.kr',
                 responsibilities: ['안전 관리 검증(시연)', '제안']
             },
             {
                 id: 'lee-sang-hyun',
-                name: '이상현',
+                name: '이상헌',
                 position: '대리',
                 track: 'safety',
                 email: 'lsh@seowon.co.kr',
@@ -174,6 +174,6 @@ export const approvalFlow = {
         { order: 2, role: '총괄', name: '이강범 전무' },
         { order: 3, role: '팀장', name: '김무빈 팀장' },
         { order: 4, role: '총무', name: '황세원 총무' },
-        { order: 5, role: '실행부서', examples: ['안전관련 임성윤차장', '구매관련 김가윤과장', '전산관련 천지연대리'] }
+        { order: 5, role: '실행부서', examples: ['안전관련 임성윤부장', '구매관련 김가윤과장', '전산관련 천지연대리'] }
     ]
 };

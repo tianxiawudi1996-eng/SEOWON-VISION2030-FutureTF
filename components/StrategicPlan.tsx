@@ -35,7 +35,7 @@ const defaultApprovalFlow = [
 
 // 실행부서 예시 기본 데이터
 const defaultExecutionDepartments = [
-    { id: 1, category: '안전관련', name: '임성윤 차장', color: '#dc2626' },
+    { id: 1, category: '안전관련', name: '임성윤 부장', color: '#dc2626' },
     { id: 2, category: '구매관련', name: '김가윤 과장', color: '#f59e0b' },
     { id: 3, category: '전산관련', name: '천지연 대리', color: '#8b5cf6' }
 ];
