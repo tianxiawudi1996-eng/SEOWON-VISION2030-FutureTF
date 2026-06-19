@@ -16,9 +16,10 @@ export const exhibitionsData: Exhibition[] = [
         endDate: '2026-06-12',
         description: '★★★★★ [국내 1순위] AI·빅데이터쇼, 로보테크쇼, AI팩토리엑스포, 시큐테크쇼 7개 전시 통합. 피지컬AI·협동로봇·산업지능화 총집결',
         website: 'https://smarttechkorea.com/',
-        isRecommended: true,
+        isRecommended: false,
         priority: 1,
         season: 'H1',
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '한국 최대 첨단기술 복합 전시회로, AI&빅데이터쇼·AI팩토리엑스포·로보테크쇼·디지털 유통·물류대전·시큐테크쇼·스마트테크쇼·대한민국 가상융합산업대전 7개 분야가 코엑스 전관에서 동시 개최됩니다. 글로벌 휴머노이드 로봇 총집결, 피지컬AI, 협동로봇, 산업지능화, AI 안전 시스템 등 서원토건 미래전략TF 핵심 관심사 전분야 커버.',
             keyHighlights: [
@@ -137,10 +138,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-08-19',
         endDate: '2026-08-21',
-        description: '★★★★☆ [국내 5순위] 글로벌 AI 리더 총집결 컨퍼런스+EXPO. AI 에이전트·생성형AI·AI 거버넌스·산업 적용 사례. KITA·코엑스 공동주최',
+        description: '★★★★☆ 글로벌 AI 리더 총집결 컨퍼런스+EXPO. AI 에이전트·생성형AI·AI 거버넌스·산업 적용 사례. KITA·코엑스 공동주최',
         website: 'https://www.aisummit.co.kr/',
         isRecommended: true,
-        priority: 5,
+        priority: 6,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '글로벌 AI 리더 및 혁신 기업이 집결하는 AI 전문 컨퍼런스+전시회. 컨퍼런스(8/19-20) 및 EXPO(8/19-21)로 구성. AI 에이전트, 생성형 AI, AI 거버넌스, 산업 AI 적용 사례 등 최신 트렌드 파악. 코엑스·DMK글로벌·한국무역협회(KITA) 공동 주최.',
@@ -167,10 +168,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-08-05',
         endDate: '2026-08-08',
-        description: '★★★☆☆ [국내 건설 추천] 대한민국 대표 건설·건축 전시. NextCon 2026 스마트건설 특별전 동시 개최. BIM·3D스캐닝·로보틱스·디지털 건설기술. K-스마트건설관 운영',
+        description: '★★★☆☆ 대한민국 대표 건설·건축 전시. NextCon 2026 스마트건설 특별전 동시 개최. BIM·3D스캐닝·로보틱스·디지털 건설기술. K-스마트건설관 운영',
         website: 'https://koreabuild.co.kr/coex/',
         isRecommended: true,
-        priority: 3,
+        priority: 5,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '대한민국 최대 건설·건축·인테리어 종합 전시회. NextCon 2026(스마트건설 특별전)이 동시 개최되어 AI와 스마트건설 기술의 현장 적용 사례 전시 및 컨퍼런스 진행. BIM, 3D 스캐닝, 로보틱스, 디지털 트윈 등 혁신 디지털 건설 기술 집중 조명. K-스마트건설관 별도 운영.',
@@ -259,8 +260,8 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-10-14',
         endDate: '2026-10-16',
-        description: '★★★★★ [킨텍스 1순위] 국내 최대 건설·안전 전문 박람회. AI 기반 스마트안전, 건설로봇, 스마트현장, 안전관리 솔루션 총집결. 서원토건 핵심 참관 대상',
-        website: 'https://www.ksafety.org/',
+        description: '★★★★★ 국내 최대 건설·안전 전문 박람회. AI 기반 스마트안전, 건설로봇, 스마트현장, 안전관리 솔루션 총집결. 서원토건 핵심 참관 대상',
+        website: 'https://www.k-consafetyexpo.com/',
         isRecommended: true,
         priority: 1,
         season: 'H2',
@@ -285,14 +286,14 @@ export const exhibitionsData: Exhibition[] = [
         name: 'KISS 2026 (국제안전보건전시회)',
         nameEn: 'Korea International Safety & Health Show 2026',
         category: '안전 & 스마트건설',
-        location: '킨텍스 (KINTEX) 1전시장',
+        location: '킨텍스 (KINTEX) 제2전시장',
         country: '한국',
         startDate: '2026-07-06',
         endDate: '2026-07-09',
-        description: '★★★★☆ [킨텍스 2순위] 아시아 최대 산업안전보건 전시회. AI 안전, IoT 센서, 드론 모니터링, 스마트 안전장비. 건설현장 안전관리 솔루션 핵심 행사',
-        website: 'https://www.kiss.or.kr/',
+        description: '★★★★☆ 아시아 최대 산업안전보건 전시회. AI 안전, IoT 센서, 드론 모니터링, 스마트 안전장비. 건설현장 안전관리 솔루션 핵심 행사',
+        website: 'https://www.safetyshow.co.kr/',
         isRecommended: true,
-        priority: 2,
+        priority: 4,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '아시아 최대 규모 산업안전보건 전문 전시회. AI 스마트 안전관리, IoT 센서 네트워크, 드론 현장 모니터링, 웨어러블 안전장비, 유해물질 감지 솔루션 등 건설현장 안전관리에 직접 적용 가능한 기술 집결. 안전보건공단(KOSHA) 주최.',
@@ -319,10 +320,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-11-18',
         endDate: '2026-11-20',
-        description: '★★★★☆ [킨텍스 2순위-b] 건설·안전·AI 특화 전시. 스마트건설 AI 솔루션, 건설로봇, 안전관리 ICT 집중 전시. 서원토건 직결 행사',
-        website: 'https://www.smartconsafety.com/',
+        description: '★★★★☆ 건설·안전·AI 특화 전시. 스마트건설 AI 솔루션, 건설로봇, 안전관리 ICT 집중 전시. 서원토건 직결 행사',
+        website: 'https://smartconexpo.com/',
         isRecommended: true,
-        priority: 2,
+        priority: 3,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '건설, 안전, AI 세 분야를 통합하여 다루는 국내 유일 특화 전시회. AI 기반 건설현장 안전관리, 건설 로봇·드론, BIM·디지털트윈, 스마트 안전장비 등 서원토건 미래전략TF 핵심 관심사 직결.',
@@ -349,10 +350,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-11-04',
         endDate: '2026-11-07',
-        description: '★★★★☆ [킨텍스 3순위] 아시아 최대 로봇 전시회. 협동로봇·건설로봇·서비스로봇·드론·AI 로봇. 500개사 2,000부스. 건설 로봇 기술 파악 필수 행사',
+        description: '★★★★☆ 아시아 최대 로봇 전시회. 협동로봇·건설로봇·서비스로봇·드론·AI 로봇. 500개사 2,000부스. 건설 로봇 기술 파악 필수 행사',
         website: 'https://www.robotworld.or.kr/',
         isRecommended: true,
-        priority: 3,
+        priority: 2,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '아시아 최대 로봇 산업 전시회. 산업용 로봇, 협동로봇, 서비스 로봇, 건설 로봇, 드론, AI 로봇 등 전 분야 망라. 건설 현장 자동화·로봇 도입 검토를 위한 핵심 참관 행사. 한국로봇산업협회 주최.',
@@ -377,12 +378,12 @@ export const exhibitionsData: Exhibition[] = [
         category: 'AI & 로봇',
         location: '킨텍스 (KINTEX)',
         country: '한국',
-        startDate: '2026-09-10',
-        endDate: '2026-09-13',
-        description: '★★★☆☆ [킨텍스 3순위-b] 국내 최대 드론·UAM 특화 전시. 건설현장 드론 모니터링·측량·안전점검 기술. 드론 실비행 시연장 운영',
-        website: 'https://www.droneshow.co.kr/',
-        isRecommended: false,
-        priority: 3,
+        startDate: '2026-11-04',
+        endDate: '2026-11-06',
+        description: '★★★☆☆ 국내 최대 드론·UAM 특화 전시. 건설현장 드론 모니터링·측량·안전점검 기술. 드론 실비행 시연장 운영',
+        website: 'https://www.goyangdue.kr/',
+        isRecommended: true,
+        priority: 8,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '드론과 도심항공교통(UAM)에 특화된 국내 최대 전문 전시회. 건설현장 드론 측량·모니터링, AI 기반 드론 안전점검, 자율비행 드론 솔루션 등 현장 적용 기술 중심. 실내외 드론 비행 시연장 별도 운영.',
@@ -409,10 +410,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '한국',
         startDate: '2026-09-23',
         endDate: '2026-09-25',
-        description: '★★★☆☆ [킨텍스 3순위-c] 스마트시티·도시재생·건설기술 통합 전시. 디지털트윈 도시, 스마트 인프라, 건설 ICT. 국토교통부 주관',
-        website: 'https://www.citytech.or.kr/',
-        isRecommended: false,
-        priority: 3,
+        description: '★★★☆☆ 스마트시티·도시재생·건설기술 통합 전시. 디지털트윈 도시, 스마트 인프라, 건설 ICT. 국토교통부 주관',
+        website: 'https://worldcitytechexpo.com/',
+        isRecommended: true,
+        priority: 9,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '스마트시티, 도시재생, 미래 건설기술을 통합 전시하는 행사. 디지털트윈 도시계획, 스마트 인프라 관리, 건설 ICT 융합기술, AI 도시안전 시스템 등 도시·인프라 분야 혁신기술 집중. 국토교통부 주관으로 정부 정책 방향 파악에 유리.',
@@ -425,6 +426,35 @@ export const exhibitionsData: Exhibition[] = [
             ],
             targetAudience: '스마트건설팀, BIM 담당자, 경영진',
             expectedVisitors: '4만명+',
+            exhibitorCount: '300개사+'
+        }
+    },
+
+    // [부산 벡스코] 대한민국 안전산업박람회 2026 (K-Safety Expo)
+    {
+        id: 'k-safety-expo-2026',
+        name: '2026 대한민국 안전산업박람회 (K-Safety Expo)',
+        nameEn: 'K-Safety Expo 2026',
+        category: '안전 & 스마트건설',
+        location: '부산 벡스코 (BEXCO) 제1전시장',
+        country: '한국',
+        startDate: '2026-09-02',
+        endDate: '2026-09-04',
+        description: '★★★★☆ 국내 최대 재난·산업안전 종합 박람회. AI 재난안전, 산업안전, 스마트 안전관리 솔루션 집결. 행정안전부 주최',
+        website: 'https://k-safetyexpo.kr/',
+        isRecommended: true,
+        priority: 7,
+        season: 'H2',
+        detailedInfo: {
+            exhibitionDetails: '행정안전부가 주최하는 국내 최대 규모의 재난·산업안전 종합 박람회입니다. 침수·산사태·지진 등 자연재난, 생활안전, 산업안전, 화재, 교통·해양안전 등 재난안전 전 분야를 아우르며, AI 기반 재난 예측·스마트 안전관리 솔루션이 집중 전시됩니다.',
+            keyHighlights: [
+                'AI 기반 재난 예측·대응 시스템',
+                '건설현장 산업안전 ICT 솔루션',
+                '스마트 안전장비·웨어러블 기기',
+                '해외바이어 수출상담회·구매상담회'
+            ],
+            targetAudience: '안전관리팀, 현장소장, 스마트건설 기획팀, 경영진',
+            expectedVisitors: '3만명+',
             exhibitorCount: '300개사+'
         }
     },
@@ -589,7 +619,7 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-05-08',
         endDate: '2026-05-10',
-        description: '★★★★☆ [상반기 확정] CIHIE (주택산업전) + WCME 2026 (세계 콘크리트 박람회) 동시 개최. 골조 및 콘크리트 분야 집중 공략',
+        description: '★★★★☆ CIHIE (주택산업전) + WCME 2026 (세계 콘크리트 박람회) 동시 개최. 골조 및 콘크리트 분야 집중 공략',
         website: 'http://www.cihie.net',
         secondaryWebsite: 'http://ykhw.gihaexpo.com/',
         secondaryWebsiteLabel: 'WCME 2026 방문',
@@ -810,10 +840,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-08-26',
         endDate: '2026-08-28',
-        description: '★★★★☆ [하반기 3순위] AI 안전 시스템, 스마트 팩토리 솔루션, 산업용 로봇',
-        website: 'http://www.are-expo.com',
+        description: '★★★★☆ AI 안전 시스템, 스마트 팩토리 솔루션, 산업용 로봇',
+        website: 'https://www.are-expo.com/en/',
         isRecommended: true,
-        priority: 4,
+        priority: 3,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '선전 로봇 및 자동화 국제전시회입니다. 산업용 로봇, AI 안전 시스템, 스마트 팩토리 솔루션 등이 전시되며, 건설 현장 자동화에 적용 가능한 최신 기술을 확인할 수 있습니다.',
@@ -836,10 +866,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-10-27',
         endDate: '2026-10-29',
-        description: '★★★★☆ [하반기] 스마트 시공 로봇, 디지털 트윈 현장 관리',
-        website: 'http://www.s-factoryexpo.com',
+        description: '★★★★☆ 스마트 시공 로봇, 디지털 트윈 현장 관리',
+        website: 'https://www.s-factoryexpo.com/',
         isRecommended: true,
-        priority: 2,
+        priority: 4,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '선전 스마트 팩토리 및 자동화 전시회입니다. 건설 현장에 적용 가능한 스마트 시공 로봇, 디지털 트윈 현장 관리 시스템, IoT 센서 등이 전시됩니다.',
@@ -862,10 +892,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-11-26',
         endDate: '2026-11-28',
-        description: '★★★★★ [하반기 확정] 종합 AI, 드론 현장 감시, 스마트 도시 기술 (중국 최대)',
+        description: '★★★★★ 종합 AI, 드론 현장 감시, 스마트 도시 기술 (중국 최대)',
         website: 'https://www.chtf.com',
         isRecommended: true,
-        priority: 1,
+        priority: 2,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '중국 최대 첨단 기술 종합 박람회입니다. AI, 드론, 로봇, 스마트 도시 기술 등 모든 첨단 기술이 한자리에 모입니다. 건설 분야에서는 드론 현장 감시, AI 안전 관리, 스마트 시티 솔루션 등을 확인할 수 있습니다.',
@@ -893,6 +923,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '스마트 빌딩 솔루션, AI 안전 진단 시스템',
         website: 'https://gebt.hk.messefrankfurt.com',
         isRecommended: false,
+        isVoid: true,
         detailedInfo: {
             exhibitionDetails: '광저우 전기 및 빌딩 기술 박람회입니다. 스마트 빌딩 솔루션, 전기 설비, AI 기반 안전 진단 시스템, 빌딩 자동화 등이 전시됩니다.',
             keyHighlights: [
@@ -914,11 +945,13 @@ export const exhibitionsData: Exhibition[] = [
         category: 'AI & 로봇',
         location: '상하이',
         country: '중국',
-        startDate: '2026-07-01', // 예상
-        endDate: '2026-07-04',
+        startDate: '2026-07-17',
+        endDate: '2026-07-20',
         description: 'AI 건설 응용 핵심 플랫폼 (상하이 개최)',
         website: 'http://www.worldaic.com.cn',
-        isRecommended: false, // 선전 우선이므로 추천 제외
+        isRecommended: true,
+        priority: 9,
+        season: 'H2',
         detailedInfo: {
             exhibitionDetails: '세계 인공지능 컨퍼런스로 중국 최대 AI 전문 행사입니다. AI 건설 응용 플랫폼, 머신러닝, 컴퓨터 비전 등 AI 핵심 기술과 건설 산업 적용 사례를 확인할 수 있습니다.',
             keyHighlights: [
@@ -943,6 +976,8 @@ export const exhibitionsData: Exhibition[] = [
         description: '콘크리트 시공, 철근 가공, 바닥재 로봇 (아시아 최대 콘크리트 행사)',
         website: 'https://en.wocasia.cn',
         isRecommended: true,
+        priority: 5,
+        season: 'H2',
         detailedInfo: {
             exhibitionDetails: '아시아 최대 콘크리트 박람회입니다. 콘크리트 시공 기술, 철근 가공 자동화, 바닥재 로봇, PC 부재 제작 등 콘크리트 관련 모든 기술을 한번에 확인할 수 있습니다.',
             keyHighlights: [
@@ -964,10 +999,10 @@ export const exhibitionsData: Exhibition[] = [
         country: '중국',
         startDate: '2026-11-24',
         endDate: '2026-11-27',
-        description: '★★★★★ [하반기 3순위] 전 세계 건설 기술의 정점, 스마트 굴착기 (2년 주기 대형 전시)',
+        description: '★★★★★ 전 세계 건설 기술의 정점, 스마트 굴착기 (2년 주기 대형 전시)',
         website: 'https://www.bauma-china.com',
         isRecommended: true,
-        priority: 3,
+        priority: 1,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '세계 최대 건설 기계 박람회인 bauma의 중국 버전입니다. 스마트 굴삭기, 건설 중장비, 철근 가공 로봇, 콘크리트 장비 등 건설 장비의 모든 것이 전시되는 2년 주기 대형 행사입니다.',
@@ -1015,12 +1050,15 @@ export const exhibitionsData: Exhibition[] = [
         id: 'automate-2026',
         name: 'Automate 2026',
         category: 'AI & 로봇',
-        location: '디트로이트',
+        location: '시카고 (McCormick Place)',
         country: '미국',
         startDate: '2026-06-22',
         endDate: '2026-06-25',
-        description: '북미에서 선도하는 자동화 쇼케이스',
+        description: '북미 최대 로봇·자동화 쇼케이스 (휴머노이드 로봇 포럼 포함)',
         website: 'https://www.automateshow.com/',
+        isRecommended: true,
+        priority: 6,
+        season: 'H1',
         detailedInfo: {
             exhibitionDetails: '북미 최대 자동화 박람회입니다. 산업용 로봇, 비전 시스템, AGV, 협동로봇 등 모든 종류의 자동화 솔루션이 전시되며, 북미 시장 트렌드를 파악할 수 있습니다.',
             keyHighlights: [
@@ -1038,14 +1076,17 @@ export const exhibitionsData: Exhibition[] = [
     // 일본 박람회
     {
         id: 'japan-build-tokyo-2026',
-        name: 'JAPAN BUILD TOKYO 2026 (도고 건설산업전)',
+        name: 'JAPAN BUILD TOKYO 2026 (도쿄 건설산업전)',
         category: '스마트건설',
         location: '도쿄 (Tokyo Big Sight)',
         country: '일본',
-        startDate: '2026-12-08',
-        endDate: '2026-12-10',
+        startDate: '2026-12-02',
+        endDate: '2026-12-04',
         description: '일본 최대 건설 종합 박람회, 스마트하우스 및 시공 기술',
         website: 'https://www.japan-build.jp/tokyo/',
+        isRecommended: true,
+        priority: 8,
+        season: 'H2',
         detailedInfo: {
             exhibitionDetails: '일본 최대 건설 종합 박람회입니다. 스마트하우스, 시공 기술, 건자재, 내장재 등 건설의 모든 분야가 한번에 전시되는 종합 행사입니다.',
             keyHighlights: [
@@ -1059,43 +1100,20 @@ export const exhibitionsData: Exhibition[] = [
             exhibitorCount: '400개사'
         }
     },
-    // [일본] iREX - 하반기 추천
-    {
-        id: 'irex-osaka-2026',
-        name: 'iREX 2026 (국제로봇전)',
-        category: 'AI & 로봇',
-        location: '오사카 (INTEX Osaka)',
-        country: '일본',
-        startDate: '2026-11-25',
-        endDate: '2026-11-28',
-        description: '★★★★☆ [하반기 2순위] 일본 최대 국제 로봇 전시회 (2년 주기), 산업용 로봇 & AI',
-        website: 'https://biz.nikkan.co.jp/eve/irex/',
-        isRecommended: true,
-        priority: 2,
-        season: 'H2',
-        detailedInfo: {
-            exhibitionDetails: '일본 최대 국제 로봇 전시회로 2년마다 개최됩니다. 산업용 로봇, 협동로봇, AI 로봇, 서비스 로봇 등 모든 종류의 로봇 기술이 전시되며, 특히 일본의 정밀 로봇 기술을 확인할 수 있습니다.',
-            keyHighlights: [
-                '6축 산업용 로봇 및 정밀 제어',
-                '협동로봇(Cobot) 및 안전 기술',
-                'AI 비전 시스템 및 머신러닝',
-                '건설 현장 적용 사례 및 데모'
-            ],
-            targetAudience: '로봇 기술팀, 자동화 엔지니어, 스마트건설 연구소',
-            expectedVisitors: '13만명+',
-            exhibitorCount: '600개사'
-        }
-    },
+    // [일본] iREX 2026은 미개최 (격년제, 직전 2025 / 다음 2027년 도쿄 Big Sight) — 항목 삭제
     {
         id: 'ai-expo-tokyo-2026',
-        name: 'AI EXPO TOKYO 2026',
+        name: 'AI EXPO TOKYO Autumn 2026',
         category: '첨단기술 & AI',
-        location: '도쿄 (Tokyo Big Sight)',
+        location: '마쿠하리 멧세 (치바)',
         country: '일본',
-        startDate: '2026-09-30',
-        endDate: '2026-10-02',
-        description: '일본 최대 AI 기술 전시회, 비전 AI, 기계 학습',
+        startDate: '2026-11-11',
+        endDate: '2026-11-13',
+        description: '일본 최대 AI 기술 전시회, 비전 AI, 기계 학습 (NexTech Week)',
         website: 'https://www.ai-expo.jp/tokyo/',
+        isRecommended: true,
+        priority: 7,
+        season: 'H2',
         detailedInfo: {
             exhibitionDetails: '일본 최대 AI 기술 전시회입니다. 비전 AI, 기계 학습, 딕러닝 등 AI 핵심 기술과 건설 산업 적용 사례를 확인할 수 있으며, 일본의 정밀 AI 기술을 경험할 수 있습니다.',
             keyHighlights: [

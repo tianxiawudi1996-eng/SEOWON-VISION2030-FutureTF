@@ -35,23 +35,25 @@ export default function Exhibitions() {
         return matchCategory && matchCountry && matchSeason;
     });
 
-    // 하반기 추천 (최상단)
-    const h2RecommendedExhibitions = filteredExhibitions
-        .filter(ex => ex.isRecommended === true && ex.season === 'H2' && !ex.isVoid)
-        .sort((a, b) => (a.priority || 999) - (b.priority || 999));
+    // 국내/국외 분리 + 우선순위(1순위→) 정렬, 동순위는 빠른 날짜순
+    const byPriorityThenDate = (a: Exhibition, b: Exhibition) =>
+        (a.priority || 999) - (b.priority || 999) ||
+        new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
 
-    // 남은 상반기 추천 (VOID 제외)
-    const h1RecommendedExhibitions = filteredExhibitions
-        .filter(ex => ex.isRecommended === true && ex.season === 'H1' && !ex.isVoid)
-        .sort((a, b) => (a.priority || 999) - (b.priority || 999));
+    // 국내 박람회 (한국, VOID 제외)
+    const domesticExhibitions = filteredExhibitions
+        .filter(ex => ex.country === '한국' && !ex.isVoid)
+        .sort(byPriorityThenDate);
 
-    // 일반 (추천 아님, VOID 아님)
-    const otherExhibitions = filteredExhibitions.filter(ex =>
-        ex.isRecommended !== true && !ex.isVoid
-    );
+    // 국외 박람회 (해외, VOID 제외)
+    const overseasExhibitions = filteredExhibitions
+        .filter(ex => ex.country !== '한국' && !ex.isVoid)
+        .sort(byPriorityThenDate);
 
-    // VOID (이미 지나간 박람회)
-    const voidExhibitions = filteredExhibitions.filter(ex => ex.isVoid === true);
+    // VOID (이미 종료된 박람회)
+    const voidExhibitions = filteredExhibitions
+        .filter(ex => ex.isVoid === true)
+        .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
     return (
         <>
@@ -146,45 +148,19 @@ export default function Exhibitions() {
                     </div>
                 </section>
 
-                {/* ① 하반기 추천 (최상단) */}
-                {seasonFilter !== 'H1' && h2RecommendedExhibitions.length > 0 && (
-                    <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
-                        <div className="container-minimal">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
-                                    ⭐ 하반기 추천 일정 (7-12월)
-                                </div>
-                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
-                            </div>
-                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {h2RecommendedExhibitions.map((exhibition, index) => (
-                                    <div key={exhibition.id} className="relative">
-                                        <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                            {index === 0 ? '하반기 확정' : `하반기 ${index + 1}순위`}
-                                        </div>
-                                        <ExhibitionCard
-                                            exhibition={exhibition}
-                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* ② 남은 상반기 추천 */}
-                {seasonFilter !== 'H2' && h1RecommendedExhibitions.length > 0 && (
+                {/* ① 국내 박람회 */}
+                {domesticExhibitions.length > 0 && (
                     <section className="py-12 bg-gradient-to-br from-blue-50 to-white animate-slide-up">
                         <div className="container-minimal">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold">
-                                    📅 남은 상반기 일정 (6월)
+                                    🇰🇷 국내 박람회
                                 </div>
                                 <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
+                                <span className="text-sm text-gray-500">{domesticExhibitions.length}개</span>
                             </div>
                             <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {h1RecommendedExhibitions.map((exhibition, index) => (
+                                {domesticExhibitions.map((exhibition, index) => (
                                     <div key={exhibition.id} className="relative">
                                         <div className="absolute -top-3 -right-3 z-10 bg-blue-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                                             {index + 1}순위
@@ -200,14 +176,23 @@ export default function Exhibitions() {
                     </section>
                 )}
 
-                {/* ③ 기타 박람회 */}
-                {otherExhibitions.length > 0 && (
-                    <section className="section-spacing">
+                {/* ② 국외 박람회 */}
+                {overseasExhibitions.length > 0 && (
+                    <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
                         <div className="container-minimal">
-                            <h2 className="text-3xl font-bold mb-6 text-black">글로벌 박람회</h2>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
+                                    🌐 국외 박람회
+                                </div>
+                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
+                                <span className="text-sm text-gray-500">{overseasExhibitions.length}개</span>
+                            </div>
                             <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {otherExhibitions.map((exhibition, index) => (
-                                    <div key={exhibition.id} className={`animate-scale-in stagger-${(index % 3) + 1}`}>
+                                {overseasExhibitions.map((exhibition, index) => (
+                                    <div key={exhibition.id} className="relative">
+                                        <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                            {index + 1}순위
+                                        </div>
                                         <ExhibitionCard
                                             exhibition={exhibition}
                                             onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}

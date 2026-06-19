@@ -13,45 +13,39 @@ export default function ExhibitionUpdates() {
                         </h3>
                         <ul className="space-y-1 text-yellow-800 text-sm">
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-green-600 flex-shrink-0">[하반기 최우선]</span>
+                                <span className="font-bold text-blue-600 flex-shrink-0">[구성 개편]</span>
                                 <span>
-                                    <span className="font-semibold text-green-700 underline decoration-double decoration-green-500">CHTF 2026 (선전):</span> 2026년 하반기 <span className="font-bold text-red-600 underline">유일한 최종 확정 박람회</span> (11월 26~28일)
+                                    박람회를 <span className="font-semibold">국내 · 국외</span>로 분리하고 건설·로봇·하이테크 중심 <span className="font-semibold">우선순위(1순위→)</span>로 재정렬
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600 flex-shrink-0">[우선순위 조정]</span>
+                                <span className="font-bold text-green-600 flex-shrink-0">[국내 1순위]</span>
                                 <span>
-                                    <span className="font-semibold">iREX (일본):</span> 2순위로 조정 및 국가 정보 정정 (중국 박람회 최우선 편성)
+                                    <span className="font-semibold text-green-700 underline decoration-double decoration-green-500">한국건설·안전박람회 2026:</span> 10월 14~16일, 킨텍스 제1전시장 (서원토건 핵심 참관)
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-red-600">[취소]</span>
+                                <span className="font-bold text-green-600 flex-shrink-0">[국외 1순위]</span>
                                 <span>
-                                    <span className="font-semibold">World of Concrete (미국):</span> 1월 일정으로 참석 불가 (추천 제외)
+                                    <span className="font-semibold text-green-700 underline decoration-double decoration-green-500">bauma CHINA 2026:</span> 11월 24~27일, 상하이 (전 세계 건설기계의 정점, 2년 주기)
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-gray-600">[조정]</span>
+                                <span className="font-bold text-blue-600 flex-shrink-0">[신규 추가]</span>
                                 <span>
-                                    <span className="font-semibold">Canton Fair (중국):</span> 우선순위 하향 조정 (추천 리스트 제외)
+                                    <span className="font-semibold">대한민국 안전산업박람회(K-Safety Expo):</span> 9월 2~4일, 부산 벡스코 (행정안전부 주최)
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-blue-600 flex-shrink-0">[우선순위 변경]</span>
+                                <span className="font-bold text-red-600 flex-shrink-0">[삭제]</span>
                                 <span>
-                                    <span className="font-semibold">상반기 2순위:</span> <span className="underline decoration-wavy decoration-red-500">CIOSH 2026 (상하이)</span> - 4월 7일~9일 (순위 조정)
+                                    <span className="font-semibold">iREX (일본):</span> 격년제로 2026년 미개최(다음 2027년 도쿄) 확인 → 목록에서 제외
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-gray-600 flex-shrink-0">[조정]</span>
+                                <span className="font-bold text-gray-600 flex-shrink-0">[종료 이동]</span>
                                 <span>
-                                    <span className="font-semibold">상반기 확정:</span> 광저우 통합 박람회 (CIHIE + WCME) - 맨 첫 번째 일정으로 확정 (5월 8일~10일)
-                                </span>
-                            </li>
-                            <li className="flex items-start gap-2">
-                                <span className="font-bold text-gray-600 flex-shrink-0">[조정]</span>
-                                <span>
-                                    <span className="font-semibold">4순위 변경:</span> DigitalBAU 2026 (뮌헨) - 일정상 참석 어려움으로 순위 하향
+                                    상반기(1~6월) 종료 박람회는 하단 <span className="font-semibold">VOID</span> 영역으로 이동
                                 </span>
                             </li>
                         </ul>
