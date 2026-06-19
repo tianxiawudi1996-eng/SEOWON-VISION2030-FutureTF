@@ -15,7 +15,7 @@ export default function ExhibitionUpdates() {
                             <li className="flex items-start gap-2">
                                 <span className="font-bold text-blue-600 flex-shrink-0">[구성 개편]</span>
                                 <span>
-                                    박람회를 <span className="font-semibold">국내 · 국외</span>로 분리하고 건설·로봇·하이테크 중심 <span className="font-semibold">우선순위(1순위→)</span>로 재정렬
+                                    AI·로봇·건설로봇·스마트안전 중심 <span className="font-semibold">핵심 Top 5</span>만 선별 — <span className="font-semibold">해외(상단) / 국내(하단)</span>로 구성
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">

@@ -18,6 +18,7 @@ export default function Exhibitions() {
     const [selectedExhibition, setSelectedExhibition] = useState<Exhibition | null>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [showVoid, setShowVoid] = useState(false);
+    const [showOthers, setShowOthers] = useState(false);
 
     const categories = ['전체', ...Array.from(new Set(exhibitions.map(ex => ex.category)))];
     const countries = ['전체', '한국', '미국', '독일', '중국', '일본'];
@@ -40,15 +41,20 @@ export default function Exhibitions() {
         (a.priority || 999) - (b.priority || 999) ||
         new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
 
-    // 국내 박람회 (한국, VOID 제외)
-    const domesticExhibitions = filteredExhibitions
+    const sortedDomestic = filteredExhibitions
         .filter(ex => ex.country === '한국' && !ex.isVoid)
         .sort(byPriorityThenDate);
-
-    // 국외 박람회 (해외, VOID 제외)
-    const overseasExhibitions = filteredExhibitions
+    const sortedOverseas = filteredExhibitions
         .filter(ex => ex.country !== '한국' && !ex.isVoid)
         .sort(byPriorityThenDate);
+
+    // 핵심 추천 Top 5 (AI·로봇·건설로봇·스마트안전 위주) — 해외 상단 / 국내 하단
+    const overseasTop = sortedOverseas.slice(0, 5);
+    const domesticTop = sortedDomestic.slice(0, 5);
+
+    // 그 외 박람회 (Top 5 외, 기본 숨김)
+    const otherExhibitions = [...sortedOverseas.slice(5), ...sortedDomestic.slice(5)]
+        .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
     // VOID (이미 종료된 박람회)
     const voidExhibitions = filteredExhibitions
@@ -148,19 +154,45 @@ export default function Exhibitions() {
                     </div>
                 </section>
 
-                {/* ① 국내 박람회 */}
-                {domesticExhibitions.length > 0 && (
+                {/* ① 해외 박람회 (상단) — 핵심 Top 5 */}
+                {overseasTop.length > 0 && (
+                    <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
+                        <div className="container-minimal">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
+                                    🌐 해외 박람회 TOP 5
+                                </div>
+                                <h2 className="text-2xl font-bold text-black">AI · 로봇 · 건설로봇 · 스마트안전</h2>
+                            </div>
+                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                                {overseasTop.map((exhibition, index) => (
+                                    <div key={exhibition.id} className="relative">
+                                        <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                            {index + 1}순위
+                                        </div>
+                                        <ExhibitionCard
+                                            exhibition={exhibition}
+                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* ② 국내 박람회 (하단) — 핵심 Top 5 */}
+                {domesticTop.length > 0 && (
                     <section className="py-12 bg-gradient-to-br from-blue-50 to-white animate-slide-up">
                         <div className="container-minimal">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-bold">
-                                    🇰🇷 국내 박람회
+                                    🇰🇷 국내 박람회 TOP 5
                                 </div>
-                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
-                                <span className="text-sm text-gray-500">{domesticExhibitions.length}개</span>
+                                <h2 className="text-2xl font-bold text-black">AI · 로봇 · 건설로봇 · 스마트안전</h2>
                             </div>
                             <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {domesticExhibitions.map((exhibition, index) => (
+                                {domesticTop.map((exhibition, index) => (
                                     <div key={exhibition.id} className="relative">
                                         <div className="absolute -top-3 -right-3 z-10 bg-blue-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                                             {index + 1}순위
@@ -176,30 +208,32 @@ export default function Exhibitions() {
                     </section>
                 )}
 
-                {/* ② 국외 박람회 */}
-                {overseasExhibitions.length > 0 && (
-                    <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
+                {/* ③ 그 외 박람회 (기본 숨김) */}
+                {otherExhibitions.length > 0 && (
+                    <section className="py-8 bg-white border-t border-gray-100">
                         <div className="container-minimal">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
-                                    🌐 국외 박람회
+                            <button
+                                onClick={() => setShowOthers(prev => !prev)}
+                                className="flex items-center gap-3 w-full text-left hover:opacity-70 transition-opacity"
+                            >
+                                <div className="px-4 py-2 bg-gray-600 text-white rounded-full text-sm font-bold">
+                                    그 외 박람회
                                 </div>
-                                <h2 className="text-2xl font-bold text-black">서원토건 우선순위</h2>
-                                <span className="text-sm text-gray-500">{overseasExhibitions.length}개</span>
-                            </div>
-                            <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {overseasExhibitions.map((exhibition, index) => (
-                                    <div key={exhibition.id} className="relative">
-                                        <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                            {index + 1}순위
+                                <span className="text-sm text-gray-500">{otherExhibitions.length}개</span>
+                                <span className="text-sm text-gray-400 ml-auto">{showOthers ? '▲ 접기' : '▼ 펼치기'}</span>
+                            </button>
+                            {showOthers && (
+                                <div className={`mt-6 ${isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}`}>
+                                    {otherExhibitions.map((exhibition) => (
+                                        <div key={exhibition.id}>
+                                            <ExhibitionCard
+                                                exhibition={exhibition}
+                                                onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
+                                            />
                                         </div>
-                                        <ExhibitionCard
-                                            exhibition={exhibition}
-                                            onDetailClick={(ex) => { setSelectedExhibition(ex); setShowDetailModal(true); }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </section>
                 )}

@@ -141,7 +141,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '★★★★☆ 글로벌 AI 리더 총집결 컨퍼런스+EXPO. AI 에이전트·생성형AI·AI 거버넌스·산업 적용 사례. KITA·코엑스 공동주최',
         website: 'https://www.aisummit.co.kr/',
         isRecommended: true,
-        priority: 6,
+        priority: 5,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '글로벌 AI 리더 및 혁신 기업이 집결하는 AI 전문 컨퍼런스+전시회. 컨퍼런스(8/19-20) 및 EXPO(8/19-21)로 구성. AI 에이전트, 생성형 AI, AI 거버넌스, 산업 AI 적용 사례 등 최신 트렌드 파악. 코엑스·DMK글로벌·한국무역협회(KITA) 공동 주최.',
@@ -171,7 +171,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '★★★☆☆ 대한민국 대표 건설·건축 전시. NextCon 2026 스마트건설 특별전 동시 개최. BIM·3D스캐닝·로보틱스·디지털 건설기술. K-스마트건설관 운영',
         website: 'https://koreabuild.co.kr/coex/',
         isRecommended: true,
-        priority: 5,
+        priority: 6,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '대한민국 최대 건설·건축·인테리어 종합 전시회. NextCon 2026(스마트건설 특별전)이 동시 개최되어 AI와 스마트건설 기술의 현장 적용 사례 전시 및 컨퍼런스 진행. BIM, 3D 스캐닝, 로보틱스, 디지털 트윈 등 혁신 디지털 건설 기술 집중 조명. K-스마트건설관 별도 운영.',
@@ -976,7 +976,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '콘크리트 시공, 철근 가공, 바닥재 로봇 (아시아 최대 콘크리트 행사)',
         website: 'https://en.wocasia.cn',
         isRecommended: true,
-        priority: 5,
+        priority: 6,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '아시아 최대 콘크리트 박람회입니다. 콘크리트 시공 기술, 철근 가공 자동화, 바닥재 로봇, PC 부재 제작 등 콘크리트 관련 모든 기술을 한번에 확인할 수 있습니다.',
@@ -1057,7 +1057,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '북미 최대 로봇·자동화 쇼케이스 (휴머노이드 로봇 포럼 포함)',
         website: 'https://www.automateshow.com/',
         isRecommended: true,
-        priority: 6,
+        priority: 5,
         season: 'H1',
         detailedInfo: {
             exhibitionDetails: '북미 최대 자동화 박람회입니다. 산업용 로봇, 비전 시스템, AGV, 협동로봇 등 모든 종류의 자동화 솔루션이 전시되며, 북미 시장 트렌드를 파악할 수 있습니다.',
