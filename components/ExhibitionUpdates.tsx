@@ -15,7 +15,7 @@ export default function ExhibitionUpdates() {
                             <li className="flex items-start gap-2">
                                 <span className="font-bold text-blue-600 flex-shrink-0">[구성 개편]</span>
                                 <span>
-                                    AI·로봇·건설로봇·스마트안전 중심 <span className="font-semibold">핵심 Top 5</span>만 선별 — <span className="font-semibold">해외(상단) / 국내(하단)</span>로 구성
+                                    <span className="font-semibold">해외(상단)</span>는 AI·로봇·건설·스마트안전·하이테크 박람회 전부, <span className="font-semibold">국내(하단)</span>는 핵심 Top 5로 구성
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
@@ -37,9 +37,9 @@ export default function ExhibitionUpdates() {
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">
-                                <span className="font-bold text-red-600 flex-shrink-0">[삭제]</span>
+                                <span className="font-bold text-blue-600 flex-shrink-0">[정정]</span>
                                 <span>
-                                    <span className="font-semibold">iREX (일본):</span> 격년제로 2026년 미개최(다음 2027년 도쿄) 확인 → 목록에서 제외
+                                    <span className="font-semibold">일본 로봇전:</span> iREX는 격년제로 2026 미개최(다음 2027 도쿄) → 2026 연말 일본 로봇전은 <span className="font-semibold">RoboDEX 나고야 (11/25~27)</span>로 편성
                                 </span>
                             </li>
                             <li className="flex items-start gap-2">

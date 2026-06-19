@@ -48,12 +48,12 @@ export default function Exhibitions() {
         .filter(ex => ex.country !== '한국' && !ex.isVoid)
         .sort(byPriorityThenDate);
 
-    // 핵심 추천 Top 5 (AI·로봇·건설로봇·스마트안전 위주) — 해외 상단 / 국내 하단
-    const overseasTop = sortedOverseas.slice(0, 5);
+    // 해외: AI·로봇·건설로봇·스마트안전·하이테크 박람회 전부 노출(상단) / 국내: 핵심 Top 5(하단)
+    const overseasAll = sortedOverseas;
     const domesticTop = sortedDomestic.slice(0, 5);
 
-    // 그 외 박람회 (Top 5 외, 기본 숨김)
-    const otherExhibitions = [...sortedOverseas.slice(5), ...sortedDomestic.slice(5)]
+    // 그 외 박람회 (국내 Top 5 외, 기본 숨김)
+    const otherExhibitions = sortedDomestic.slice(5)
         .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
     // VOID (이미 종료된 박람회)
@@ -154,18 +154,19 @@ export default function Exhibitions() {
                     </div>
                 </section>
 
-                {/* ① 해외 박람회 (상단) — 핵심 Top 5 */}
-                {overseasTop.length > 0 && (
+                {/* ① 해외 박람회 (상단) — AI·로봇·건설로봇·스마트안전·하이테크 전부 */}
+                {overseasAll.length > 0 && (
                     <section className="py-12 bg-gradient-to-br from-green-50 to-white animate-slide-up">
                         <div className="container-minimal">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="px-4 py-2 bg-green-600 text-white rounded-full text-sm font-bold">
-                                    🌐 해외 박람회 TOP 5
+                                    🌐 해외 박람회
                                 </div>
-                                <h2 className="text-2xl font-bold text-black">AI · 로봇 · 건설로봇 · 스마트안전</h2>
+                                <h2 className="text-2xl font-bold text-black">AI · 로봇 · 건설로봇 · 스마트안전 · 하이테크</h2>
+                                <span className="text-sm text-gray-500">{overseasAll.length}개</span>
                             </div>
                             <div className={isMobileMode ? "grid grid-cols-1 gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                                {overseasTop.map((exhibition, index) => (
+                                {overseasAll.map((exhibition, index) => (
                                     <div key={exhibition.id} className="relative">
                                         <div className="absolute -top-3 -right-3 z-10 bg-green-400 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
                                             {index + 1}순위

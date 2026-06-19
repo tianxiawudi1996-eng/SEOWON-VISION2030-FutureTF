@@ -869,7 +869,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '★★★★☆ 스마트 시공 로봇, 디지털 트윈 현장 관리',
         website: 'https://www.s-factoryexpo.com/',
         isRecommended: true,
-        priority: 4,
+        priority: 6,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '선전 스마트 팩토리 및 자동화 전시회입니다. 건설 현장에 적용 가능한 스마트 시공 로봇, 디지털 트윈 현장 관리 시스템, IoT 센서 등이 전시됩니다.',
@@ -950,7 +950,7 @@ export const exhibitionsData: Exhibition[] = [
         description: 'AI 건설 응용 핵심 플랫폼 (상하이 개최)',
         website: 'http://www.worldaic.com.cn',
         isRecommended: true,
-        priority: 9,
+        priority: 8,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '세계 인공지능 컨퍼런스로 중국 최대 AI 전문 행사입니다. AI 건설 응용 플랫폼, 머신러닝, 컴퓨터 비전 등 AI 핵심 기술과 건설 산업 적용 사례를 확인할 수 있습니다.',
@@ -976,7 +976,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '콘크리트 시공, 철근 가공, 바닥재 로봇 (아시아 최대 콘크리트 행사)',
         website: 'https://en.wocasia.cn',
         isRecommended: true,
-        priority: 6,
+        priority: 9,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '아시아 최대 콘크리트 박람회입니다. 콘크리트 시공 기술, 철근 가공 자동화, 바닥재 로봇, PC 부재 제작 등 콘크리트 관련 모든 기술을 한번에 확인할 수 있습니다.',
@@ -1085,7 +1085,7 @@ export const exhibitionsData: Exhibition[] = [
         description: '일본 최대 건설 종합 박람회, 스마트하우스 및 시공 기술',
         website: 'https://www.japan-build.jp/tokyo/',
         isRecommended: true,
-        priority: 8,
+        priority: 10,
         season: 'H2',
         detailedInfo: {
             exhibitionDetails: '일본 최대 건설 종합 박람회입니다. 스마트하우스, 시공 기술, 건자재, 내장재 등 건설의 모든 분야가 한번에 전시되는 종합 행사입니다.',
@@ -1100,7 +1100,34 @@ export const exhibitionsData: Exhibition[] = [
             exhibitorCount: '400개사'
         }
     },
-    // [일본] iREX 2026은 미개최 (격년제, 직전 2025 / 다음 2027년 도쿄 Big Sight) — 항목 삭제
+    // [일본] iREX 2026은 미개최 (격년제, 직전 2025.12 / 다음 2027.11 도쿄). 2026 연말 일본 로봇전은 RoboDEX 나고야로 편성
+    {
+        id: 'robodex-nagoya-2026',
+        name: 'RoboDEX 나고야 2026 (로봇개발·응용전)',
+        nameEn: 'RoboDEX Nagoya 2026',
+        category: 'AI & 로봇',
+        location: '아이치 스카이엑스포 (나고야)',
+        country: '일본',
+        startDate: '2026-11-25',
+        endDate: '2026-11-27',
+        description: '★★★★☆ 일본 대표 로봇 전문 전시회. 산업·서비스·휴머노이드 로봇, AGV, AI 자동화. Factory Innovation Week 내 동시 개최',
+        website: 'https://www.fiweek.jp/nagoya/',
+        isRecommended: true,
+        priority: 4,
+        season: 'H2',
+        detailedInfo: {
+            exhibitionDetails: 'RX Japan이 주최하는 일본 대표 로봇 전문 전시회로, Factory Innovation Week 나고야의 핵심 전시입니다. 산업용 로봇, 서비스·휴머노이드 로봇, AGV/AMR, 로봇 개발 기술, AI 자동화 솔루션이 집결하며 스마트팩토리·그린팩토리 등 5개 전시와 동시 개최됩니다.',
+            keyHighlights: [
+                '산업용·서비스·휴머노이드 로봇 총집결',
+                'AGV/AMR 자율주행 물류 로봇',
+                '건설 현장 적용 가능한 로봇 자동화 기술',
+                'Factory Innovation Week 5개 전시 동시 관람'
+            ],
+            targetAudience: '로봇 기술팀, 자동화 담당자, 스마트건설 연구소',
+            expectedVisitors: '4만명+',
+            exhibitorCount: '300개사+'
+        }
+    },
     {
         id: 'ai-expo-tokyo-2026',
         name: 'AI EXPO TOKYO Autumn 2026',
